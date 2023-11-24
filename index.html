@@ -13,13 +13,15 @@
         });
         document.querySelectorAll('.colorspan').forEach(sel => {
           sel.addEventListener("change", (event) => {
-            let span = document.createElement('span');
-            span.innerHTML = `<span class="${event.target.value}">请输入文本</span>⁣⁣⁣⁣　`;
+            let span_text = event.target.id == 'link' ? 'a' : 'span';
+            let span = document.createElement(span_text);
+            span.innerHTML = `<${span_text} class="${event.target.value}">请输入文本</${span_text}>⁣⁣⁣⁣　`;
             if (position === '') {
               document.querySelector('div.passage').append(span);
             } else {
               position.insertNode(span);
             }
+            event.target.value = '';
           });
         });
         document.querySelector("#theme").addEventListener("change", (event) => {
@@ -49,6 +51,9 @@
               }
             });
         });
+        document.querySelector('#clear').addEventListener("click", (event) => {
+          document.querySelector("div.passage").innerText = '';
+        });
       });
     </script>
     <link type="text/css" rel="stylesheet" href="style.css" />
@@ -69,16 +74,14 @@
             </div>
             <div id="story" role="main" class="">
               <div id="passages" aria-live="polite">
-                <div data-tags="nosave exitCheckBypass" class="passage nosave exitcheckbypass" contenteditable="true">
-                  欢迎游玩欲都孤儿！
-<br><br>
+                <div data-tags="nosave exitCheckBypass" class="passage nosave exitcheckbypass" contenteditable="plaintext-only">欢迎游玩欲都孤儿！
+
 倘若你不想被卷入麻烦，那么请牢记要穿着得体，并待在安全、明亮的地方。夜晚是非常危险的，尤其当你身穿色情下流的服饰时，那将引起某些人的注意——而这究竟会给你带来好运还是霉头，谁知道呢？
-<br><br>
+
 新学期将在明日09:00开始，上学的时候别忘记穿校服！
-巴士是这个小镇里最便捷的交通方式，可以通过巴士站快速移动到想要去的地方。<br><br>
-                  <a class="link-internal macro-link" role="link" tabindex="0">(1) 继续</a>
-                  <br>
-                  <br>
+巴士是这个小镇里最便捷的交通方式，可以通过巴士站快速移动到想要去的地方。
+
+<a class="link-internal macro-link" role="link" tabindex="0">(1) 继续</a>
                 </div>
               </div>
             </div>
@@ -90,7 +93,6 @@
       <div class="toolbox">
         <div class="item">欢迎使用 <b>DOL烤饼机</b>（ <a href="https://github.com/omvjro/DOL-pancake">GitHub 仓库</a>）！本烤饼机专为高度还原游戏界面而设计，如在传播所生成图片时遇到疑问，请及时说明此为假图，谢谢！ <br>当前问题： <ul>
             <li>无法生成特效文本截图，会变成一坨色块，需要手动截图</li>
-            <li>无法连续插入同一种文本</li>
             <li>无法根据文本长度自动生成长图，需要手动输入图片长度，且只能手动截图</li>
           </ul>
         </div>
@@ -140,7 +142,7 @@
           </select>
         </div>
         <div class="item">
-          <button id="pic">生成图片</button><button id="pic-down">下载图片</button>
+          <button id="pic">生成图片</button><button id="pic-down">下载图片</button><button id="clear">清空内容</button>
         </div>
         <div class="item" id="img-item"></div>
       </div>
