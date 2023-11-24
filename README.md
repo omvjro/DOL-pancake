@@ -13,3 +13,5 @@
 以下为所抄代码及所使用工具：
 - [js实现可编辑的div，并在光标处插入元素](https://blog.csdn.net/weixin_44817017/article/details/115321425)
 - [html-to-image](https://github.com/bubkoo/html-to-image)
+- [FileSaver.js](https://github.com/eligrey/FileSaver.js)
+- [BootCDN](https://www.bootcdn.cn/)
