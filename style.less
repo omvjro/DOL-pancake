@@ -487,7 +487,7 @@ div#dol {
 	div#body {
 		color: #eee;
 		background-color: #111;
-		overflow: auto
+		overflow: hidden;
 	}
 	
 	a {
@@ -524,14 +524,9 @@ div#dol {
 	
 	#story {
 		z-index: 10;
-		margin: 2.5em
+		margin: 2.5em;
+		margin-right: 1.5em
 	}
-	/*
-	@media screen and (max-width:1136px) {
-		#story {
-			margin-right: 1.5em
-		}
-	}*/
 	
 	#passages {
 		max-width: 54em;
@@ -660,24 +655,11 @@ div#dol {
 	}
 	
 	#ui-bar.stowed~#story {
-		margin-left: 4.5em
+		margin-left: 3.5em
 	}
-	/*
-	@media screen and (max-width:1136px) {
-		#story {
-			margin-left: 19em
-		}
-	
-		#ui-bar.stowed~#story {
-			margin-left: 3.5em
-		}
-	}
-	
-	@media screen and (max-width:768px) {
 		#story {
 			margin-left: 3.5em
 		}
-	}*/
 	
 	#ui-bar {
 		position: absolute;
