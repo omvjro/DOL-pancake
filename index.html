@@ -27,9 +27,6 @@
         document.querySelector("#theme").addEventListener("change", (event) => {
           document.querySelector('#body').setAttribute('data-theme', event.target.value);
         });
-        document.querySelector("#length").addEventListener("change", (event) => {
-          document.querySelector('#body').style.height = `${event.target.value}px`;
-        });
         document.querySelector('#pic').addEventListener("click", (event) => {
           htmlToImage.toPng(document.querySelector("#dol")).then(function(dataUrl) {
             var img = new Image();
@@ -53,6 +50,7 @@
         });
         document.querySelector('#clear').addEventListener("click", (event) => {
           document.querySelector("div.passage").innerText = '';
+          document.querySelector('#img-item').innerHTML = '<div class = "item" id = "img-item"></div>';
         });
       });
     </script>
@@ -91,9 +89,8 @@
         </div>
       </div>
       <div class="toolbox">
-        <div class="item">欢迎使用 <b>DOL烤饼机</b>（ <a href="https://github.com/omvjro/DOL-pancake">GitHub 仓库</a>）！本烤饼机专为高度还原游戏界面而设计，如在传播所生成图片时遇到疑问，请及时说明此为假图，谢谢！ <br>当前问题： <ul>
+        <div class="item">欢迎使用DOL烤饼机！本烤饼机专为高度还原游戏界面而设计，如在传播所生成图片时遇到疑问，请及时说明此为假图，谢谢！ <br>当前问题（详情可见 <a href="https://github.com/omvjro/DOL-pancake">GitHub 仓库</a>）： <ul>
             <li>无法生成特效文本截图，会变成一坨色块，需要手动截图</li>
-            <li>无法根据文本长度自动生成长图，需要手动输入图片长度，且只能手动截图</li>
           </ul>
         </div>
         <div class="item"> 更换主题： <select id="theme">
@@ -104,8 +101,6 @@
             <option value="storm">Storm</option>
           </select>
         </div>
-        <div class="item"> 修改图片长度（px，默认667）：<input type="number" id="length" name="img-length" min="200" max="10000" />
-      </div>
         <div class="item"> 插入常规颜色文本： <select id="color" class="colorspan">
             <option style='display: none'></option>
             <option value="red">red</option>
@@ -142,7 +137,7 @@
           </select>
         </div>
         <div class="item">
-          <button id="pic">生成图片</button><button id="pic-down">下载图片</button><button id="clear">清空内容</button>
+          <button id="pic">预览图片</button><button id="pic-down">下载图片</button><button id="clear">清空内容</button>
         </div>
         <div class="item" id="img-item"></div>
       </div>
