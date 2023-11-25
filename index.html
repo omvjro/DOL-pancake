@@ -28,17 +28,19 @@
           document.querySelector('#body').setAttribute('data-theme', event.target.value);
         });
         document.querySelector('#pic').addEventListener("click", (event) => {
+          document.querySelector('#img-item').innerText = '生成图片中……';
           htmlToImage.toPng(document.querySelector("#dol")).then(function(dataUrl) {
             var img = new Image();
             img.src = dataUrl;
             img.alt = 'DOL-pancake';
-            document.querySelector('#img-item').innerHTML = '<div class = "item" id = "img-item"></div>';
+            document.querySelector('#img-item').innerText = '';
             document.querySelector('#img-item').appendChild(img);
           }).catch(function(error) {
             console.error('oops, something went wrong!', error);
           });
         });
         document.querySelector('#pic-down').addEventListener("click", (event) => {
+          document.querySelector('#img-item').innerText = '生成图片中……';
           htmlToImage.toBlob(document.querySelector("#dol"))
             .then(function (blob) {
               if (window.saveAs) {
@@ -47,10 +49,11 @@
                 FileSaver.saveAs(blob, 'dol-pancake.png');
               }
             });
+          document.querySelector('#img-item').innerText = '';
         });
         document.querySelector('#clear').addEventListener("click", (event) => {
           document.querySelector("div.passage").innerText = '';
-          document.querySelector('#img-item').innerHTML = '<div class = "item" id = "img-item"></div>';
+          document.querySelector('#img-item').innerText = '';
         });
       });
     </script>
