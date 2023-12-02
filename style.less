@@ -11,6 +11,25 @@
 		justify-items: center;
 	}
 }
+html, pre{
+    ::-webkit-scrollbar {
+        width: 10px;
+      }
+      
+      ::-webkit-scrollbar-track {
+        background-color: transparent;
+      }
+      
+      ::-webkit-scrollbar-thumb {
+        background-color: #666;
+        border: 5px solid transparent;
+        background-clip: content-box;
+      }
+      
+      ::-webkit-scrollbar-thumb:hover {
+        background-color: #aaa;
+      }
+}
 body, html {
 	background: #000;
 	padding: 0;
@@ -21,9 +40,18 @@ body, html {
 }
 .item {
 	padding: .25em;
+	#output {
+		max-width: 100%;
+	}
 	img {
 		width: 375px;
 		max-width: 100%;
+	}
+	pre {
+		background: #222;
+		padding: 1em 2em;
+		border-radius: 5px;
+		text-wrap: wrap;
 	}
 	button, select, input {
 		border: 1px solid #666;

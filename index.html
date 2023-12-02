@@ -5,63 +5,11 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <script src="https://cdn.bootcdn.net/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", (event) => {
-        let position = '';
-        document.querySelector('div.passage').addEventListener("blur", (event) => {
-          position = window.getSelection().getRangeAt(0)
-        });
-        document.querySelectorAll('.colorspan').forEach(sel => {
-          sel.addEventListener("change", (event) => {
-            let span_text = event.target.id == 'link' ? 'a' : 'span';
-            let span = document.createElement(span_text);
-            span.innerHTML = `<${span_text} class="${event.target.value}">请输入文本</${span_text}>⁣⁣⁣⁣　`;
-            if (position === '') {
-              document.querySelector('div.passage').append(span);
-            } else {
-              position.insertNode(span);
-            }
-            event.target.value = '';
-          });
-        });
-        document.querySelector("#theme").addEventListener("change", (event) => {
-          document.querySelector('#body').setAttribute('data-theme', event.target.value);
-        });
-        document.querySelector('#pic').addEventListener("click", (event) => {
-          document.querySelector('#img-item').innerText = '生成图片中……';
-          htmlToImage.toPng(document.querySelector("#dol")).then(function(dataUrl) {
-            var img = new Image();
-            img.src = dataUrl;
-            img.alt = 'DOL-pancake';
-            document.querySelector('#img-item').innerText = '';
-            document.querySelector('#img-item').appendChild(img);
-          }).catch(function(error) {
-            console.error('oops, something went wrong!', error);
-          });
-        });
-        document.querySelector('#pic-down').addEventListener("click", (event) => {
-          document.querySelector('#img-item').innerText = '生成图片中……';
-          htmlToImage.toBlob(document.querySelector("#dol"))
-            .then(function (blob) {
-              if (window.saveAs) {
-                window.saveAs(blob, 'dol-pancake.png');
-              } else {
-                FileSaver.saveAs(blob, 'dol-pancake.png');
-              }
-            });
-          document.querySelector('#img-item').innerText = '';
-        });
-        document.querySelector('#clear').addEventListener("click", (event) => {
-          document.querySelector("div.passage").innerText = '';
-          document.querySelector('#img-item').innerText = '';
-        });
-      });
-    </script>
+    <script src="script.js"></script>
     <link type="text/css" rel="stylesheet" href="style.css" />
     <link type="image/png" rel="icon" sizes="16x16" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAGJUExURUdwTM5+RYZPI4BVKoRNH4lQIwAAAHU7H6xoMo1SInlRG4ZMIYNGIa5oNJdaLKtnNK5qNo5VHMJ3QKdkMZ1cMJ5dLqBfLaJgMqRfMJhYKYdQKNGvo6FhM6tkNJRVJ4tGF8B4QZ1cLaliM5FUJ5ZWKPbXxuPBs5NWJ4xSJKhiNJlZKPrp39Krmb2qpKBdLdGom927oo9SI7qHZJpaKbiWiruhmYlRIpVbNtqHTP/u4rVpOqhiMr9xP61jM7FnN7hrO7ttPptbK89+RumaVteFSL90PadbHN2PSKVYHLN1S6ZgMuO7n+3j3P/s34NOI/3p3ZRXKadjNOCPUOOTUsh6Qs59QPCiWsh3O7ZmKrh1Oo9NGMJ2Qp9YJrhqOrBkLtvSz694UpBSIOCUU7CFaNikhKdoOq9ySfHby6OZlHR4f6FvRp9TFpVTIP7o15t7ZqmHbY2YqODEruXEr7K3wC5ejfrNsODi5s+omPTazSJSgb29whxOfvLTxfzk1b+Ma8PEyfPj2+Hm63iNotY+v8UAAAA4dFJOUwD8PQYhfQEEtkkJKhexXbrGEu+WdaXC/rPoRln8+HUL++r0vIX1kPSx4p7s9q7OOP6Y1P1r/av8OyD8ogAAAOZJREFUGBk1wIWWglAUBdCjggzqdHd3N/chpWKP6HR3d3d/ubhcbtjczuIiW4kXeVypQ8oJVFR6YHOXBeelPLPaBUB0SAtLy6FwMBLZaGsAULMYWlldM/374XVlq90Drj4eiJrb5zLbPdrUO1ohMtkfvUjdxGMnB6ra6YLIZO0y9f94fUene0oXIDJZ0xN/Hw9EZ4bWAvj6FZah57d3otvjZh+AEd3I0O+PRbQTqxMA9Kks/fJlvVpzidoq2Jy9k0b6+/N+7LCJL0cO5x2fmX2a4Ad4AQVT01dDw6MoEHoGk0TJ7kbYsoQUMAKQPM6bAAAAAElFTkSuQmCC">
   </head>
   <body>
-    <!--<iframe id="ifm" width="400" height="600" src="1.html" sandbox="allow-same-origin allow-scripts"></iframe>-->
     <div id="container">
       <div id="dol">
         <div id="html">
@@ -82,8 +30,7 @@
 新学期将在明日09:00开始，上学的时候别忘记穿校服！
 巴士是这个小镇里最便捷的交通方式，可以通过巴士站快速移动到想要去的地方。
 
-<a class="link-internal macro-link" role="link" tabindex="0">(1) 继续</a>
-                </div>
+<a class=" ">(1) 继续</a></div>
               </div>
             </div>
             <div id="gameVersionDisplay" contenteditable="false"> MADE BY DOL烤饼机 </div>
@@ -92,10 +39,13 @@
         </div>
       </div>
       <div class="toolbox">
-        <div class="item">欢迎使用DOL烤饼机！本烤饼机专为高度还原游戏界面而设计，如在传播所生成图片时遇到疑问，请及时说明此为假图，谢谢！ <br>当前问题（详情可见 <a href="https://github.com/omvjro/DOL-pancake">GitHub 仓库</a>）： <ul>
+        <div class="item">欢迎使用DOL烤饼机！本烤饼机专为高度还原游戏界面而设计，如在传播所生成图片时遇到疑问，请及时说明此为假图，谢谢！<br>当前问题和注意事项（详情可见 <a href="https://github.com/omvjro/DOL-pancake">GitHub 仓库</a>）： <ul>
             <li>无法生成特效文本截图，会变成一坨色块，需要手动截图</li>
-          </ul>
+            <li>如需导出代码，请不要在链接前加上序号</li>
+            <li>目前只能导出文本显示的代码，如 | + 嫉妒 这样的文字，导出后不会实际增加凯拉尔的嫉妒</li>
+        </ul>
         </div>
+        <div class="selectors">
         <div class="item"> 更换主题： <select id="theme">
             <option value="">Default</option>
             <option value="zen">Zen</option>
@@ -138,14 +88,15 @@
         </div>
         <div class="item"> 插入链接： <select id="link" class="colorspan">
             <option style='display: none'></option>
-            <option value="nextLink">普通链接</option>
+            <option value=" ">普通链接</option>
             <option value="nextWraith">幽灵链接</option>
           </select>
         </div>
-        <div class="item">
-          <button id="pic">预览图片</button><button id="pic-down">下载图片</button><button id="clear">清空内容</button>
         </div>
-        <div class="item" id="img-item"></div>
+        <div class="item">
+          <button id="pic">预览图片</button><button id="pic-down">下载图片</button><button id="code">导出代码</button><button id="clear">清空内容</button>
+        </div>
+        <div class="item" id="output"></div>
       </div>
     </div>
   </body>

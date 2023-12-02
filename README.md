@@ -1,10 +1,11 @@
 # DOL-pancake / DOL烤饼机
-本烤饼机用于快速生成高度还原 [Degrees of Lewdity](https://www.vrelnir.com/) 游戏原文的伪截图，为四处抄代码缝合而来，如有 bug，请多担待，欢迎 issue 或 PR。
+本烤饼机用于快速生成高度还原 [Degrees of Lewdity](https://www.vrelnir.com/) 游戏原文的伪截图，亦图帮助文本方面的 MOD 制作，为四处抄代码缝合而来，如有 bug，请多担待，欢迎 issue 或 PR。
 
 ## 计划
 由于勉强能用.jpg且作者实力有限，无限鸽，如有实际需求，将更快完成。
 - [x] 连续插入同一种文本
 - [x] 生成长图
+- [ ] 正确输出非文本代码
 - [ ] 生成特效文本正常的截图
 - [ ] 支持更多游戏内容
 
