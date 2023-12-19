@@ -30,7 +30,7 @@
 新学期将在明日09:00开始，上学的时候别忘记穿校服！
 巴士是这个小镇里最便捷的交通方式，可以通过巴士站快速移动到想要去的地方。
 
-<a class=" ">&ZeroWidthSpace;继续</a> </div>
+<a class="normalLink">&ZeroWidthSpace;继续</a> </div>
               </div>
             </div>
             <div id="gameVersionDisplay" contenteditable="false"> MADE BY DOL烤饼机 </div>
@@ -39,13 +39,14 @@
         </div>
       </div>
       <div class="toolbox">
-        <div class="item">欢迎使用DOL烤饼机！本烤饼机专为高度还原游戏界面而设计，如在传播所生成图片时遇到疑问，请及时说明此为假图，谢谢！<br>当前问题和注意事项（详情可见 <a href="https://github.com/omvjro/DOL-pancake">GitHub 仓库</a>）： <ul>
+        <div class="item">欢迎使用DOL烤饼机！本烤饼机专为高度还原游戏界面而设计，如在传播所生成图片时遇到疑问，请及时说明此为假图，谢谢！<br>当前问题和注意事项（详情可见 <a href="https://github.com/omvjro/DOL-pancake" target="_blank">GitHub 仓库</a>）： <ul>
             <li>无法生成特效文本截图，会变成一坨色块，需要手动截图</li>
             <li>目前只能导出文本显示的代码，如 | + 嫉妒 这样的文字，导出后不会实际增加凯拉尔的嫉妒</li>
+            <li>人称代词将自动转化为&lt;&lt;he&gt;&gt;（他/她），可能需要手动修改和补充&lt;&lt;personselect&gt;&gt;类代码</li>
         </ul>
         </div>
         <div class="selectors">
-        <div class="item"> 更换主题： <select id="theme">
+        <div class="item"><label for="theme">更换主题：</label><select id="theme" name="theme">
             <option value="">Default</option>
             <option value="zen">Zen</option>
             <option value="arctic">Arctic</option>
@@ -55,8 +56,70 @@
         </div>
         <div class="item">
           <label for="link-num">链接标号</label><input type="checkbox" id="link-num" name="link-num" checked />
+          <label for="html-mode">HTML 模式</label><input type="checkbox" id="html-mode" name="html-mode" />
+        </div><!-- 未加入数据（情况特殊）：悉尼的性欲、支配、氧气 -->
+        <div class="item" id="static-wrapper">
+          <label>插入
+          <select id="static-class" name="static-class">
+            <option value="pc">PC</option>
+            <option value="npc">NPC</option>
+            <option value="skill">PC技能</option>
+            <option value="others">其他</option>
+          </select>数据变化：</label>
+          <select id="static-plus" name="static-plus">
+            <option value="g">+</option>
+            <option value="gg">+ +</option>
+            <option value="ggg">+ + +</option>
+            <option value="l">-</option>
+            <option value="ll">- -</option>
+            <option value="lll">- - -</option>
+          </select>
+          <select id="static-type" name="static-type">
+            <!-- PC -->
+            <option value="stress" class="pc">压力</option>
+            <option value="tiredness" class="pc">疲劳</option>
+            <option value="arousal" class="pc">性奋</option>
+            <option value="trauma" class="pc">创伤</option>
+            <option value="control" class="pc">自控</option>
+            <option value="pain" class="pc">疼痛</option>
+            <option value="awareness" class="pc">意识</option><!-- TODO: 纯真 -->
+            <option value="purity" class="pc">纯洁</option>
+            <option value="corruption" class="pc">堕落</option>
+            <option value="lewdity" class="pc">淫秽</option>
+            <!-- NPC -->
+            <option value="love" class="npc">好感</option>
+            <option value="lust" class="npc">性欲</option>
+            <option value="rtrauma" class="npc">罗宾的创伤</option>
+            <option value="ksuspicion" class="npc">嫉妒</option>
+            <option value="spurity" class="npc">悉尼的纯洁</option><!-- TODO: 悉尼的堕落 -->
+            <option value="rage" class="npc">愤怒</option>
+            <option value="endear" class="npc">亲密</option>
+            <!-- PC技能 -->
+            <option value="science" class="skill">科学</option>
+            <option value="maths" class="skill">数学</option>
+            <option value="english" class="skill">语文</option>
+            <option value="history" class="skill">历史</option>
+            <option value="swim" class="skill">游泳</option>
+            <option value="athletics" class="skill">运动</option>
+            <option value="tending" class="skill">护理</option>
+            <option value="housekeeping" class="skill">家务</option>
+            <option value="danceskill" class="skill">舞蹈</option>
+            <!-- 其他 -->
+            <option value="hope" class="others">希望</option>
+            <option value="reb" class="others">叛逆</option>
+            <option value="delinquency" class="others">违规行为</option>
+            <option value="cool" class="others">声望</option>
+            <option value="attention" class="others">关注度</option>
+            <option value="respect" class="others">尊敬</option>
+            <option value="suspicion" class="others">怀疑</option>
+            <!--<option value="oxygen" class="others">氧气</option>-->
+            <option value="chaos" class="others">混乱</option>
+            <option value="aggro" class="others">雷米的渗透</option>
+            <option value="trust" class="others">信任</option>
+          </select>
+          <button id="static" class="small">确认</button>
         </div>
-        <div class="item"> 插入常规颜色文本： <select id="color" class="colorspan">
+        <div class="item"><label for="color">插入常规颜色文本：</label><select id="color" name="color" class="colorspan">
             <option style='display: none'></option>
             <option value="red">red</option>
             <option value="pink">pink</option>
@@ -73,7 +136,7 @@
             <option value="grey">grey</option>
           </select>
         </div>
-        <div class="item"> 插入态度颜色文本： <select id="status-color" class="colorspan">
+        <div class="item"><label for="status-color">插入态度颜色文本：</label><select id="status-color" name="status-color" class="colorspan">
             <option style='display: none'></option>
             <option value="brat">brat</option>
             <option value="meek">meek</option>
@@ -81,16 +144,16 @@
             <option value="sub">sub</option>
           </select>
         </div>
-        <div class="item"> 插入特效文本： <select id="special-color" class="colorspan">
+        <div class="item"><label for="special-color">插入特效文本：</label><select id="special-color" name="special-color" class="colorspan">
             <option style='display: none'></option>
             <option value="wraith">象牙幽灵</option>
             <option value="lustful">炫彩悉尼</option>
             <option value="rainbow">炫彩</option>
           </select>
         </div>
-        <div class="item"> 插入链接： <select id="link" class="colorspan">
+        <div class="item"><label for="link">插入链接：</label><select id="link" name="link" class="colorspan">
             <option style='display: none'></option>
-            <option value=" ">普通链接</option>
+            <option value="normalLink">普通链接</option>
             <option value="nextWraith">幽灵链接</option>
           </select>
         </div>

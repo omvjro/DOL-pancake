@@ -53,7 +53,7 @@ body, html {
 		border-radius: 5px;
 		text-wrap: wrap;
 	}
-	button, select, input {
+	button {
 		border: 1px solid #666;
 		background-color: #222;
 		color: #eee;
@@ -64,9 +64,31 @@ body, html {
 		user-select: none;
 		-webkit-appearance: button;
 		text-transform: none;
-	}
-	button {
 		margin-right: 5px;
+
+		&.small {
+			line-height: 1;
+		}
+	}
+	select {
+		color: #eee;
+		background-color: transparent;
+		border: 1px solid #444;
+		padding: .34em .4em;
+		cursor: pointer;
+	}
+	input:not(:disabled):focus,input:not(:disabled):hover,select:not(:disabled):focus,select:not(:disabled):hover,textarea:not(:disabled):focus,textarea:not(:disabled):hover {
+		background-color: #333;
+		border-color: #eee
+	}
+	input[type=checkbox],input[type=file],input[type=radio],select {
+		cursor: pointer
+	}
+	#static-type option {
+		display: none;
+		&.display {
+			display: block;
+		}
 	}
 }
 .toolbox {
