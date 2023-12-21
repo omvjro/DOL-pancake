@@ -29,51 +29,111 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // 获取 option 文字
+  let selectedText = id => document.getElementById(id).options[document.getElementById(id).selectedIndex].text;
+
   // 分类显示数据变化
-  document.querySelectorAll(`.${document.querySelector('#static-class').value}`).forEach(e => {e.classList.add('display')});
+  document.querySelectorAll('#static-type option').forEach(e => { e.hidden = 1 });
+  document.querySelectorAll(`.${document.querySelector('#static-class').value}`).forEach(e => { e.hidden = 0 });
   document.querySelector('#static-class').addEventListener('change', () => {
-    document.querySelectorAll(`#static-wrapper option`).forEach(e => {e.classList.remove('display')});
+    document.querySelectorAll(`#static-type option`).forEach(e => { e.hidden = 1 });
     document.querySelector('#static-type').value = document.querySelectorAll(`.${document.querySelector('#static-class').value}`)[0].value;
-    document.querySelectorAll(`.${document.querySelector('#static-class').value}`).forEach(e => {e.classList.add('display')});
+    document.querySelectorAll(`.${document.querySelector('#static-class').value}`).forEach(e => { e.hidden = 0 });
   });
 
   // 插入数据变化
   document.querySelector('#static').addEventListener('click', () => {
-    let selectedText = id => document.getElementById(id).options[document.getElementById(id).selectedIndex].text;
     let plus = document.getElementById('static-plus').value;
     let type = document.getElementById('static-type').value;
+
+    // 处理同代码变体
+    const type_variants = {
+      innocence: 'awareness',
+      scorruption: 'spurity',
+    }
+    for (let variant in type_variants) {
+      if (type == variant) {
+        plus = plus.includes('g') ? plus.replaceAll('g', 'l') : plus.replaceAll('l', 'g');
+        type = type_variants[type];
+        var if_variant = 1;
+      }
+    }
     let code = `<<${plus}${type}>>`; // TODO: 数据默认变化值
     let text = `${selectedText('static-plus')} ${selectedText('static-type')}`;
 
     // 处理颜色
     let color, if_positive;
-    let positive_types = ['control', 'love', 'purity', 'cool','chaos', 'trust', 'respect']; // 正面数据列表
+    const positive_types = ['control', 'love', 'purity', 'cool','chaos', 'trust', 'respect']; // 正面数据列表
     for (let type of positive_types) {
       if (code.includes(type)) { if_positive = 1 };
     }
-    if (type == 'awareness') { // 意识
-      color = text.includes('+') ? 'lblue' : 'blue';
+    if (type == 'awareness') { // 意识、纯真
+      if (if_variant) {
+        color = 'blue';
+      } else {
+        color = plus.includes('g') ? 'lblue' : 'blue';
+      }
     } else if (type == 'awareness') { // 堕落
-      color = text.includes('+') ? 'pink' : 'teal';
+      color = plus.includes('g') ? 'pink' : 'teal';
     } else if (type == 'lewdity' || type == 'attention') { // 淫秽、关注度
       color = 'lewd';
     } else if (type == 'lust') { // 性欲
-      color = text.includes('+') ? 'lewd' : 'teal';
-    } else if (type == 'spurity') { // 悉尼的纯洁
-      color = text.includes('+') ? 'teal' : 'purple';
+      color = plus.includes('g') ? 'lewd' : 'teal';
+    } else if (type == 'spurity') { // 悉尼的纯洁、堕落
+      color = plus.includes('g') ? 'teal' : 'purple';
     } else if (type == 'endear' || type == 'hope') { // 亲密、希望
-      color = text.includes('+') ? 'teal' : 'pink';
+      color = plus.includes('g') ? 'teal' : 'pink';
     } else if (type == 'reb') { // 叛逆
-      color = text.includes('+') ? 'def' : 'blue';
+      color = plus.includes('g') ? 'def' : 'blue';
     } else if (if_positive || document.querySelector('#static-class').value == 'skill') { // 正面数据
-      color = text.includes('+') ? 'green' : 'red';
+      color = plus.includes('g') ? 'green' : 'red';
     } else  { // 负面数据
-      color = text.includes('+') ? 'red' : 'green';
+      color = plus.includes('g') ? 'red' : 'green';
     }
 
-    let span = document.createElement('span');
-    insert(span);
-    span.outerHTML = `<status contenteditable="false" code="${code}"> | <span class="${color}">${text}</span> </status>`;
+    let status = document.createElement('status');
+    insert(status);
+    status.outerHTML = `<status contenteditable="false" code="${code}"> | <span class="${color}">${text}</span> </status>`;
+  });
+
+  // 插入技能检定
+  document.querySelector('#skill-check-type').addEventListener('change', event => {
+    if (document.getElementById('skill-check-type').value == 'custom') { // 自定义技能
+      let custom_skill = document.createElement('input');
+      let custom_value = document.createElement('input');
+      event.target.after(custom_value);
+      event.target.after(custom_skill);
+      custom_skill.outerHTML = '<input type="text" class="custom" name="custom_skill" id="custom_skill" placeholder="技能名称"></input>';
+      custom_value.outerHTML = '<input type="text" class="custom" name="custom_value" id="custom_value" placeholder="判定变量"></input>';
+    } else {
+      let custom_input = document.querySelectorAll('.custom');
+      if (custom_input) {custom_input.forEach(e => e.remove());}
+    }
+  });
+  document.querySelector('#skill-check').addEventListener('click', () => {
+    let type = document.getElementById('skill-check-type').value;
+    let diffi = document.getElementById('skill-check-diffi').value;
+    const diffi_color = {
+      very_easy: 'green',
+      easy: 'teal',
+      medium: 'lblue',
+      challenging: 'blue',
+      hard: 'purple',
+      very_hard: 'pink',
+      impossible: 'red',
+    }
+    let code;
+    let type_display = selectedText('skill-check-type');
+    if (type !== 'custom') {
+      code = `<<${type}difficulty>>`;
+    } else { // 自定义技能
+      type_display = document.getElementById('custom_skill').value;
+      type_value = document.getElementById('custom_value').value;
+      code = `<<skill_difficulty \`${type_value}\` "${type_display}">>`
+    }
+    let skillcheck = document.createElement('skillcheck');
+    insert(skillcheck);
+    skillcheck.outerHTML = `<skillcheck contenteditable="false" code='${code}'> | <span class="orange">${type_display}</span>：<span class="${diffi_color[diffi]}">${selectedText('skill-check-diffi')}</span></skillcheck>`;
   });
 
   // 插入颜色文字
@@ -126,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let output_container = document.createElement('div');
     output_container.innerHTML = document.querySelector('div.passage').innerHTML;
     output_container.childNodes.forEach(child => {
-      if (child.nodeType == 1 ) {
+      if (child.nodeType == 1) {
         if (child.classList.contains('nextWraith')) { // 幽灵链接
           child.setAttribute('code', child.outerHTML
           .replace(/<a.*?>/gi, '<span id="next" class="nextWraith"><<link [[')
@@ -150,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
     code = code.split('\n').map(line => line.endsWith(' ') ? line.slice(0, -1) : line).join('\n');
     code = code.replaceAll('\n', '\n<br>\n') // 换行
     .replaceAll('\n\n', '\n')
-    .replaceAll('\u200b', '')
+    .replaceAll('\u200b', '') // 颜色文字残余
     .replaceAll('&lt;', '<') // 尖括号
     .replaceAll('&gt;', '>')
     .replaceAll('他们', '\u200b们')  // 人称代词
@@ -179,4 +239,3 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 });
-  

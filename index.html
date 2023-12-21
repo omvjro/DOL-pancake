@@ -58,7 +58,7 @@
           <label for="link-num">链接标号</label><input type="checkbox" id="link-num" name="link-num" checked />
           <label for="html-mode">HTML 模式</label><input type="checkbox" id="html-mode" name="html-mode" />
         </div><!-- 未加入数据（情况特殊）：悉尼的性欲、支配、氧气 -->
-        <div class="item" id="static-wrapper">
+        <div class="item">
           <label>插入
           <select id="static-class" name="static-class">
             <option value="pc">PC</option>
@@ -82,7 +82,8 @@
             <option value="trauma" class="pc">创伤</option>
             <option value="control" class="pc">自控</option>
             <option value="pain" class="pc">疼痛</option>
-            <option value="awareness" class="pc">意识</option><!-- TODO: 纯真 -->
+            <option value="awareness" class="pc">意识</option>
+            <option value="innocence" class="pc">纯真</option>
             <option value="purity" class="pc">纯洁</option>
             <option value="corruption" class="pc">堕落</option>
             <option value="lewdity" class="pc">淫秽</option>
@@ -91,7 +92,8 @@
             <option value="lust" class="npc">性欲</option>
             <option value="rtrauma" class="npc">罗宾的创伤</option>
             <option value="ksuspicion" class="npc">嫉妒</option>
-            <option value="spurity" class="npc">悉尼的纯洁</option><!-- TODO: 悉尼的堕落 -->
+            <option value="spurity" class="npc">悉尼的纯洁</option>
+            <option value="scorruption" class="npc">悉尼的堕落</option>
             <option value="rage" class="npc">愤怒</option>
             <option value="endear" class="npc">亲密</option>
             <!-- PC技能 -->
@@ -118,6 +120,31 @@
             <option value="trust" class="others">信任</option>
           </select>
           <button id="static" class="small">确认</button>
+        </div>
+        <div class="item">
+          <label>插入技能检定：</label>
+          <select id="skill-check-type" name="static-check-type">
+            <option value="skulduggery">诡术</option>
+            <option value="physique">体能</option>
+            <option value="willpower">意志</option>
+            <option value="english">语文</option>
+            <option value="swimming">游泳</option>
+            <option value="athletics">运动</option>
+            <option value="tending">护理</option>
+            <option value="housekeeping">家务</option>
+            <option value="dance">舞蹈</option>
+            <option value="custom">自定义</option>
+          </select>
+          <select id="skill-check-diffi" name="skill-check-diffi">
+            <option value="very_easy">易如反掌</option>
+            <option value="easy">简单</option>
+            <option value="medium">普通</option>
+            <option value="challenging">挑战</option>
+            <option value="hard">困难</option>
+            <option value="very_hard">极难</option>
+            <option value="impossible">不可能</option>
+          </select>
+          <button id="skill-check" class="small">确认</button>
         </div>
         <div class="item"><label for="color">插入常规颜色文本：</label><select id="color" name="color" class="colorspan">
             <option style='display: none'></option>
