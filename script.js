@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+  const dol_editor = document.querySelector('div.passage');
+  const output = document.querySelector('#output');
+
   // 链接标号
   let getIndex = ifChecked => document.querySelectorAll('#dol a').forEach((a, index) => {
     if (ifChecked) {
@@ -17,28 +20,37 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // 准备插入元素
-  let position = '';
-  document.querySelector('div.passage').addEventListener('blur', () => {
+  let position;
+  dol_editor.addEventListener('blur', () => {
     position = window.getSelection().getRangeAt(0);
   });
-  const insert = element => {
-    if (position === '') {
-      document.querySelector('div.passage').append(element);
-    } else {
+  const insert = (element, cursor=0) => {
+    if (position) {
       position.insertNode(element);
+    } else {
+      dol_editor.append(element);
     }
+    let selection = window.getSelection();
+    selection.removeAllRanges();
+    let range = document.createRange();
+    range.selectNode(element);
+    if (cursor) { range.collapse(0) }
+    selection.addRange(range);
   }
 
   // 获取 option 文字
   let selectedText = id => document.getElementById(id).options[document.getElementById(id).selectedIndex].text;
 
   // 分类显示数据变化
-  document.querySelectorAll('#static-type option').forEach(e => { e.hidden = 1 });
-  document.querySelectorAll(`.${document.querySelector('#static-class').value}`).forEach(e => { e.hidden = 0 });
-  document.querySelector('#static-class').addEventListener('change', () => {
-    document.querySelectorAll(`#static-type option`).forEach(e => { e.hidden = 1 });
-    document.querySelector('#static-type').value = document.querySelectorAll(`.${document.querySelector('#static-class').value}`)[0].value;
-    document.querySelectorAll(`.${document.querySelector('#static-class').value}`).forEach(e => { e.hidden = 0 });
+  let static_class = document.querySelector('#static-class');
+  let toggle_options = () => {
+    document.querySelectorAll('#static-type option').forEach(e => { e.hidden = 1 });
+    document.querySelectorAll(`.${static_class.value}`).forEach(e => { e.hidden = 0 });
+  }
+  toggle_options();
+  static_class.addEventListener('change', () => {
+    toggle_options();
+    document.querySelector('#static-type').value = document.querySelectorAll(`.${static_class.value}`)[0].value;
   });
 
   // 插入数据变化
@@ -58,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         var if_variant = 1;
       }
     }
+
     let code = `<<${plus}${type}>>`; // TODO: 数据默认变化值
     let text = `${selectedText('static-plus')} ${selectedText('static-type')}`;
 
@@ -85,15 +98,17 @@ document.addEventListener('DOMContentLoaded', () => {
       color = plus.includes('g') ? 'teal' : 'pink';
     } else if (type == 'reb') { // 叛逆
       color = plus.includes('g') ? 'def' : 'blue';
-    } else if (if_positive || document.querySelector('#static-class').value == 'skill') { // 正面数据
+    } else if (if_positive || static_class.value == 'skill') { // 正面数据
       color = plus.includes('g') ? 'green' : 'red';
     } else  { // 负面数据
       color = plus.includes('g') ? 'red' : 'green';
     }
 
     let status = document.createElement('status');
-    insert(status);
-    status.outerHTML = `<status contenteditable="false" code="${code}"> | <span class="${color}">${text}</span> </status>`;
+    status.innerHTML = ` | <span class="${color}">${text}</span>`
+    status.setAttribute('code', code);
+    status.contentEditable = false;
+    insert(status, 1);
   });
 
   // 插入技能检定
@@ -107,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
       custom_value.outerHTML = '<input type="text" class="custom" name="custom_value" id="custom_value" placeholder="判定变量"></input>';
     } else {
       let custom_input = document.querySelectorAll('.custom');
-      if (custom_input) {custom_input.forEach(e => e.remove());}
+      if (custom_input) { custom_input.forEach(e => e.remove()) }
     }
   });
   document.querySelector('#skill-check').addEventListener('click', () => {
@@ -132,8 +147,10 @@ document.addEventListener('DOMContentLoaded', () => {
       code = `<<skill_difficulty \`${type_value}\` "${type_display}">>`
     }
     let skillcheck = document.createElement('skillcheck');
-    insert(skillcheck);
-    skillcheck.outerHTML = `<skillcheck contenteditable="false" code='${code}'> | <span class="orange">${type_display}</span>：<span class="${diffi_color[diffi]}">${selectedText('skill-check-diffi')}</span></skillcheck>`;
+    skillcheck.innerHTML = ` | <span class="orange">${type_display}</span>：<span class="${diffi_color[diffi]}">${selectedText('skill-check-diffi')}</span>`;
+    skillcheck.setAttribute('code', code);
+    skillcheck.contentEditable = false;
+    insert(skillcheck, 1);
   });
 
   // 插入颜色文字
@@ -141,8 +158,10 @@ document.addEventListener('DOMContentLoaded', () => {
     sel.addEventListener('change', (event) => {
       let span_text = event.target.id == 'link' ? 'a' : 'span';
       let span = document.createElement(span_text);
+      span.innerText = '\u200b请输入文本';
+      span.classList.add(event.target.value);
       insert(span);
-      span.outerHTML = `<${span_text} class="${event.target.value}">\u200b请输入文本</${span_text}> `;
+      span.after(document.createTextNode(' '));
       event.target.value = '';
     });
   });
@@ -154,13 +173,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 预览图片
   document.querySelector('#pic').addEventListener('click', () => {
-    document.querySelector('#output').innerText = '生成图片中……';
+    output.innerText = '生成图片中……';
     htmlToImage.toPng(document.querySelector("#dol")).then(function(dataUrl) {
       var img = new Image();
       img.src = dataUrl;
       img.alt = 'DOL-pancake';
-      document.querySelector('#output').innerText = '';
-      document.querySelector('#output').appendChild(img);
+      output.innerText = '';
+      output.appendChild(img);
     }).catch(function(error) {
       console.error('oops, something went wrong!', error);
     });
@@ -168,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 下载图片
   document.querySelector('#pic-down').addEventListener('click', () => {
-    document.querySelector('#output').innerText = '生成图片中……';
+    output.innerText = '生成图片中……';
     htmlToImage.toBlob(document.querySelector("#dol"))
       .then(function (blob) {
         if (window.saveAs) {
@@ -177,14 +196,14 @@ document.addEventListener('DOMContentLoaded', () => {
           FileSaver.saveAs(blob, 'dol-pancake.png');
         }
       });
-    document.querySelector('#output').innerText = '';
+    output.innerText = '';
   });
 
   // 导出代码
   document.querySelector('#code').addEventListener('click', () => {
 
     let output_container = document.createElement('div');
-    output_container.innerHTML = document.querySelector('div.passage').innerHTML;
+    output_container.innerHTML = dol_editor.innerHTML;
     output_container.childNodes.forEach(child => {
       if (child.nodeType == 1) {
         if (child.classList.contains('nextWraith')) { // 幽灵链接
@@ -199,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (child.getAttribute('code')) {
           let code = document.createTextNode(child.getAttribute('code'));
-          output_container.replaceChild(code, child)
+          output_container.replaceChild(code, child);
         }
       }
       if (document.querySelector('#html-mode').checked) { // HTML 模式
@@ -226,16 +245,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.querySelector('#html-mode').checked) { // HTML 模式
       code = code.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('&amp;', '&');
     }
+    console.log(code)
 
-    navigator.clipboard.writeText(code);
-    document.querySelector('#output').innerHTML = `代码已复制到剪贴板，如未成功，请在下方手动复制。<pre contenteditable="plaintext-only"></pre>`;
-    document.querySelector('#output pre').innerText = code;
+    try { navigator.clipboard.writeText(code) } finally {
+      output.innerHTML = `代码已复制到剪贴板，如未成功，请在下方手动复制。<pre contenteditable="plaintext-only"></pre>`;
+      document.querySelector('#output pre').innerText = code;
+    }
   });
 
   // 清空内容
   document.querySelector('#clear').addEventListener('click', () => {
-    document.querySelector('div.passage').innerText = '';
-    document.querySelector('#output').innerText = '';
+    dol_editor.innerText = '';
+    output.innerText = '';
   });
 
 });

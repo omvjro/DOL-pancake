@@ -1,14 +1,7 @@
 @import "game.less";
 @media screen and (min-width:500px) {
-	body {
-		padding: 2em;
-	}
-}
-@media screen and (min-width:700px) {
 	#container {
-		grid-template-columns: 1fr 1fr;
-		align-items: baseline;
-		justify-items: center;
+		padding: 2em;
 	}
 }
 html, pre{
@@ -36,7 +29,9 @@ body, html {
 	margin: 0;
 }
 #container {
-	display: grid;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
 }
 .item {
 	padding: .25em;
@@ -91,14 +86,14 @@ body, html {
 	}
 }
 .toolbox {
-	max-width: 800px;
-	min-width: 30%;
+	max-width: 600px;
 	background: #000;
 	color: #eee;
 	padding: 2em;
 	border-radius: 5px;
 	margin: 2em;
 	border: solid #eee 1px;
+	flex: 1 1 300px;
 	a {
 		cursor: pointer;
 		color: #68d;
@@ -117,6 +112,7 @@ div#dol {
 	width: 375px;
 	max-width: 100%;
 	min-height: 667px;
+	flex: 0 1 375px;
 
 	a[data-if-index="1"]::before {
 		content: attr(data-index);

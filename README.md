@@ -14,9 +14,11 @@
 - [ ] 生成特效文本正常的截图
 - [ ] 支持更多游戏内容
 
+## 其他问题
+- Safari 上可能存在显示问题。由于没有相关设备，调试不便，暂不计划解决。
+
 ## 感谢
 以下为除游戏代码外，所抄代码及所使用工具：
-- [js实现可编辑的div，并在光标处插入元素](https://blog.csdn.net/weixin_44817017/article/details/115321425)
 - [html-to-image](https://github.com/bubkoo/html-to-image)
 - [FileSaver.js](https://github.com/eligrey/FileSaver.js)
 - [less.js](https://github.com/less/less.js) ([less-plugin-clean-css](https://github.com/less/less-plugin-clean-css))
