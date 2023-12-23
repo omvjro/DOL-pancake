@@ -3,8 +3,7 @@
     <meta charset="UTF-8">
     <title>DOL烤饼机</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <script src="https://cdn.bootcdn.net/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
-    <script src="https://cdn.bootcdn.net/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="modern-screenshot@4.4.37.min.js"></script>
     <script src="script.js"></script>
     <link type="text/css" rel="stylesheet" href="style.css" />
     <link type="image/png" rel="icon" sizes="16x16" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAGJUExURUdwTM5+RYZPI4BVKoRNH4lQIwAAAHU7H6xoMo1SInlRG4ZMIYNGIa5oNJdaLKtnNK5qNo5VHMJ3QKdkMZ1cMJ5dLqBfLaJgMqRfMJhYKYdQKNGvo6FhM6tkNJRVJ4tGF8B4QZ1cLaliM5FUJ5ZWKPbXxuPBs5NWJ4xSJKhiNJlZKPrp39Krmb2qpKBdLdGom927oo9SI7qHZJpaKbiWiruhmYlRIpVbNtqHTP/u4rVpOqhiMr9xP61jM7FnN7hrO7ttPptbK89+RumaVteFSL90PadbHN2PSKVYHLN1S6ZgMuO7n+3j3P/s34NOI/3p3ZRXKadjNOCPUOOTUsh6Qs59QPCiWsh3O7ZmKrh1Oo9NGMJ2Qp9YJrhqOrBkLtvSz694UpBSIOCUU7CFaNikhKdoOq9ySfHby6OZlHR4f6FvRp9TFpVTIP7o15t7ZqmHbY2YqODEruXEr7K3wC5ejfrNsODi5s+omPTazSJSgb29whxOfvLTxfzk1b+Ma8PEyfPj2+Hm63iNotY+v8UAAAA4dFJOUwD8PQYhfQEEtkkJKhexXbrGEu+WdaXC/rPoRln8+HUL++r0vIX1kPSx4p7s9q7OOP6Y1P1r/av8OyD8ogAAAOZJREFUGBk1wIWWglAUBdCjggzqdHd3N/chpWKP6HR3d3d/ubhcbtjczuIiW4kXeVypQ8oJVFR6YHOXBeelPLPaBUB0SAtLy6FwMBLZaGsAULMYWlldM/374XVlq90Drj4eiJrb5zLbPdrUO1ohMtkfvUjdxGMnB6ra6YLIZO0y9f94fUene0oXIDJZ0xN/Hw9EZ4bWAvj6FZah57d3otvjZh+AEd3I0O+PRbQTqxMA9Kks/fJlvVpzidoq2Jy9k0b6+/N+7LCJL0cO5x2fmX2a4Ad4AQVT01dDw6MoEHoGk0TJ7kbYsoQUMAKQPM6bAAAAAElFTkSuQmCC">
@@ -39,12 +38,7 @@
         </div>
       </div>
       <div class="toolbox">
-        <div class="item">欢迎使用DOL烤饼机！本烤饼机专为高度还原游戏界面而设计，如在传播所生成图片时遇到疑问，请及时说明此为假图，谢谢！<br>当前问题和注意事项（详情可见 <a href="https://github.com/omvjro/DOL-pancake" target="_blank">GitHub 仓库</a>）： <ul>
-            <li>无法生成特效文本截图，会变成一坨色块，需要手动截图</li>
-            <li>Safari 上可能存在显示问题</li>
-            <li>目前只能导出文本显示的代码，如 | + 嫉妒 这样的文字，导出后不会实际增加凯拉尔的嫉妒</li>
-            <li>人称代词将自动转化为&lt;&lt;he&gt;&gt;（他/她），可能需要手动修改和补充&lt;&lt;personselect&gt;&gt;类代码</li>
-        </ul>
+        <div class="item">欢迎使用DOL烤饼机！本烤饼机专为高度还原游戏界面而设计，如在传播所生成图片时遇到疑问，请及时说明此为假图，谢谢！如有问题或建议，可前往 <a href="https://github.com/omvjro/DOL-pancake" target="_blank">GitHub 仓库</a>提出。
         </div>
         <div class="selectors">
         <div class="item"><label for="theme">更换主题：</label><select id="theme" name="theme">
@@ -58,7 +52,7 @@
         <div class="item">
           <label for="link-num">链接标号</label><input type="checkbox" id="link-num" name="link-num" checked />
           <label for="html-mode">HTML 模式</label><input type="checkbox" id="html-mode" name="html-mode" />
-        </div><!-- 未加入数据（情况特殊）：悉尼的性欲、支配、氧气 -->
+        </div>
         <div class="item">
           <label>插入
           <select id="static-class" name="static-class">
@@ -66,7 +60,8 @@
             <option value="npc">NPC</option>
             <option value="skill">PC技能</option>
             <option value="others">其他</option>
-          </select>数据变化：</label>
+          </select>
+          数据变化：</label>
           <select id="static-plus" name="static-plus">
             <option value="g">+</option>
             <option value="gg">+ +</option>
@@ -91,10 +86,13 @@
             <!-- NPC -->
             <option value="love" class="npc">好感</option>
             <option value="lust" class="npc">性欲</option>
+            <option value="dom" class="npc">支配</option>
             <option value="rtrauma" class="npc">罗宾的创伤</option>
+            <option value="rdom" class="npc">罗宾的自信</option>
             <option value="ksuspicion" class="npc">嫉妒</option>
             <option value="spurity" class="npc">悉尼的纯洁</option>
             <option value="scorruption" class="npc">悉尼的堕落</option>
+            <option value="slust" class="npc">悉尼的性欲</option>
             <option value="rage" class="npc">愤怒</option>
             <option value="endear" class="npc">亲密</option>
             <!-- PC技能 -->
@@ -185,6 +183,13 @@
             <option value="nextWraith">幽灵链接</option>
           </select>
         </div>
+        <!-- <div class="item">
+          <label for="custom-confirm">插入自定义部件：</label>
+          <select><option value="new">新建</option></select>
+          <button name="custom-confirm" id="custom-confirm" class="small">确认</button>
+          <button id="custom-edit" class="small">修改</button>
+          <button id="custom-delete" class="small">删除</button>
+        </div> -->
         </div>
         <div class="item">
           <button id="pic">预览图片</button><button id="pic-down">下载图片</button><button id="code">导出代码</button><button id="clear">清空内容</button>

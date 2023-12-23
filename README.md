@@ -3,23 +3,19 @@
 
 ## 计划
 由于勉强能用.jpg且作者实力有限，无限鸽，如有实际需求，将更快完成。
-- [x] 连续插入同一种文本
-- [x] 生成长图
 - [x] 链接标号
 - [x] 人称代词
 - [x] HTML 模式
-- [ ] 数据变化显示（WIP）
-- [ ] 实际数据变化
+- [ ] 数据变化（WIP）
 - [ ] 技能检定（WIP）
-- [ ] 生成特效文本正常的截图
+- [ ] 安全地粘贴游戏原内容
+- [ ] 自定义部件
+- [ ] 使用帮助
 - [ ] 支持更多游戏内容
 
 ## 其他问题
 - Safari 上可能存在显示问题。由于没有相关设备，调试不便，暂不计划解决。
 
 ## 感谢
-以下为除游戏代码外，所抄代码及所使用工具：
-- [html-to-image](https://github.com/bubkoo/html-to-image)
-- [FileSaver.js](https://github.com/eligrey/FileSaver.js)
+- [modern-screenshot](https://github.com/qq15725/modern-screenshot)
 - [less.js](https://github.com/less/less.js) ([less-plugin-clean-css](https://github.com/less/less-plugin-clean-css))
-- [BootCDN](https://www.bootcdn.cn/)
