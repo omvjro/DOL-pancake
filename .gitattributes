@@ -1,3 +1,4 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 game.less linguist-detectable=false
+modern-screenshot@4.4.37.min.js linguist-detectable=false
