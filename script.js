@@ -108,20 +108,21 @@ document.addEventListener('DOMContentLoaded', () => {
   // 准备插入元素
   let position;
   let insertTarget;
-  const updatePosition = (target) => {
+  const generateInsertTarget = (target) => {
     insertTarget = target;
     insertTarget.addEventListener('blur', () => {
       position = window.getSelection().getRangeAt(0);
     });
+    insertTarget.addEventListener('click', () => {
+      insertTarget = target;
+    });
   };
-  updatePosition(dolEditor);
+  generateInsertTarget(dolEditor);
   const insert = (element, cursor = 0) => {
-    if (position) {
-      if (position.startContainer.parentElement === dolEditor) {
-        position.insertNode(element);
-      } else {
-        position.startContainer.parentElement.after(element);
-      }
+    if (position?.startContainer.parentElement.parentElement === insertTarget) {
+      position.startContainer.parentElement.after(element);
+    } else if (position?.startContainer.parentElement === insertTarget) {
+      position.insertNode(element);
     } else {
       insertTarget.append(element);
     }
@@ -237,6 +238,95 @@ document.addEventListener('DOMContentLoaded', () => {
       span.after(document.createTextNode(' '));
       event.target.value = '';
     });
+  });
+
+  // 自定义部件
+  const customWidgets = JSON.parse(localStorage.getItem('customWidgets')) || {};
+  const loadCustomWidgets = () => {
+    if (customWidgets) {
+      const customWidgetSelect = document.querySelector('#customNames');
+      let widgetOptions = '';
+      Object.keys(customWidgets).forEach((widget) => {
+        widgetOptions += `<option>${widget}</option>`;
+      });
+      customWidgetSelect.innerHTML = `${widgetOptions}<option>新建</option>`;
+    }
+  };
+  loadCustomWidgets();
+  const loadCustomEditor = () => {
+    document.querySelector('#customEditor')?.remove();
+    const newWidgetEditor = document.createElement('div');
+    document.querySelector('#customWidget').after(newWidgetEditor);
+    newWidgetEditor.outerHTML = `<div id="customEditor"><div class="item">
+      <label>部件名称：</label>
+      <input type="text" id="customWidgetName" placeholder="将置入<<>>中为导出代码所用"></input></div>
+      <div class="item" style="display: flex; flex-wrap: wrap;">
+      <label>部件显示：</label>
+      <div id="customWidgetDisplay" contenteditable="plaintext-only"></div></div>
+      <div class="item">
+      <button id="customWidgetSave" class="small">保存</button>
+      <button id="customWidgetQuit" class="small">取消</button>
+      <label for="useHTML" style="font-size: .9em;">使用HTML</label><input type="checkbox" id="useHTML" name="useHTML" /></div>
+      <div class="item" style="font-size: .9em;" id="tipBox"></div>
+      </div>`;
+    const newWidgetDisplay = document.querySelector('#customWidgetDisplay');
+    generateInsertTarget(newWidgetDisplay);
+    let overlay = false;
+    document.querySelector('#customWidgetSave').addEventListener('click', () => {
+      const tipBox = document.getElementById('tipBox');
+      const tip = (msg, color = 'red') => {
+        tipBox.innerHTML = `<span class="${color}">${msg}</span>`;
+      };
+      const display = document.querySelector('#customWidgetDisplay');
+      const widgetName = document.querySelector('#customWidgetName').value;
+      const code = document.querySelector('#useHTML').checked ? display.textContent : display.innerHTML;
+      if (widgetName === '新建' || widgetName.includes('<') || widgetName.includes('>')) {
+        tip('用这种名字会出bug的QAQ');
+        return;
+      }
+      if (customWidgets[widgetName] && !overlay) {
+        tip('存在同名部件，再次点击“确认”将覆盖');
+        overlay = true;
+        return;
+      }
+      if (widgetName === '' || code === '') {
+        tip('还有东西没填哦');
+        return;
+      }
+      if (overlay) overlay = false;
+      customWidgets[widgetName] = code;
+      localStorage.setItem('customWidgets', JSON.stringify(customWidgets));
+      loadCustomWidgets();
+      document.querySelector('#customNames').value = '新建';
+      tip(`${widgetName} 创建成功`, 'gold');
+    });
+    document.querySelector('#customWidgetQuit').addEventListener('click', () => {
+      document.querySelector('#customEditor').remove();
+    });
+  };
+  document.querySelector('#customNames').addEventListener('change', (event) => {
+    if (event.target.value !== '新建') return;
+    loadCustomEditor();
+  });
+  document.querySelector('#customInsert').addEventListener('click', () => {
+    const name = document.querySelector('#customNames').value;
+    if (name === '新建') {
+      loadCustomEditor();
+      return;
+    }
+    const widget = document.createElement('widget');
+    widget.innerHTML = customWidgets[name];
+    widget.setAttribute('code', `<<${name}>>`);
+    widget.contentEditable = false;
+    generateInsertTarget(dolEditor);
+    insert(widget);
+  });
+  document.querySelector('#customDelete').addEventListener('click', () => {
+    const name = document.querySelector('#customNames').value;
+    if (name === '新建') return;
+    delete customWidgets[name];
+    localStorage.setItem('customWidgets', JSON.stringify(customWidgets));
+    loadCustomWidgets();
   });
 
   // 更换主题
