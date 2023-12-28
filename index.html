@@ -51,7 +51,8 @@
         </div>
         <div class="item">
           <label for="link-num">链接标号</label><input type="checkbox" id="link-num" name="link-num" checked />
-          <label for="html-mode">HTML 模式</label><input type="checkbox" id="html-mode" name="html-mode" />
+          <label for="html-mode">导出 HTML</label><input type="checkbox" id="html-mode" name="html-mode" />
+          <label for="direct-paste">直接粘贴</label><input type="checkbox" id="direct-paste" name="direct-paste" />
         </div>
         <div class="item">
           <label>插入
@@ -144,6 +145,42 @@
             <option value="impossible">不可能</option>
           </select>
           <button id="skill-check" class="small">确认</button>
+        </div>
+        <div class="item">
+          <label>插入淫秽提示：</label>
+          <select id="lewd-tip-type" name="lewd-tip-type">
+            <option value="exhibitionist">露出癖</option>
+            <option value="promiscuous">淫乱</option>
+            <option value="deviant">异种癖</option>
+          </select>
+          <select id="lewd-tip-grade" name="lewd-tip-grade">
+            <option value="1">1级</option>
+            <option value="2">2级</option>
+            <option value="3">3级</option>
+            <option value="4">4级</option>
+            <option value="5">5级</option>
+            <option value="6">6级</option>
+          </select>
+          <button id="lewd-tip" class="small">确认</button>
+        </div>
+        <div class="item"><label for="trans-tags">插入转化提示：</label><select name="trans-tags" id="trans-tags" class="tags">
+          <option style='display: none'></option>
+          <option value="wolfgirl">狼</option>
+          <option value="cat">猫</option>
+          <option value="cow">奶牛</option>
+          <option value="harpy">哈比</option>
+          <option value="fox">狐狸</option>
+          <option value="angel">天使</option>
+          <option value="fallenangel">堕天使</option>
+          <option value="demon">恶魔</option>
+        </select>
+        </div>
+        <div class="item"><label for="other-tags">插入其他提示：</label><select name="other-tags" id="other-tags" class="tags">
+          <option style='display: none'></option>
+          <option value="crime">犯罪</option>
+          <option value="defianttext">反抗</option>
+          <option value="submissivetext">顺从</option>
+        </select>
         </div>
         <div class="item"><label for="color">插入常规颜色文本：</label><select id="color" name="color" class="colorspan">
             <option style='display: none'></option>

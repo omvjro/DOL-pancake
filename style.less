@@ -66,6 +66,11 @@ body, html {
 		&.small {
 			line-height: 1;
 		}
+
+		&:disabled {
+			background-color: #444;
+			cursor: not-allowed;
+		}
 	}
 	select, input {
 		color: #eee;
@@ -83,7 +88,11 @@ body, html {
 		border-color: #eee
 	}
 	input[type=checkbox],input[type=file],input[type=radio],select {
-		cursor: pointer
+		cursor: pointer;
+
+		&:disabled {
+			cursor: not-allowed;
+		}
 	}
 }
 .toolbox {

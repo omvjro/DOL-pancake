@@ -88,6 +88,25 @@ document.addEventListener('DOMContentLoaded', () => {
     very_hard: 'pink',
     impossible: 'red',
   };
+  const tagColors = {
+    1: 'teal',
+    2: 'lblue',
+    3: 'blue',
+    4: 'purple',
+    5: 'pink',
+    6: 'red',
+    crime: 'red',
+    defianttext: 'def',
+    submissivetext: 'sub',
+    wolfgirl: 'blue',
+    cat: 'blue',
+    cow: 'blue',
+    harpy: 'gold',
+    fox: 'orange',
+    angel: 'gold',
+    fallenangel: 'black',
+    demon: 'red',
+  };
 
   // 链接标号
   const toggleIndex = (isChecked) => document.querySelectorAll('#dol a').forEach((a, index) => {
@@ -103,6 +122,23 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   document.addEventListener('click', () => {
     toggleIndex(document.querySelector('#link-num').checked);
+  });
+
+  // 复制游戏原文
+  document.querySelector('#direct-paste').addEventListener('change', (event) => {
+    if (event.target.checked) {
+      dolEditor.setAttribute('contenteditable', 'true');
+      dolEditor.innerHTML = dolEditor.innerHTML.replaceAll('\n', '<br>');
+      document.querySelector('#link-num').checked = false;
+      document.querySelector('#link-num').disabled = true;
+      document.querySelector('#code').disabled = true;
+      toggleIndex(false);
+    } else {
+      dolEditor.setAttribute('contenteditable', 'plaintext-only');
+      dolEditor.innerHTML = dolEditor.innerHTML.replaceAll('<br>', '\n');
+      document.querySelector('#link-num').disabled = false;
+      document.querySelector('#code').disabled = false;
+    }
   });
 
   // 准备插入元素
@@ -227,12 +263,35 @@ document.addEventListener('DOMContentLoaded', () => {
     insert(skillcheck, 1);
   });
 
+  // 插入标签
+  document.querySelectorAll('.tags').forEach((sel) => {
+    sel.addEventListener('change', (event) => {
+      const type = event.target.value;
+      const tag = document.createElement('tag');
+      tag.innerHTML = ` | <span class="${tagColors[type]}">${getOptionText(event.target.id)}</span>`;
+      tag.setAttribute('code', `<<${type}>>`);
+      tag.contentEditable = false;
+      insert(tag, 1);
+      event.target.value = '';
+    });
+  });
+  document.querySelector('#lewd-tip').addEventListener('click', () => {
+    const type = document.querySelector('#lewd-tip-type').value;
+    const grade = document.querySelector('#lewd-tip-grade').value;
+    const tag = document.createElement('tag');
+    const text = `${grade === '6' ? '!' : ''}${getOptionText('lewd-tip-type')} ${getOptionText('lewd-tip-grade')}${grade === '6' ? '!' : ''}`;
+    tag.innerHTML = ` | <span class="${tagColors[grade]}">${text}</span>`;
+    tag.setAttribute('code', `<<${type}${grade}>>`);
+    tag.contentEditable = false;
+    insert(tag, 1);
+  });
+
   // 插入颜色文字
   document.querySelectorAll('.colorspan').forEach((sel) => {
     sel.addEventListener('change', (event) => {
       const spanText = event.target.id === 'link' ? 'a' : 'span';
       const span = document.createElement(spanText);
-      span.innerText = '\u200b请输入文本';
+      span.innerText = spanText === 'a' ? '\u200b继续' : '\u200b请输入文本';
       span.classList.add(event.target.value);
       insert(span);
       span.after(document.createTextNode(' '));
@@ -274,23 +333,23 @@ document.addEventListener('DOMContentLoaded', () => {
     let overlay = false;
     document.querySelector('#customWidgetSave').addEventListener('click', () => {
       const tipBox = document.getElementById('tipBox');
-      const tip = (msg, color = 'red') => {
-        tipBox.innerHTML = `<span class="${color}">${msg}</span>`;
+      const updateTip = (tip, color = 'red') => {
+        tipBox.innerHTML = `<span class="${color}">${tip}</span>`;
       };
       const display = document.querySelector('#customWidgetDisplay');
       const widgetName = document.querySelector('#customWidgetName').value;
       const code = document.querySelector('#useHTML').checked ? display.textContent : display.innerHTML;
       if (widgetName === '新建' || widgetName.includes('<') || widgetName.includes('>')) {
-        tip('用这种名字会出bug的QAQ');
+        updateTip('用这种名字会出bug的QAQ');
         return;
       }
       if (customWidgets[widgetName] && !overlay) {
-        tip('存在同名部件，再次点击“确认”将覆盖');
+        updateTip('存在同名部件，再次点击“确认”将覆盖');
         overlay = true;
         return;
       }
       if (widgetName === '' || code === '') {
-        tip('还有东西没填哦');
+        updateTip('还有东西没填哦');
         return;
       }
       if (overlay) overlay = false;
@@ -298,7 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('customWidgets', JSON.stringify(customWidgets));
       loadCustomWidgets();
       document.querySelector('#customNames').value = '新建';
-      tip(`${widgetName} 创建成功`, 'gold');
+      updateTip(`${widgetName} 创建成功`, 'gold');
     });
     document.querySelector('#customWidgetQuit').addEventListener('click', () => {
       document.querySelector('#customEditor').remove();
