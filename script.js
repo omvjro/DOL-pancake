@@ -400,7 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
     modernScreenshot.domToPng(document.querySelector('#dol'), { scale: 2 }).then((dataUrl) => {
       const img = new Image();
       img.src = dataUrl;
-      img.alt = 'DOL-pancake';
+      img.alt = 'dol-pancake';
       output.innerText = '';
       output.appendChild(img);
     }).catch((error) => {
@@ -414,7 +414,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // eslint-disable-next-line no-undef
     modernScreenshot.domToPng(document.querySelector('#dol'), { scale: 2 }).then((dataUrl) => {
       const link = document.createElement('a');
-      link.download = 'dol-pancake.png';
+      link.download = `dol-pancake-${Date.now()}.png`;
       link.href = dataUrl;
       link.click();
       output.innerText = '';
@@ -472,10 +472,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try { navigator.clipboard.writeText(code); } finally {
-      output.innerHTML = `代码已复制到剪贴板，如未成功，请在下方手动复制。
+      output.innerHTML = `代码已复制到剪贴板，如未成功，请在下方手动复制，也可以点击<a id="downTwee">此处</a>将代码下载为 twee 文件。
       请注意，导出代码不含数据实际变化部件，且人称代词可能需要手动修改和补充&lt;&lt;personselect&gt;&gt;类代码。
       <pre contenteditable="plaintext-only"></pre>`;
       document.querySelector('#output pre').innerText = code;
+      const link = document.querySelector('#downTwee');
+      link.download = `dol-pancake-${Date.now()}.twee`;
+      const twee = new Blob([code], { type: 'text/plain' });
+      link.href = URL.createObjectURL(twee);
     }
   });
 
