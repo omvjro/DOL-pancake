@@ -149,8 +149,17 @@ document.addEventListener('DOMContentLoaded', () => {
     insertTarget.addEventListener('blur', () => {
       position = window.getSelection().getRangeAt(0);
     });
-    insertTarget.addEventListener('click', () => {
-      insertTarget = target;
+    insertTarget.addEventListener('input', (event) => {
+      Object.keys(event.target.children).forEach((key) => {
+        const child = event.target.children[key];
+        if (child?.tagName === 'FONT') {
+          child.before(document.createTextNode(child.innerText));
+          child.remove();
+        }
+      });
+    });
+    insertTarget.addEventListener('click', (event) => {
+      event.target = target;
     });
   };
   generateInsertTarget(dolEditor);
