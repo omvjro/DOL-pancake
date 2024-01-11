@@ -1,5 +1,33 @@
 const dolEditor = document.querySelector('div.passage');
 const output = document.querySelector('#output');
+const colors = {
+  color: [
+    ['red'],
+    ['pink'],
+    ['purple'],
+    ['blue'],
+    ['lblue'],
+    ['teal'],
+    ['green'],
+    ['gold'],
+    ['yellow'],
+    ['orange'],
+    ['black'],
+    ['lewd'],
+    ['grey'],
+  ],
+  statusColor: [
+    ['brat'],
+    ['meek'],
+    ['def'],
+    ['sub'],
+  ],
+  specialColor: [
+    ['wraith', '象牙幽灵'],
+    ['lustful', '炫彩悉尼'],
+    ['rainbow', '炫彩'],
+  ],
+};
 const npcList = {
   love: {
     '': '',
@@ -105,6 +133,14 @@ const tagColors = {
   demon: 'red',
 };
 
+Object.keys(colors).forEach((id) => {
+  let options = '';
+  colors[id].forEach((color) => {
+    options += `<option${color.length === 1 ? ` class="${color[0]}"` : ''} value="${color[0]}">${color.at(-1)}</option$>`;
+  });
+  document.getElementById(id).innerHTML += options;
+});
+
 // 链接标号
 const toggleIndex = (isChecked) => document.querySelectorAll('#dol a').forEach((a, index) => {
   if (isChecked) {
@@ -160,6 +196,7 @@ const generateInsertTarget = (target) => {
   });
 };
 generateInsertTarget(dolEditor);
+
 const insert = (element, cursor = 0) => {
   if (position?.startContainer.parentElement.parentElement === insertTarget) {
     position.startContainer.parentElement.after(element);
@@ -285,7 +322,8 @@ document.querySelector('#lewd-tip').addEventListener('click', () => {
   const type = document.querySelector('#lewd-tip-type').value;
   const grade = document.querySelector('#lewd-tip-grade').value;
   const tag = document.createElement('tag');
-  const text = `${grade === '6' ? '!' : ''}${getOptionText('lewd-tip-type')} ${getOptionText('lewd-tip-grade')}${grade === '6' ? '!' : ''}`;
+  let text = `${getOptionText('lewd-tip-type')} ${getOptionText('lewd-tip-grade')}`;
+  if (grade === '6') text = `!${text}!`;
   tag.innerHTML = ` | <span class="${tagColors[grade]}">${text}</span>`;
   tag.setAttribute('code', `<<${type}${grade}>>`);
   tag.contentEditable = false;
@@ -399,10 +437,10 @@ document.querySelector('#theme').addEventListener('change', (event) => {
   document.querySelector('#body').setAttribute('data-theme', event.target.value);
 });
 
+/* global modernScreenshot */
 // 预览图片
 document.querySelector('#pic').addEventListener('click', () => {
   output.innerText = '生成图片中……';
-  // eslint-disable-next-line no-undef
   modernScreenshot.domToPng(document.querySelector('#dol'), { scale: 2 }).then((dataUrl) => {
     const img = new Image();
     img.src = dataUrl;
@@ -417,7 +455,6 @@ document.querySelector('#pic').addEventListener('click', () => {
 // 下载图片
 document.querySelector('#pic-down').addEventListener('click', () => {
   output.innerText = '生成图片中……';
-  // eslint-disable-next-line no-undef
   modernScreenshot.domToPng(document.querySelector('#dol'), { scale: 2 }).then((dataUrl) => {
     const link = document.createElement('a');
     link.download = `dol-pancake-${Date.now()}.png`;
@@ -451,6 +488,7 @@ document.querySelector('#code').addEventListener('click', () => {
         const code = document.createTextNode(child.getAttribute('code'));
         mockOutput.replaceChild(code, child);
       }
+      if (child.innerText === '\u200b') child.remove();
     }
     if (isHTML) {
       child.textContent = child.textContent.replaceAll('"', '&quot;').replaceAll("'", '&#39;');
@@ -460,7 +498,7 @@ document.querySelector('#code').addEventListener('click', () => {
   code = code.split('\n').map((line) => (line.endsWith(' ') ? line.slice(0, -1) : line)).join('\n');
   code = code.replaceAll('\n', '\n<br>\n') // 换行
     .replaceAll('\n\n', '\n')
-    .replaceAll('\u200b', '') // 颜色文字残余
+    .replaceAll('\u200b', '') // 颜色文本残余
     .replaceAll('&lt;', '<') // 尖括号
     .replaceAll('&gt;', '>')
     .replaceAll('他们', '\u200b们') // 人称代词

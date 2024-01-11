@@ -163,8 +163,8 @@
           </select>
           <button id="lewd-tip" class="small">确认</button>
         </div>
-        <div class="item"><label for="trans-tags">插入转化提示：</label><select name="trans-tags" id="trans-tags" class="tags">
-          <option style='display: none'></option>
+        <div class="item otherTags"><label for="trans-tags">插入其他提示：</label><select name="trans-tags" id="trans-tags" class="tags">
+          <option style='display: none' value="">转化</option>
           <option value="wolfgirl">狼</option>
           <option value="cat">猫</option>
           <option value="cow">奶牛</option>
@@ -174,48 +174,25 @@
           <option value="fallenangel">堕天使</option>
           <option value="demon">恶魔</option>
         </select>
-        </div>
-        <div class="item"><label for="other-tags">插入其他提示：</label><select name="other-tags" id="other-tags" class="tags">
-          <option style='display: none'></option>
+        <select name="other-tags" id="other-tags" class="tags">
+          <option style="display: none" value="">更多</option>
           <option value="crime">犯罪</option>
           <option value="defianttext">反抗</option>
           <option value="submissivetext">顺从</option>
         </select>
         </div>
-        <div class="item"><label for="color">插入常规颜色文本：</label><select id="color" name="color" class="colorspan">
-            <option style='display: none'></option>
-            <option value="red">red</option>
-            <option value="pink">pink</option>
-            <option value="purple">purple</option>
-            <option value="blue">blue</option>
-            <option value="lblue">light blue</option>
-            <option value="teal">teal</option>
-            <option value="green">green</option>
-            <option value="gold">gold</option>
-            <option value="yellow">yellow</option>
-            <option value="orange">orange</option>
-            <option value="black">black</option>
-            <option value="lewd">lewd</option>
-            <option value="grey">grey</option>
-          </select>
-        </div>
-        <div class="item"><label for="status-color">插入态度颜色文本：</label><select id="status-color" name="status-color" class="colorspan">
-            <option style='display: none'></option>
-            <option value="brat">brat</option>
-            <option value="meek">meek</option>
-            <option value="def">defiant</option>
-            <option value="sub">sub</option>
-          </select>
-        </div>
-        <div class="item"><label for="special-color">插入特效文本：</label><select id="special-color" name="special-color" class="colorspan">
-            <option style='display: none'></option>
-            <option value="wraith">象牙幽灵</option>
-            <option value="lustful">炫彩悉尼</option>
-            <option value="rainbow">炫彩</option>
-          </select>
+        <div class="item"><label for="color">插入颜色文本：</label><select id="color" name="color" class="colorspan">
+          <option style='display: none' value="">常规</option>
+        </select>
+        <select id="statusColor" name="statusColor" class="colorspan">
+          <option style='display: none' value="">态度</option>
+        </select>
+        <select id="specialColor" name="specialColor" class="colorspan">
+          <option style='display: none' value="">特效</option>
+        </select>
         </div>
         <div class="item"><label for="link">插入链接：</label><select id="link" name="link" class="colorspan">
-            <option style='display: none'></option>
+            <option style='display: none' value=""></option>
             <option value="normalLink">普通链接</option>
             <option value="nextWraith">幽灵链接</option>
           </select>
@@ -230,7 +207,7 @@
         <div class="item">
           <button id="pic">预览图片</button>
           <button id="pic-down">下载图片</button>
-          <button id="code">复制代码</button>
+          <button id="code">导出代码</button>
           <button id="clear">清空内容</button>
         </div>
         <div class="item" id="output"></div>
