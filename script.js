@@ -158,12 +158,14 @@ document.addEventListener('click', () => {
 });
 
 // 复制游戏原文
-document.querySelector('#direct-paste').addEventListener('change', (event) => {
-  if (event.target.checked) {
+const editableSwitch = (isTrue, isNum = false) => {
+  if (isTrue) {
     dolEditor.setAttribute('contenteditable', 'true');
     dolEditor.innerHTML = dolEditor.innerHTML.replaceAll('\n', '<br>');
-    document.querySelector('#link-num').checked = false;
-    document.querySelector('#link-num').disabled = true;
+    if (!isNum) {
+      document.querySelector('#link-num').checked = false;
+      document.querySelector('#link-num').disabled = true;
+    }
     document.querySelector('#code').disabled = true;
     toggleIndex(false);
   } else {
@@ -172,6 +174,9 @@ document.querySelector('#direct-paste').addEventListener('change', (event) => {
     document.querySelector('#link-num').disabled = false;
     document.querySelector('#code').disabled = false;
   }
+};
+document.querySelector('#direct-paste').addEventListener('change', (event) => {
+  editableSwitch(event.target.checked);
 });
 
 // 准备插入元素
@@ -355,6 +360,22 @@ document.querySelectorAll('.colorspan').forEach((sel) => {
   });
 });
 
+// 插入图片
+document.querySelector('#insertPic').addEventListener('input', (event) => {
+  const img = new Image();
+  const reader = new FileReader();
+  reader.readAsDataURL(event.target.files[0]);
+  reader.onload = () => {
+    img.src = reader.result;
+    insert(img, 1);
+    event.target.value = '';
+  };
+  img.addEventListener('dragstart', () => {
+    document.querySelector('#direct-paste').checked = true;
+    editableSwitch(true, true);
+  });
+});
+
 // 自定义部件
 const customWidgets = JSON.parse(localStorage.getItem('customWidgets')) || {};
 const loadCustomWidgets = () => {
@@ -500,7 +521,7 @@ document.querySelector('#code').addEventListener('click', () => {
         const code = document.createTextNode(child.getAttribute('code'));
         mockOutput.replaceChild(code, child);
       }
-      if (Array.from(child.childNodes).every((grandChild) => grandChild.nodeType !== 3 || grandChild.textContent === '')) {
+      if (Array.from(child.childNodes).every((grandChild) => grandChild.nodeType !== 3 || grandChild.textContent === '') && child?.tagName === 'SPAN') {
         child.outerHTML = child.innerHTML;
       }
       if (child.innerText === '\u200b') child.remove();

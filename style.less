@@ -94,6 +94,23 @@ body, html {
 			cursor: not-allowed;
 		}
 	}
+	input[type=file] {
+		display: none;
+	}
+	label[for="insertPic"]::after {
+		content: '选择文件';
+		font-size: .8em;
+		color: #eee;
+		background-color: transparent;
+		border: 1px solid #444;
+		padding: .34em .4em;
+		cursor: pointer;
+	}
+	label[for="insertPic"]:hover::after {
+		background-color: #333;
+		border-color: #eee
+	}
+
 }
 .toolbox {
 	max-width: 600px;
@@ -158,6 +175,10 @@ div#dol {
 
 	a[data-if-index="1"]::before {
 		content: attr(data-index);
+	}
+
+	img {
+		max-width: 100%;
 	}
 }
 /** Colour Classes **/
