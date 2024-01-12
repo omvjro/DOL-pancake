@@ -199,7 +199,6 @@ generateInsertTarget(dolEditor);
 
 const insert = (element, cursor = 0) => {
   const position = selection.getRangeAt(0);
-  selection.deleteFromDocument();
   if (position?.startContainer.parentElement.parentElement === insertTarget) {
     position.startContainer.parentElement.after(element);
   } else if (position?.startContainer.parentElement === insertTarget) {
@@ -211,7 +210,11 @@ const insert = (element, cursor = 0) => {
   newSelection.removeAllRanges();
   const range = document.createRange();
   range.selectNode(element);
-  if (cursor) range.collapse(0);
+  if (cursor) {
+    range.collapse(0);
+  } else {
+    selection.deleteFromDocument();
+  }
   newSelection.addRange(range);
 };
 
