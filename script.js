@@ -175,12 +175,12 @@ document.querySelector('#direct-paste').addEventListener('change', (event) => {
 });
 
 // 准备插入元素
-let position;
+let selection;
 let insertTarget;
 const generateInsertTarget = (target) => {
   insertTarget = target;
   insertTarget.addEventListener('blur', () => {
-    position = window.getSelection().getRangeAt(0);
+    selection = window.getSelection();
   });
   insertTarget.addEventListener('input', (event) => {
     Object.keys(event.target.children).forEach((key) => {
@@ -198,6 +198,8 @@ const generateInsertTarget = (target) => {
 generateInsertTarget(dolEditor);
 
 const insert = (element, cursor = 0) => {
+  const position = selection.getRangeAt(0);
+  selection.deleteFromDocument();
   if (position?.startContainer.parentElement.parentElement === insertTarget) {
     position.startContainer.parentElement.after(element);
   } else if (position?.startContainer.parentElement === insertTarget) {
@@ -205,12 +207,17 @@ const insert = (element, cursor = 0) => {
   } else {
     insertTarget.append(element);
   }
-  const selection = window.getSelection();
-  selection.removeAllRanges();
+  const newSelection = window.getSelection();
+  newSelection.removeAllRanges();
   const range = document.createRange();
   range.selectNode(element);
   if (cursor) range.collapse(0);
-  selection.addRange(range);
+  newSelection.addRange(range);
+};
+
+const wrap = (element) => {
+  element.innerText = selection.toString();
+  selection.getRangeAt(0).surroundContents(element);
 };
 
 const getOptionText = (id) => document.getElementById(id)?.options[document.getElementById(id)?.selectedIndex]?.text;
@@ -335,10 +342,14 @@ document.querySelectorAll('.colorspan').forEach((sel) => {
   sel.addEventListener('change', (event) => {
     const spanText = event.target.id === 'link' ? 'a' : 'span';
     const span = document.createElement(spanText);
-    span.innerText = spanText === 'a' ? '\u200b继续' : '\u200b请输入文本';
     span.classList.add(event.target.value);
-    insert(span);
-    span.after(document.createTextNode(' '));
+    if (selection.isCollapsed) {
+      span.innerText = spanText === 'a' ? '\u200b继续' : '\u200b请输入文本';
+      insert(span);
+      span.after(document.createTextNode(' '));
+    } else {
+      wrap(span);
+    }
     event.target.value = '';
   });
 });
@@ -487,6 +498,9 @@ document.querySelector('#code').addEventListener('click', () => {
       if (child.getAttribute('code')) {
         const code = document.createTextNode(child.getAttribute('code'));
         mockOutput.replaceChild(code, child);
+      }
+      if (Array.from(child.childNodes).every((grandChild) => grandChild.nodeType !== 3 || grandChild.textContent === '')) {
+        child.outerHTML = child.innerHTML;
       }
       if (child.innerText === '\u200b') child.remove();
     }
