@@ -176,11 +176,13 @@ document.querySelector('#direct-paste').addEventListener('change', (event) => {
 
 // 准备插入元素
 let selection;
+let position;
 let insertTarget;
 const generateInsertTarget = (target) => {
   insertTarget = target;
   insertTarget.addEventListener('blur', () => {
     selection = window.getSelection();
+    position = selection.getRangeAt(0);
   });
   insertTarget.addEventListener('input', (event) => {
     Object.keys(event.target.children).forEach((key) => {
@@ -198,7 +200,7 @@ const generateInsertTarget = (target) => {
 generateInsertTarget(dolEditor);
 
 const insert = (element, cursor = 0) => {
-  const position = selection.getRangeAt(0);
+  if (selection?.isCollapsed === false) { selection.deleteFromDocument(); }
   if (position?.startContainer.parentElement.parentElement === insertTarget) {
     position.startContainer.parentElement.after(element);
   } else if (position?.startContainer.parentElement === insertTarget) {
@@ -210,11 +212,7 @@ const insert = (element, cursor = 0) => {
   newSelection.removeAllRanges();
   const range = document.createRange();
   range.selectNode(element);
-  if (cursor) {
-    range.collapse(0);
-  } else {
-    selection.deleteFromDocument();
-  }
+  if (cursor) { range.collapse(0); }
   newSelection.addRange(range);
 };
 
