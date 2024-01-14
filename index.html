@@ -4,7 +4,7 @@
     <title>DOL烤饼机</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <script src="modern-screenshot@4.4.37.min.js"></script>
-    <script src="script.js" defer></script>
+    <script type="module" src="script.js" defer></script>
     <link type="text/css" rel="stylesheet" href="style.css" />
     <link type="image/png" rel="icon" sizes="16x16" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAGJUExURUdwTM5+RYZPI4BVKoRNH4lQIwAAAHU7H6xoMo1SInlRG4ZMIYNGIa5oNJdaLKtnNK5qNo5VHMJ3QKdkMZ1cMJ5dLqBfLaJgMqRfMJhYKYdQKNGvo6FhM6tkNJRVJ4tGF8B4QZ1cLaliM5FUJ5ZWKPbXxuPBs5NWJ4xSJKhiNJlZKPrp39Krmb2qpKBdLdGom927oo9SI7qHZJpaKbiWiruhmYlRIpVbNtqHTP/u4rVpOqhiMr9xP61jM7FnN7hrO7ttPptbK89+RumaVteFSL90PadbHN2PSKVYHLN1S6ZgMuO7n+3j3P/s34NOI/3p3ZRXKadjNOCPUOOTUsh6Qs59QPCiWsh3O7ZmKrh1Oo9NGMJ2Qp9YJrhqOrBkLtvSz694UpBSIOCUU7CFaNikhKdoOq9ySfHby6OZlHR4f6FvRp9TFpVTIP7o15t7ZqmHbY2YqODEruXEr7K3wC5ejfrNsODi5s+omPTazSJSgb29whxOfvLTxfzk1b+Ma8PEyfPj2+Hm63iNotY+v8UAAAA4dFJOUwD8PQYhfQEEtkkJKhexXbrGEu+WdaXC/rPoRln8+HUL++r0vIX1kPSx4p7s9q7OOP6Y1P1r/av8OyD8ogAAAOZJREFUGBk1wIWWglAUBdCjggzqdHd3N/chpWKP6HR3d3d/ubhcbtjczuIiW4kXeVypQ8oJVFR6YHOXBeelPLPaBUB0SAtLy6FwMBLZaGsAULMYWlldM/374XVlq90Drj4eiJrb5zLbPdrUO1ohMtkfvUjdxGMnB6ra6YLIZO0y9f94fUene0oXIDJZ0xN/Hw9EZ4bWAvj6FZah57d3otvjZh+AEd3I0O+PRbQTqxMA9Kks/fJlvVpzidoq2Jy9k0b6+/N+7LCJL0cO5x2fmX2a4Ad4AQVT01dDw6MoEHoGk0TJ7kbYsoQUMAKQPM6bAAAAAElFTkSuQmCC">
   </head>
@@ -72,52 +72,6 @@
             <option value="lll">- - -</option>
           </select>
           <select id="static-type" name="static-type">
-            <!-- PC -->
-            <option value="stress" class="pc">压力</option>
-            <option value="tiredness" class="pc">疲劳</option>
-            <option value="arousal" class="pc">性奋</option>
-            <option value="trauma" class="pc">创伤</option>
-            <option value="control" class="pc">自控</option>
-            <option value="pain" class="pc">疼痛</option>
-            <option value="awareness" class="pc">意识</option>
-            <option value="innocence" class="pc">纯真</option>
-            <option value="purity" class="pc">纯洁</option>
-            <option value="corruption" class="pc">堕落</option>
-            <option value="lewdity" class="pc">淫秽</option>
-            <!-- NPC -->
-            <option value="love" class="npc">好感</option>
-            <option value="lust" class="npc">性欲</option>
-            <option value="dom" class="npc">支配</option>
-            <option value="rtrauma" class="npc">罗宾的创伤</option>
-            <option value="rdom" class="npc">罗宾的自信</option>
-            <option value="ksuspicion" class="npc">嫉妒</option>
-            <option value="spurity" class="npc">悉尼的纯洁</option>
-            <option value="scorruption" class="npc">悉尼的堕落</option>
-            <option value="slust" class="npc">悉尼的性欲</option>
-            <option value="rage" class="npc">愤怒</option>
-            <option value="endear" class="npc">亲密</option>
-            <!-- PC技能 -->
-            <option value="science" class="skill">科学</option>
-            <option value="maths" class="skill">数学</option>
-            <option value="english" class="skill">语文</option>
-            <option value="history" class="skill">历史</option>
-            <option value="swim" class="skill">游泳</option>
-            <option value="athletics" class="skill">运动</option>
-            <option value="tending" class="skill">护理</option>
-            <option value="housekeeping" class="skill">家务</option>
-            <option value="danceskill" class="skill">舞蹈</option>
-            <!-- 其他 -->
-            <option value="hope" class="others">希望</option>
-            <option value="reb" class="others">叛逆</option>
-            <option value="delinquency" class="others">违规行为</option>
-            <option value="cool" class="others">声望</option>
-            <option value="attention" class="others">关注度</option>
-            <option value="respect" class="others">尊敬</option>
-            <option value="suspicion" class="others">怀疑</option>
-            <!--<option value="oxygen" class="others">氧气</option>-->
-            <option value="chaos" class="others">混乱</option>
-            <option value="aggro" class="others">雷米的渗透</option>
-            <option value="trust" class="others">信任</option>
           </select>
           <button id="static" class="small">确认</button>
         </div>
@@ -198,7 +152,7 @@
           </select>
         </div>
         <div class="item">
-        <label id="insertPicLabel" for="insertPic">插入图片：</label>
+        <label for="insertPic">插入图片：</label>
         <input id="insertPic" for="insertPic" type="file" accept="image/png, image/jpeg, image/webp">
         </div>
         <div class="item" id="customWidget">

@@ -1,144 +1,24 @@
+import {
+  colors, npcList, statics, diffiColors, tagColors,
+} from './data.js';
+
 const dolEditor = document.querySelector('div.passage');
 const output = document.querySelector('#output');
-const colors = {
-  color: [
-    ['red'],
-    ['pink'],
-    ['purple'],
-    ['blue'],
-    ['lblue'],
-    ['teal'],
-    ['green'],
-    ['gold'],
-    ['yellow'],
-    ['orange'],
-    ['black'],
-    ['lewd'],
-    ['grey'],
-  ],
-  statusColor: [
-    ['brat'],
-    ['meek'],
-    ['def'],
-    ['sub'],
-  ],
-  specialColor: [
-    ['wraith', '象牙幽灵'],
-    ['lustful', '炫彩悉尼'],
-    ['rainbow', '炫彩'],
-  ],
-};
-const npcList = {
-  love: {
-    '': '',
-    Avery: '艾弗里的',
-    Eden: '伊甸的',
-    Kylar: '凯拉尔的',
-    Robin: '罗宾的',
-    Whitney: '惠特尼的',
-    Alex: '艾利克斯的',
-    Sydney: '悉尼的',
-    'Black Wolf': '黑狼的',
-    'Great Hawk': '巨鹰的',
-    Bailey: '贝利的',
-    Briar: '布莱尔的',
-    Charlie: '查里的',
-    Darryl: '达里尔的',
-    Doren: '多伦的',
-    Gwylan: '格威岚的',
-    Harper: '哈珀的',
-    Jordan: '约旦的',
-    Landry: '兰德里的',
-    Leighton: '礼顿的',
-    Mason: '梅森的',
-    Morgan: '摩根的',
-    River: '瑞沃的',
-    Sam: '萨姆的',
-    Sirris: '西里斯的',
-    Winter: '温特的',
-    Niki: '尼奇的',
-    Quinn: '奎恩的',
-    Remy: '雷米的',
-    Wren: '伦恩的',
-    'Ivory Wraith': '象牙怨灵的',
-    Zephyr: '泽菲尔的',
-  },
-  lust: {
-    '': '',
-    Avery: '艾弗里的',
-    Eden: '伊甸的',
-    Kylar: '凯拉尔的',
-    Mason: '梅森的',
-    Robin: '罗宾的',
-    Whitney: '惠特尼的',
-    Alex: '艾利克斯的',
-    Sydney: '悉尼的',
-    'Black Wolf': '黑狼的',
-    'Great Hawk': '巨鹰的',
-  },
-  dom: {
-    Whitney: '惠特尼的',
-    Eden: '伊甸的',
-    Alex: '艾利克斯的',
-    'Great Hawk': '巨鹰的',
-  },
-};
-const typeVariants = {
-  innocence: 'awareness',
-  scorruption: 'spurity',
-};
-const staticColors = {
-  awareness: ['lblue', 'blue'],
-  innocence: ['blue', 'blue'],
-  corruption: ['pink', 'teal'],
-  lewdity: ['lewd', 'lewd'],
-  attention: ['lewd', 'lewd'],
-  lust: ['lewd', 'teal'],
-  dom: ['purple', 'lblue'],
-  rdom: ['purple', 'lblue'],
-  spurity: ['teal', 'purple'],
-  scorruption: ['teal', 'purple'],
-  slust: ['lewd', 'teal'],
-  endear: ['teal', 'pink'],
-  hope: ['teal', 'pink'],
-  reb: ['def', 'blue'],
-};
-const positiveTypes = new Set(['control', 'love', 'purity', 'cool', 'chaos', 'trust', 'respect']);
-const diffiColors = {
-  very_easy: 'green',
-  easy: 'teal',
-  medium: 'lblue',
-  challenging: 'blue',
-  hard: 'purple',
-  very_hard: 'pink',
-  impossible: 'red',
-};
-const tagColors = {
-  1: 'teal',
-  2: 'lblue',
-  3: 'blue',
-  4: 'purple',
-  5: 'pink',
-  6: 'red',
-  crime: 'red',
-  defianttext: 'def',
-  submissivetext: 'sub',
-  wolfgirl: 'blue',
-  cat: 'blue',
-  cow: 'blue',
-  harpy: 'gold',
-  fox: 'orange',
-  angel: 'gold',
-  fallenangel: 'black',
-  demon: 'red',
-};
 
 Object.keys(colors).forEach((id) => {
   let options = '';
   colors[id].forEach((color) => {
-    options += `<option${color.length === 1 ? ` class="${color[0]}"` : ''} value="${color[0]}">${color.at(-1)}</option$>`;
+    options += `<option${color.length === 1 ? ` class="${color[0]}"` : ''} value="${color[0]}">${color.at(-1)}</option>`;
   });
   document.getElementById(id).innerHTML += options;
+});
+
+Object.keys(statics).forEach((type) => {
+  let options = '';
+  Object.keys(statics[type]).forEach((id) => {
+    options += `<option class="${type}" value="${id}">${statics[type][id].name}</option>`;
+  });
+  document.getElementById('static-type').innerHTML += options;
 });
 
 // 链接标号
@@ -190,16 +70,15 @@ const generateInsertTarget = (target) => {
     position = selection.getRangeAt(0);
   });
   insertTarget.addEventListener('input', (event) => {
-    Object.keys(event.target.children).forEach((key) => {
-      const child = event.target.children[key];
+    Object.values(event.target.children).forEach((child) => {
       if (child?.tagName === 'FONT') {
         child.before(document.createTextNode(child.innerText));
         child.remove();
       }
     });
   });
-  insertTarget.addEventListener('click', (event) => {
-    event.target = target;
+  insertTarget.addEventListener('click', () => {
+    insertTarget = target;
   });
 };
 generateInsertTarget(dolEditor);
@@ -257,34 +136,37 @@ document.querySelector('#static-type').addEventListener('change', (event) => {
 document.querySelector('#static').addEventListener('click', () => {
   let plus = document.getElementById('static-plus').value;
   const isPlus = plus.includes('g');
-  const colorType = document.getElementById('static-type').value;
-  let type = colorType;
+  let type = document.getElementById('static-type').value;
   const npc = document.getElementById('static-npc')?.value;
+  const stat = statics[staticClass.value][type];
 
-  if (typeVariants[type]) {
-    plus = isPlus ? plus.replaceAll('g', 'l') : plus.replaceAll('l', 'g');
-    type = typeVariants[type];
+  plus = (stat.variant && isPlus) ? plus.replaceAll('g', 'l') : plus.replaceAll('l', 'g');
+  type = stat.variant || type;
+  let valueType = stat.valueMacro || type;
+  if (staticClass.value === 'npc') {
+    valueType = `npcincr "${stat.npc || npc}" ${stat.valueType || type}`;
   }
 
-  let code = `<<${plus}${type}${npc ? ` "${npc}"` : ''}>>`; // TODO: 数据默认变化值
-  let text = `${getOptionText('static-plus')} ${getOptionText('static-npc') || ''}${getOptionText('static-type')}`;
-  if (type === 'slust' && !isPlus) text = text.replace('悉尼的', '');
-  if (type === 'rdom') code = code.replace('rdom', 'dom "Robin"');
+  const code = `<<${plus}${type}${npc ? ` "${npc}"` : ''}>>`;
+  const valueCode = stat.value ? `<<${valueType} ${isPlus ? '' : '-'}${stat.value[plus.length - 1]}>>` : '';
+  let text = `${getOptionText('static-plus')} ${getOptionText('static-npc') || ''}${stat.name}`;
+  if (type === 'slust' && !isPlus) { text = text.replace('悉尼的', ''); }
 
-  let color = isPlus ? staticColors?.[colorType]?.[0] : staticColors?.[colorType]?.[1];
+  let color = stat.colors?.[+!isPlus];
   if (!color) {
-    if (positiveTypes.has(type) || staticClass.value === 'skill') {
+    if (stat.positive || staticClass.value === 'skill') {
       color = isPlus ? 'green' : 'red';
     } else {
       color = isPlus ? 'red' : 'green';
     }
   }
 
-  const status = document.createElement('status');
-  status.innerHTML = ` | <span class="${color}">${text}</span>`;
-  status.setAttribute('code', code);
-  status.contentEditable = false;
-  insert(status, 1);
+  const widget = document.createElement('widget');
+  widget.innerHTML = ` | <span class="${color}">${text}</span>`;
+  widget.setAttribute('code', code);
+  widget.setAttribute('valueCode', valueCode);
+  widget.contentEditable = false;
+  insert(widget, 1);
 });
 
 // 插入技能检定
@@ -507,21 +389,35 @@ document.querySelector('#code').addEventListener('click', () => {
 
   mockOutput.childNodes.forEach((child) => {
     if (child.nodeType === 1) {
-      if (child.classList.contains('nextWraith')) { // 幽灵链接
+      if (child.classList.contains('nextWraith')) {
         child.setAttribute('code', child.outerHTML
           .replace(/<a.*?>/gi, '<span id="next" class="nextWraith"><<link [[')
           .replace('</a>', '|]]>><</link>>'));
       }
-      if (child.classList.contains('normalLink')) { // 普通链接
+      if (child.classList.contains('normalLink')) {
         child.setAttribute('code', child.outerHTML
           .replace(/<a.*?>/gi, '<<link [[')
           .replace('</a>', '|]]>><</link>>'));
       }
       if (child.getAttribute('code')) {
-        const code = document.createTextNode(child.getAttribute('code'));
+        let valueCode = child.getAttribute('valueCode') || '';
+        if (valueCode !== '') {
+          (function addValueCodeToInlineLink(candidate) {
+            if (!candidate) { return; }
+            const candidateContent = candidate.textContent;
+            if (candidateContent.includes('\n')) { return; }
+            if (candidateContent.includes('<</link>>')) {
+              candidate.textContent = candidateContent.replace('<</link>>', `${valueCode}<</link>>`);
+              valueCode = '';
+              return;
+            }
+            addValueCodeToInlineLink(candidate.previousSibling);
+          }(child.previousSibling));
+        }
+        const code = document.createTextNode(`${child.getAttribute('code')}${valueCode}`);
         mockOutput.replaceChild(code, child);
       }
-      if (Array.from(child.childNodes).every((grandChild) => grandChild.nodeType !== 3 || grandChild.textContent === '') && child?.tagName === 'SPAN') {
+      if (Array.from(child.childNodes).every((grandChild) => grandChild.nodeType !== 3 || grandChild.textContent === '') && child.tagName === 'SPAN') {
         child.outerHTML = child.innerHTML;
       }
       if (child.innerText === '\u200b') child.remove();
@@ -551,16 +447,18 @@ document.querySelector('#code').addEventListener('click', () => {
     code = code.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('&amp;', '&');
   }
 
-  try { navigator.clipboard.writeText(code); } finally {
-    output.innerHTML = `代码已复制到剪贴板，如未成功，请在下方手动复制，也可以点击<a id="downTwee">此处</a>将代码下载为 twee 文件。
-      请注意，导出代码不含数据实际变化部件，且人称代词可能需要手动修改和补充&lt;&lt;personselect&gt;&gt;类代码。
+  (async () => {
+    try { await navigator.clipboard.writeText(code); } finally {
+      output.innerHTML = `代码已复制到剪贴板，如未成功，请在下方手动复制，也可以点击<a id="downTwee">此处</a>将代码下载为 twee 文件。
+      请注意，由于显示部件存在歧义，导出代码不一定包含全部数据实际变化部件，且人称代词可能需要手动修改和补充&lt;&lt;personselect&gt;&gt;类代码。
       <pre contenteditable="plaintext-only"></pre>`;
-    document.querySelector('#output pre').innerText = code;
-    const link = document.querySelector('#downTwee');
-    link.download = `dol-pancake-${Date.now()}.twee`;
-    const twee = new Blob([code], { type: 'text/plain' });
-    link.href = URL.createObjectURL(twee);
-  }
+      document.querySelector('#output pre').innerText = code;
+      const link = document.querySelector('#downTwee');
+      link.download = `dol-pancake-${Date.now()}.twee`;
+      const twee = new Blob([code], { type: 'text/plain' });
+      link.href = URL.createObjectURL(twee);
+    }
+  })();
 });
 
 // 清空内容

@@ -24,5 +24,6 @@ module.exports = {
   rules: {
     'no-param-reassign': 'off',
     'max-len': 'off',
+    'import/extensions': 'off',
   },
 };
