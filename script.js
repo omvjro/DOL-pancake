@@ -124,6 +124,25 @@ staticClass.addEventListener('change', () => {
 document.querySelector('#static-type').addEventListener('change', (event) => {
   document.querySelector('#static-npc')?.remove();
   const type = event.target.value;
+  const stat = statics[staticClass.value][type];
+
+  if (stat.limit) {
+    document.querySelectorAll('#static-plus option').forEach((option) => {
+      if (option.value.includes('g')) {
+        if (option.value.length > stat.limit[0]) {
+          option.hidden = 1;
+        }
+      } else if (option.value.length > stat.limit[1]) {
+        option.hidden = 1;
+      }
+    });
+    document.querySelector('#static-plus').value = 'g';
+  } else {
+    document.querySelectorAll('#static-plus option').forEach((option) => {
+      option.hidden = 0;
+    });
+  }
+
   if (!npcList[type]) return;
   const npcSelect = document.createElement('select');
   event.target.before(npcSelect);
@@ -140,17 +159,22 @@ document.querySelector('#static').addEventListener('click', () => {
   const npc = document.getElementById('static-npc')?.value;
   const stat = statics[staticClass.value][type];
 
-  plus = (stat.variant && isPlus) ? plus.replaceAll('g', 'l') : plus.replaceAll('l', 'g');
-  type = stat.variant || type;
+  if (stat.variant) {
+    plus = plus.startsWith('g') ? plus.replaceAll('g', 'l') : plus.replaceAll('l', 'g');
+    type = stat.variant;
+  }
+
   let valueType = stat.valueMacro || type;
   if (staticClass.value === 'npc') {
     valueType = `npcincr "${stat.npc || npc}" ${stat.valueType || type}`;
   }
 
-  const code = `<<${plus}${type}${npc ? ` "${npc}"` : ''}>>`;
+  let code = `<<${plus}${type}${npc ? ` "${npc}"` : ''}>>`;
   const valueCode = stat.value ? `<<${valueType} ${isPlus ? '' : '-'}${stat.value[plus.length - 1]}>>` : '';
   let text = `${getOptionText('static-plus')} ${getOptionText('static-npc') || ''}${stat.name}`;
-  if (type === 'slust' && !isPlus) { text = text.replace('悉尼的', ''); }
+  [text, , code] = stat.decorate?.({
+    text, isPlus, code,
+  }) || [text, isPlus, code];
 
   let color = stat.colors?.[+!isPlus];
   if (!color) {

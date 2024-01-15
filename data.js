@@ -186,6 +186,11 @@ const statics = {
       npc: 'Sydney',
       valueType: 'lust',
       value: [1, 3, 10],
+      decorate(input) {
+        const { text, isPlus } = input;
+        if (!isPlus) { input.text = text.replace('悉尼的', ''); }
+        return Object.values(input);
+      },
     },
     arage: {
       name: '愤怒',
@@ -199,7 +204,11 @@ const statics = {
     },
     obsession: {
       name: '痴迷',
-      limit: [3, 0],
+      colors: ['red', 'blue'],
+      decorate(input) {
+        input.code = input.code.replace('gg', 'g').replace('gg', 'g').replace('ll', 'l').replace('ll', 'l');
+        return Object.values(input);
+      },
     },
   },
   skill: {
@@ -276,11 +285,11 @@ const statics = {
     suspicion: {
       name: '怀疑',
     },
-    // oxygen: {
-    //   name: '氧气',
-    //   colors: ['blue', 'blue'],
-    //   limit: [1, 1],
-    // },
+    oxygen: {
+      name: '氧气',
+      colors: ['teal', 'blue'],
+      limit: [1, 1],
+    },
     chaos: {
       name: '混乱',
       positive: true,
