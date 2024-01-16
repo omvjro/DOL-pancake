@@ -1,5 +1,5 @@
 import {
-  colors, npcList, statics, diffiColors, tagColors,
+  colors, npcList, statics, diffiColors, tagColors, hollows,
 } from './data.js';
 
 const dolEditor = document.querySelector('div.passage');
@@ -19,6 +19,28 @@ Object.keys(statics).forEach((type) => {
     options += `<option class="${type}" value="${id}">${statics[type][id].name}</option>`;
   });
   document.getElementById('static-type').innerHTML += options;
+});
+
+// 高级选项
+const switchAdvanced = () => {
+  document.querySelectorAll('.advanced').forEach((advanced) => {
+    advanced.hidden = advanced.hidden ? 0 : 1;
+  });
+};
+const loadAdvanced = () => {
+  if (localStorage.getItem('isAdvancer')) {
+    switchAdvanced();
+    document.querySelector('#advanced').checked = 1;
+  }
+};
+loadAdvanced();
+document.querySelector('#advanced').addEventListener('change', () => {
+  if (localStorage.getItem('isAdvancer')) {
+    localStorage.removeItem('isAdvancer');
+  } else {
+    localStorage.setItem('isAdvancer', 1);
+  }
+  switchAdvanced();
 });
 
 // 链接标号
@@ -84,7 +106,7 @@ const generateInsertTarget = (target) => {
 generateInsertTarget(dolEditor);
 
 const insert = (element, cursor = 0) => {
-  if (selection?.isCollapsed === false) { selection.deleteFromDocument(); }
+  if (selection?.isCollapsed === false) selection.deleteFromDocument();
   if (position?.startContainer.parentElement.parentElement === insertTarget) {
     position.startContainer.parentElement.after(element);
   } else if (position?.startContainer.parentElement === insertTarget) {
@@ -96,7 +118,7 @@ const insert = (element, cursor = 0) => {
   newSelection.removeAllRanges();
   const range = document.createRange();
   range.selectNode(element);
-  if (cursor) { range.collapse(0); }
+  if (cursor) range.collapse(0);
   newSelection.addRange(range);
 };
 
@@ -160,7 +182,7 @@ document.querySelector('#static').addEventListener('click', () => {
   const stat = statics[staticClass.value][type];
 
   if (stat.variant) {
-    plus = plus.startsWith('g') ? plus.replaceAll('g', 'l') : plus.replaceAll('l', 'g');
+    plus = isPlus ? plus.replaceAll('g', 'l') : plus.replaceAll('l', 'g');
     type = stat.variant;
   }
 
@@ -252,11 +274,10 @@ document.querySelector('#lewd-tip').addEventListener('click', () => {
 // 插入颜色文字
 document.querySelectorAll('.colorspan').forEach((sel) => {
   sel.addEventListener('change', (event) => {
-    const spanText = event.target.id === 'link' ? 'a' : 'span';
-    const span = document.createElement(spanText);
+    const span = document.createElement('span');
     span.classList.add(event.target.value);
-    if (selection.isCollapsed) {
-      span.innerText = spanText === 'a' ? '\u200b继续' : '\u200b请输入文本';
+    if (selection?.isCollapsed || !selection) {
+      span.innerText = '\u200b请输入文本';
       insert(span);
       span.after(document.createTextNode(' '));
     } else {
@@ -264,6 +285,24 @@ document.querySelectorAll('.colorspan').forEach((sel) => {
     }
     event.target.value = '';
   });
+});
+
+// 插入链接
+document.querySelector('#linkConfirm').addEventListener('click', () => {
+  const link = document.createElement('a');
+  const time = document.querySelector('#linkTime').value || '';
+  link.classList.add(document.querySelector('#link').value);
+  link.setAttribute('endevent', document.querySelector('#endevent').value || '');
+  link.setAttribute('linkto', document.querySelector('#linkTo').value || '');
+  link.setAttribute('linktime', time);
+  if (selection?.isCollapsed || !selection) {
+    link.innerText = '\u200b继续';
+    if (time !== '') link.innerText += ` (${Math.floor(time / 60)}:${(`${time % 60}`).padStart(2, '0')})`;
+    insert(link);
+    link.after(document.createTextNode(' '));
+  } else {
+    wrap(link);
+  }
 });
 
 // 插入图片
@@ -282,9 +321,108 @@ document.querySelector('#insertPic').addEventListener('input', (event) => {
   });
 });
 
+const updateTip = (tipbox, tip, color = 'red') => {
+  tipbox.innerHTML = `<span class="${color}">${tip}</span>`;
+};
+
+// 插入常用不可见部件
+let hollowOptions = '';
+Object.keys(hollows).forEach((key) => {
+  hollowOptions += `<select id=${key}>
+  <option value="" style='display: none'>${key === 'person' ? 'personselect' : key}</option>`;
+  hollows[key].forEach((option) => {
+    hollowOptions += `<option>${option}</option>`;
+  });
+  hollowOptions += '</select>\n';
+});
+document.querySelector('#hollows').innerHTML = hollowOptions;
+document.querySelectorAll('#hollows select').forEach((select) => {
+  select.addEventListener('change', (event) => {
+    const hollow = event.target.value;
+    const widget = document.createElement('widget');
+    widget.classList.add('noDisplay');
+    widget.innerText = `${hollow}`;
+    widget.setAttribute('code', `<<${hollow}>>`);
+    widget.contentEditable = false;
+    insert(widget, 1);
+    event.target.value = '';
+  });
+});
+
+// 生成 twee 代码
+const replacePronouns = (string, replacement) => string.replaceAll('\u200b', '')
+  .replaceAll('他们', '\u200b们')
+  .replaceAll('她们', '\u200c们')
+  .replaceAll('其他', '其\u200b')
+  .replaceAll('他妈', '\u200b妈')
+  .replaceAll('他人', '\u200b人')
+  .replaceAll('他娘', '\u200b娘')
+  .replaceAll('他', replacement)
+  .replaceAll('她', replacement)
+  .replaceAll('\u200b', '他')
+  .replaceAll('\u200c', '她');
+const getCode = (sourceHTML, isHTML = false) => {
+  const mockOutput = document.createElement('div');
+  mockOutput.innerHTML = sourceHTML;
+
+  Object.values(mockOutput.children).forEach((child) => {
+    if (child.tagName === 'A') {
+      child.textContent = replacePronouns(child.textContent, '${$NPCList[0].pronouns.him}');
+
+      const endevent = child.getAttribute('endevent') ? `<<${child.getAttribute('endevent')}>>` : '';
+      const linktime = child.getAttribute('linktime') ? `<<pass ${child.getAttribute('linktime')}>>` : '';
+      const linkto = child.getAttribute('linkto') || '';
+
+      if (child.classList.contains('nextWraith')) {
+        child.setAttribute('code', child.outerHTML
+          .replace(/<a.*?>/gi, '<span id="next" class="nextWraith"><<link [[`')
+          .replace('</a>', `\`|${linkto}]]>>${linktime}${endevent}<</link>>`));
+      } else if (child.classList.contains('normalLink')) {
+        child.setAttribute('code', child.outerHTML
+          .replace(/<a.*?>/gi, '<<link [[`')
+          .replace('</a>', `\`|${linkto}]]>>${linktime}${endevent}<</link>>`));
+      }
+    }
+    if (child.getAttribute('code')) {
+      let valueCode = child.getAttribute('valueCode') || '';
+      if (valueCode !== '') {
+        (function addValueCodeToInlineLink(candidate) {
+          if (!candidate) return;
+          const candidateContent = candidate.textContent;
+          if (candidateContent.includes('\n')) return;
+          if (candidateContent.includes('<</link>>')) {
+            candidate.textContent = candidateContent.replace('<</link>>', `${valueCode}<</link>>`);
+            valueCode = '';
+            return;
+          }
+          addValueCodeToInlineLink(candidate.previousSibling);
+        }(child.previousSibling));
+      }
+      const code = document.createTextNode(`${child.getAttribute('code')}${valueCode}`);
+      mockOutput.replaceChild(code, child);
+    }
+    if (Array.from(child.childNodes).every((grandChild) => grandChild.nodeType !== 3 || grandChild.textContent === '') && child.tagName === 'SPAN') {
+      child.outerHTML = child.innerHTML;
+    }
+    if (child.innerText === '\u200b') child.remove();
+  });
+  let code = mockOutput.innerHTML;
+  code = code.split('\n').map((line) => (line.endsWith(' ') ? line.slice(0, -1) : line)).join('\n');
+  code = code.replaceAll('\n', '\n<br>\n').replaceAll('\n\n', '\n')
+    .replaceAll('&lt;', '<').replaceAll('&gt;', '>');
+  code = replacePronouns(code, '<<he>>');
+  if (isHTML) {
+    code = code.replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+  }
+
+  return code;
+};
+
 // 自定义部件
-const customWidgets = JSON.parse(localStorage.getItem('customWidgets')) || {};
+let customWidgets;
 const loadCustomWidgets = () => {
+  customWidgets = JSON.parse(localStorage.getItem('customWidgets')) || {};
   if (customWidgets) {
     const customWidgetSelect = document.querySelector('#customNames');
     let widgetOptions = '';
@@ -305,42 +443,77 @@ const loadCustomEditor = () => {
       <div class="item" style="display: flex; flex-wrap: wrap;">
       <label>部件显示：</label>
       <div id="customWidgetDisplay" contenteditable="plaintext-only"></div></div>
+      <div class="item" style="display: flex; flex-wrap: wrap;">
+      <label for="twee">twee 代码：</label>
+      <textarea name="twee" id="twee" placeholder="可留空，在“插入”时，为“导出代码”所用；在“导出所有”时，替代由“部件显示”自动转化的代码"></textarea></div>
       <div class="item">
       <button id="customWidgetSave" class="small">保存</button>
+      <button id="customWidgetInsert" class="small">插入</button>
       <button id="customWidgetQuit" class="small">取消</button>
       <label for="useHTML" style="font-size: .9em;">使用HTML</label><input type="checkbox" id="useHTML" name="useHTML" /></div>
       <div class="item" style="font-size: .9em;" id="tipBox"></div>
       </div>`;
   const newWidgetDisplay = document.querySelector('#customWidgetDisplay');
   generateInsertTarget(newWidgetDisplay);
-  let overlay = false;
+  const overlayWidget = [false, false, false];
+  const tipBox = document.getElementById('tipBox');
+  const updateTipWidget = (tip, color) => { updateTip(tipBox, tip, color); };
   document.querySelector('#customWidgetSave').addEventListener('click', () => {
-    const tipBox = document.getElementById('tipBox');
-    const updateTip = (tip, color = 'red') => {
-      tipBox.innerHTML = `<span class="${color}">${tip}</span>`;
-    };
     const display = document.querySelector('#customWidgetDisplay');
     const widgetName = document.querySelector('#customWidgetName').value;
     const code = document.querySelector('#useHTML').checked ? display.textContent : display.innerHTML;
+    const twee = document.querySelector('#twee').value;
+
     if (widgetName === '新建' || widgetName.includes('<') || widgetName.includes('>')) {
-      updateTip('用这种名字会出bug的QAQ');
+      updateTipWidget('用这种名字会出bug的QAQ');
       return;
     }
-    if (customWidgets[widgetName] && !overlay) {
-      updateTip('存在同名部件，再次点击“确认”将覆盖');
-      overlay = true;
+    if (customWidgets[widgetName] && !overlayWidget[0]) {
+      updateTipWidget('存在同名部件，再次点击“确认”将覆盖');
+      overlayWidget[0] = true;
       return;
     }
-    if (widgetName === '' || code === '') {
-      updateTip('还有东西没填哦');
+    if (widgetName === '') {
+      updateTipWidget('请输入名字！');
       return;
     }
-    if (overlay) overlay = false;
-    customWidgets[widgetName] = code;
+    if (code === '' && !overlayWidget[1]) {
+      updateTipWidget(`显示没填哦！
+      如果确定要创建空显示部件，请再次点击“确认”，创建的部件会显示在编辑框中，而不会出现在生成的图片里。`);
+      overlayWidget[1] = true;
+      return;
+    }
+    if (overlayWidget[0]) overlayWidget[0] = false;
+    if (overlayWidget[1]) overlayWidget[1] = false;
+    customWidgets[widgetName] = {
+      html: code || `<span class="noDisplay">${widgetName}</span>`,
+      twee,
+    };
     localStorage.setItem('customWidgets', JSON.stringify(customWidgets));
     loadCustomWidgets();
     document.querySelector('#customNames').value = '新建';
-    updateTip(`${widgetName} 创建成功`, 'gold');
+    updateTipWidget(`${widgetName} 创建成功`, 'gold');
+  });
+  document.querySelector('#customWidgetInsert').addEventListener('click', () => {
+    const twee = document.querySelector('#twee').value;
+    const widgetName = document.querySelector('#customWidgetName').value;
+    const display = document.querySelector('#customWidgetDisplay');
+    const code = document.querySelector('#useHTML').checked ? display.textContent : display.innerHTML;
+
+    if (code === '' && !overlayWidget[2]) {
+      updateTipWidget(`显示没填哦！
+      如果确定要插入空显示部件，请再次点击“确认”，插入的部件会显示在编辑框中，而不会出现在生成的图片里。`);
+      overlayWidget[2] = true;
+      return;
+    }
+    if (overlayWidget[2]) overlayWidget[2] = false;
+
+    const widget = document.createElement('widget');
+    widget.innerHTML = code || `<span class="noDisplay">${widgetName}</span>`;
+    widget.setAttribute('code', `${twee}`);
+    widget.contentEditable = false;
+    generateInsertTarget(dolEditor);
+    insert(widget, 1);
   });
   document.querySelector('#customWidgetQuit').addEventListener('click', () => {
     document.querySelector('#customEditor').remove();
@@ -357,11 +530,11 @@ document.querySelector('#customInsert').addEventListener('click', () => {
     return;
   }
   const widget = document.createElement('widget');
-  widget.innerHTML = customWidgets[name];
+  widget.innerHTML = customWidgets[name].html || customWidgets[name];
   widget.setAttribute('code', `<<${name}>>`);
   widget.contentEditable = false;
   generateInsertTarget(dolEditor);
-  insert(widget);
+  insert(widget, 1);
 });
 document.querySelector('#customDelete').addEventListener('click', () => {
   const name = document.querySelector('#customNames').value;
@@ -369,6 +542,21 @@ document.querySelector('#customDelete').addEventListener('click', () => {
   delete customWidgets[name];
   localStorage.setItem('customWidgets', JSON.stringify(customWidgets));
   loadCustomWidgets();
+});
+document.querySelector('#customExport').addEventListener('click', () => {
+  let twee = `<!-- Generated by DOL-pancake -->\n:: Widget ${Date.now()} [widget]\n`;
+
+  Object.keys(customWidgets).forEach((name) => {
+    twee += `\n<<widget "${name}">>\n${
+      customWidgets[name].twee || getCode(customWidgets[name].html || customWidgets[name])
+    }\n<</widget>>\n`;
+  });
+
+  const link = document.createElement('a');
+  link.download = `widgets-${Date.now()}.twee`;
+  const blob = new Blob([twee], { type: 'text/plain' });
+  link.href = URL.createObjectURL(blob);
+  link.click();
 });
 
 // 更换主题
@@ -379,6 +567,7 @@ document.querySelector('#theme').addEventListener('change', (event) => {
 /* global modernScreenshot */
 // 预览图片
 document.querySelector('#pic').addEventListener('click', () => {
+  document.querySelectorAll('.noDisplay').forEach((e) => { e.hidden = 1; });
   output.innerText = '生成图片中……';
   modernScreenshot.domToPng(document.querySelector('#dol'), { scale: 2 }).then((dataUrl) => {
     const img = new Image();
@@ -388,11 +577,14 @@ document.querySelector('#pic').addEventListener('click', () => {
     output.appendChild(img);
   }).catch((error) => {
     output.innerText = `出错了（${error}）`;
+  }).finally(() => {
+    document.querySelectorAll('.noDisplay').forEach((e) => { e.hidden = 0; });
   });
 });
 
 // 下载图片
 document.querySelector('#pic-down').addEventListener('click', () => {
+  document.querySelectorAll('.noDisplay').forEach((e) => { e.hidden = 1; });
   output.innerText = '生成图片中……';
   modernScreenshot.domToPng(document.querySelector('#dol'), { scale: 2 }).then((dataUrl) => {
     const link = document.createElement('a');
@@ -402,87 +594,204 @@ document.querySelector('#pic-down').addEventListener('click', () => {
     output.innerText = '';
   }).catch((error) => {
     output.innerText = `出错了（${error}）`;
+  }).finally(() => {
+    document.querySelectorAll('.noDisplay').forEach((e) => { e.hidden = 0; });
   });
 });
 
 // 导出代码
 document.querySelector('#code').addEventListener('click', () => {
-  const isHTML = document.querySelector('#html-mode').checked;
-  const mockOutput = document.createElement('div');
-  mockOutput.innerHTML = dolEditor.innerHTML;
+  const code = getCode(dolEditor.innerHTML, document.querySelector('#html-mode').checked);
 
-  mockOutput.childNodes.forEach((child) => {
-    if (child.nodeType === 1) {
-      if (child.classList.contains('nextWraith')) {
-        child.setAttribute('code', child.outerHTML
-          .replace(/<a.*?>/gi, '<span id="next" class="nextWraith"><<link [[')
-          .replace('</a>', '|]]>><</link>>'));
-      }
-      if (child.classList.contains('normalLink')) {
-        child.setAttribute('code', child.outerHTML
-          .replace(/<a.*?>/gi, '<<link [[')
-          .replace('</a>', '|]]>><</link>>'));
-      }
-      if (child.getAttribute('code')) {
-        let valueCode = child.getAttribute('valueCode') || '';
-        if (valueCode !== '') {
-          (function addValueCodeToInlineLink(candidate) {
-            if (!candidate) { return; }
-            const candidateContent = candidate.textContent;
-            if (candidateContent.includes('\n')) { return; }
-            if (candidateContent.includes('<</link>>')) {
-              candidate.textContent = candidateContent.replace('<</link>>', `${valueCode}<</link>>`);
-              valueCode = '';
-              return;
-            }
-            addValueCodeToInlineLink(candidate.previousSibling);
-          }(child.previousSibling));
-        }
-        const code = document.createTextNode(`${child.getAttribute('code')}${valueCode}`);
-        mockOutput.replaceChild(code, child);
-      }
-      if (Array.from(child.childNodes).every((grandChild) => grandChild.nodeType !== 3 || grandChild.textContent === '') && child.tagName === 'SPAN') {
-        child.outerHTML = child.innerHTML;
-      }
-      if (child.innerText === '\u200b') child.remove();
-    }
-    if (isHTML) {
-      child.textContent = child.textContent.replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+  output.innerHTML = `点击<a id="copyCode">此处</a>复制代码。
+  请注意，由于显示部件存在歧义，导出代码不一定包含全部数据实际变化部件，且人称代词可能需要手动修改和补充&lt;&lt;personselect&gt;&gt;类代码。<div class="tempTip"></div>
+  <pre contenteditable="plaintext-only"></pre>`;
+  document.querySelector('#output pre').innerText = code;
+
+  document.querySelector('#copyCode').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(code); } catch (err) {
+      updateTip(document.querySelector('.tempTip'), '复制失败，请手动复制！');
     }
   });
-  let code = mockOutput.innerHTML;
-  code = code.split('\n').map((line) => (line.endsWith(' ') ? line.slice(0, -1) : line)).join('\n');
-  code = code.replaceAll('\n', '\n<br>\n') // 换行
-    .replaceAll('\n\n', '\n')
-    .replaceAll('\u200b', '') // 颜色文本残余
-    .replaceAll('&lt;', '<') // 尖括号
-    .replaceAll('&gt;', '>')
-    .replaceAll('他们', '\u200b们') // 人称代词
-    .replaceAll('她们', '\u200c们')
-    .replaceAll('其他', '其\u200b')
-    .replaceAll('他妈', '\u200b妈')
-    .replaceAll('他人', '\u200b人')
-    .replaceAll('他娘', '\u200b娘')
-    .replaceAll('他', '<<he>>')
-    .replaceAll('她', '<<he>>')
-    .replaceAll('\u200b', '他')
-    .replaceAll('\u200c', '她');
-  if (isHTML) {
-    code = code.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('&amp;', '&');
+});
+
+// 存储管理
+const toggleOptionsManage = () => {
+  document.querySelectorAll('#saveManageSaved option').forEach((e) => { e.hidden = 1; });
+  document.querySelectorAll(`.${document.querySelector('#saveManageType').value}`)?.forEach((e) => { e.hidden = 0; });
+};
+toggleOptionsManage();
+
+let savedCode;
+const loadSavedCode = () => {
+  savedCode = JSON.parse(localStorage.getItem('savedCode')) || {
+    widget: {},
+    passage: {},
+  };
+  const options = {
+    widget: '',
+    passage: '',
+  };
+  Object.keys(savedCode.passage).forEach((name) => {
+    options.passage += `<option class="passage">${name}</option>`;
+  });
+  Object.keys(savedCode.widget).forEach((name) => {
+    options.widget += `<option class="widget">${name}</option>`;
+  });
+  document.querySelector('#saveManageSaved').innerHTML = Object.values(options).join('');
+  [document.querySelector('#saveManageSaved').value] = Object.keys(savedCode[document.querySelector('#saveManageType').value]);
+  document.querySelector('#linkToList').innerHTML = options.passage || '';
+  toggleOptionsManage();
+};
+loadSavedCode();
+
+let overlaySave = false;
+document.querySelector('#save').addEventListener('click', () => {
+  const name = document.querySelector('#saveName').value;
+  const type = document.querySelector('#saveType').value;
+  const tipBox = document.querySelector('#codeSaver .tipBox');
+  const updateTipSave = (tip, color) => { updateTip(tipBox, tip, color); };
+
+  if (name === '') {
+    updateTipSave(tipBox, '请输入名字！');
+    return;
+  }
+  if (savedCode[type][name] && !overlaySave) {
+    updateTipSave(`存在同名 ${type}，再次点击“确认”将覆盖`);
+    overlaySave = true;
+    return;
   }
 
-  (async () => {
-    try { await navigator.clipboard.writeText(code); } finally {
-      output.innerHTML = `代码已复制到剪贴板，如未成功，请在下方手动复制，也可以点击<a id="downTwee">此处</a>将代码下载为 twee 文件。
-      请注意，由于显示部件存在歧义，导出代码不一定包含全部数据实际变化部件，且人称代词可能需要手动修改和补充&lt;&lt;personselect&gt;&gt;类代码。
-      <pre contenteditable="plaintext-only"></pre>`;
-      document.querySelector('#output pre').innerText = code;
-      const link = document.querySelector('#downTwee');
-      link.download = `dol-pancake-${Date.now()}.twee`;
-      const twee = new Blob([code], { type: 'text/plain' });
-      link.href = URL.createObjectURL(twee);
+  savedCode[type][name] = {
+    code: getCode(dolEditor.innerHTML, false),
+    html: dolEditor.innerHTML,
+  };
+
+  localStorage.setItem('savedCode', JSON.stringify(savedCode));
+  loadSavedCode();
+  updateTipSave(`${type} ${name} 创建成功`, 'gold');
+});
+
+document.querySelector('#saveManage').addEventListener('change', (event) => {
+  if (event.target.value === 'export' || event.target.value === 'clear') {
+    document.querySelector('#saveManageSaved').hidden = 1;
+  } else {
+    document.querySelector('#saveManageSaved').hidden = 0;
+  }
+});
+
+let overlayManager = false;
+
+document.querySelector('#saveManageType').addEventListener('change', (event) => {
+  toggleOptionsManage();
+  document.querySelector('#saveManageSaved').value = document.querySelectorAll(`option.${document.querySelector('#saveManageType').value}`)?.[0]?.value || '';
+
+  if (event.target.value === 'clear') overlayManager = false;
+});
+
+document.querySelector('#saveManageConfirm').addEventListener('click', () => {
+  const saveManage = document.querySelector('#saveManage').value;
+  const saveType = document.querySelector('#saveManageType').value;
+  const saveName = document.querySelector('#saveManageSaved').value;
+  const tipBox = document.querySelector('#saveManager .tipBox');
+  const updateTipManager = (tip, color) => { updateTip(tipBox, tip, color); };
+
+  if (saveManage === 'load') {
+    dolEditor.innerHTML = savedCode[saveType][saveName].html;
+  }
+  if (saveManage === 'delete') {
+    delete savedCode[saveType][saveName];
+    localStorage.setItem('savedCode', JSON.stringify(savedCode));
+    loadSavedCode();
+  }
+  if (saveManage === 'export') {
+    let twee = '<!-- Generated by DOL-pancake -->';
+    if (saveType === 'passage') {
+      Object.keys(savedCode.passage).forEach((name) => {
+        twee += `\n:: ${name}\n${savedCode.passage[name].code}\n`;
+      });
+    } else {
+      twee += `\n:: Widgets ${Date.now()} [widget]\n`;
+      Object.keys(savedCode.widget).forEach((name) => {
+        twee += `\n<<widget "${name}">>\n${savedCode.widget[name].code}\n<</widget>>\n`;
+      });
     }
-  })();
+
+    const link = document.createElement('a');
+    link.download = `${saveType}s-${Date.now()}.twee`;
+    const blob = new Blob([twee], { type: 'text/plain' });
+    link.href = URL.createObjectURL(blob);
+    link.click();
+  }
+  if (saveManage === 'clear') {
+    if (overlayManager) {
+      updateTipManager(`已删除所有 ${saveType}`);
+      overlayManager = false;
+    } else {
+      updateTipManager(`请再次点击以确认删除所有 ${saveType}`);
+      overlayManager = true;
+    }
+  }
+});
+
+// 设置管理
+const loadAll = () => {
+  loadCustomWidgets();
+  loadSavedCode();
+};
+const tipBoxPancake = document.querySelector('#pancakeManager .tipBox');
+document.querySelector('#pancakeManage').addEventListener('change', () => {
+  updateTip(tipBoxPancake, '');
+});
+document.querySelector('#pancakeManageConfirm').addEventListener('click', () => {
+  const operate = document.querySelector('#pancakeManage').value;
+  let blob;
+  const injection = 'injected for recognition';
+
+  if (operate === 'export') {
+    let json = `{"//":"${injection}",`;
+    let count = 0;
+    Object.keys(localStorage).forEach((item) => {
+      count += 1;
+      json += `"${item}": ${localStorage.getItem(item)}`;
+      if (count !== Object.keys(localStorage).length) json += ',';
+    });
+    json += '}';
+
+    blob = new Blob([json], { type: 'application/json' });
+    const link = document.createElement('a');
+    link.download = `dol-pancke-config-${Date.now()}.json`;
+    link.href = URL.createObjectURL(blob);
+    link.click();
+  }
+  if (operate === 'import') {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json';
+    input.addEventListener('change', (event) => {
+      const reader = new FileReader();
+      reader.readAsText(event.target.files[0]);
+      reader.onload = () => {
+        const json = JSON.parse(reader.result);
+        if (json['//'] !== injection) {
+          updateTip(tipBoxPancake, '该文件不是有效的烤饼机设置');
+          return;
+        }
+        Object.keys(json).forEach((item) => {
+          if (item === '//') return;
+          localStorage.setItem(item, JSON.stringify(json[item]));
+          loadAll();
+        });
+        updateTip(tipBoxPancake, '导入成功', 'gold');
+      };
+    });
+    input.click();
+  }
+  if (operate === 'reset') {
+    localStorage.clear();
+    loadAll();
+    updateTip(tipBoxPancake, '重置成功', 'gold');
+  }
 });
 
 // 清空内容
