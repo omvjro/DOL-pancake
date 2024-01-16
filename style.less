@@ -7,6 +7,16 @@
 		margin: 2em;
 	}
 }
+@media screen and (max-width:700px) {
+	.toolbox {
+		max-width: calc(100vw - 6em);
+	}
+}
+@media screen and (min-width:701px) {
+	.toolbox {
+		max-width: 600px;
+	}
+}
 html, pre {
     ::-webkit-scrollbar {
         width: 10px;
@@ -79,7 +89,7 @@ body, html {
 		padding: .34em .4em;
 		cursor: pointer;
 	}
-	input[type="text"] {
+	input[type="text"], input[type="number"], input[list] {
 		width: 5em;
 		cursor:text;
 	}
@@ -113,7 +123,6 @@ body, html {
 
 }
 .toolbox {
-	max-width: 600px;
 	background: #000;
 	color: #eee;
 	padding: 2em;
@@ -134,18 +143,28 @@ body, html {
 		color: #8af;
 		text-decoration: underline;
 	}
-	.colorspan, .otherTags select {
+	.colorspan, .otherTags select, #hollows select {
 		color: gray;
-		text-transform: uppercase;
 		option:not([class]) {
 			color: #eee;
 		}
+	}
+	.tipBox {
+		font-size: .9em;
 	}
 }
 #customEditor {
 	margin-left: 1em;
 	input[type="text"] {
 		width: auto;
+	}
+	textarea {
+		color: #eee;
+		background-color: transparent;
+		border: 1px solid #444;
+		padding: .34em .4em;
+		width: 250px;
+		height: 70px;
 	}
 	#customWidgetDisplay {
 		color: #eee;
@@ -172,7 +191,9 @@ div#dol {
 	max-width: 100%;
 	min-height: 667px;
 	flex: 0 1 375px;
+}
 
+div#dol, #customWidgetDisplay {
 	a[data-if-index="1"]::before {
 		content: attr(data-index);
 	}
@@ -180,7 +201,17 @@ div#dol {
 	img {
 		max-width: 100%;
 	}
+
+	.noDisplay {
+		background: rgba(173, 216, 230, .5);
+		padding: 0 6px;
+		margin: 2px 2px;
+		border-radius: 2px;
+		font-size: .8em;
+		display: inline-block;
+	}
 }
+
 /** Colour Classes **/
 
 /* Utility */

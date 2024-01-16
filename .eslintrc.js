@@ -25,5 +25,6 @@ module.exports = {
     'no-param-reassign': 'off',
     'max-len': 'off',
     'import/extensions': 'off',
+    'no-template-curly-in-string': 'off',
   },
 };
