@@ -562,6 +562,7 @@ document.querySelector('#customExport').addEventListener('click', () => {
 // 更换主题
 const loadTheme = () => {
   document.querySelector('#body').setAttribute('data-theme', localStorage.getItem('theme'));
+  document.querySelector('#theme').value = localStorage.getItem('theme');
 };
 loadTheme();
 document.querySelector('#theme').addEventListener('change', (event) => {
