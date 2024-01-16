@@ -567,7 +567,7 @@ document.querySelector('#theme').addEventListener('change', (event) => {
 /* global modernScreenshot */
 // 预览图片
 document.querySelector('#pic').addEventListener('click', () => {
-  document.querySelectorAll('.noDisplay').forEach((e) => { e.hidden = 1; });
+  document.querySelectorAll('.noDisplay').forEach((e) => { e.style.display = 'none'; });
   output.innerText = '生成图片中……';
   modernScreenshot.domToPng(document.querySelector('#dol'), { scale: 2 }).then((dataUrl) => {
     const img = new Image();
@@ -578,13 +578,13 @@ document.querySelector('#pic').addEventListener('click', () => {
   }).catch((error) => {
     output.innerText = `出错了（${error}）`;
   }).finally(() => {
-    document.querySelectorAll('.noDisplay').forEach((e) => { e.hidden = 0; });
+    document.querySelectorAll('.noDisplay').forEach((e) => { e.style.display = 'inline-block'; });
   });
 });
 
 // 下载图片
 document.querySelector('#pic-down').addEventListener('click', () => {
-  document.querySelectorAll('.noDisplay').forEach((e) => { e.hidden = 1; });
+  document.querySelectorAll('.noDisplay').forEach((e) => { e.style.display = 'none'; });
   output.innerText = '生成图片中……';
   modernScreenshot.domToPng(document.querySelector('#dol'), { scale: 2 }).then((dataUrl) => {
     const link = document.createElement('a');
@@ -595,7 +595,7 @@ document.querySelector('#pic-down').addEventListener('click', () => {
   }).catch((error) => {
     output.innerText = `出错了（${error}）`;
   }).finally(() => {
-    document.querySelectorAll('.noDisplay').forEach((e) => { e.hidden = 0; });
+    document.querySelectorAll('.noDisplay').forEach((e) => { e.style.display = 'inline-block'; });
   });
 });
 
