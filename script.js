@@ -560,8 +560,13 @@ document.querySelector('#customExport').addEventListener('click', () => {
 });
 
 // 更换主题
+const loadTheme = () => {
+  document.querySelector('#body').setAttribute('data-theme', localStorage.getItem('theme'));
+};
+loadTheme();
 document.querySelector('#theme').addEventListener('change', (event) => {
-  document.querySelector('#body').setAttribute('data-theme', event.target.value);
+  localStorage.setItem('theme', event.target.value);
+  loadTheme();
 });
 
 /* global modernScreenshot */
@@ -738,6 +743,7 @@ document.querySelector('#saveManageConfirm').addEventListener('click', () => {
 const loadAll = () => {
   loadCustomWidgets();
   loadSavedCode();
+  loadTheme();
 };
 const tipBoxPancake = document.querySelector('#pancakeManager .tipBox');
 document.querySelector('#pancakeManage').addEventListener('change', () => {
