@@ -85,6 +85,27 @@ document.querySelector('#direct-paste').addEventListener('change', (event) => {
 let selection;
 let position;
 let insertTarget;
+
+const positionCursor = (element, cursor = false) => {
+  const newSelection = window.getSelection();
+  newSelection.removeAllRanges();
+  const range = document.createRange();
+  range.selectNode(element);
+  if (cursor) range.collapse(0);
+  newSelection.addRange(range);
+};
+const insert = (element, cursor) => {
+  if (selection?.isCollapsed === false) selection.deleteFromDocument();
+  if (position?.startContainer.parentElement.parentElement === insertTarget) {
+    position.startContainer.parentElement.after(element);
+  } else if (position?.startContainer.parentElement === insertTarget) {
+    position.insertNode(element);
+  } else {
+    insertTarget.append(element);
+  }
+  positionCursor(element, cursor);
+};
+
 const generateInsertTarget = (target) => {
   insertTarget = target;
   insertTarget.addEventListener('blur', () => {
@@ -97,6 +118,14 @@ const generateInsertTarget = (target) => {
         child.before(document.createTextNode(child.innerText));
         child.remove();
       }
+      if (child?.tagName === 'A' && child.innerHTML.includes('\n')) {
+        if (child.innerHTML.endsWith('\n')) {
+          const br = document.createElement('br');
+          child.after(br);
+          positionCursor(br, true);
+        }
+        child.innerHTML = child.innerHTML.replace('\n', '');
+      }
     });
   });
   insertTarget.addEventListener('click', () => {
@@ -105,26 +134,9 @@ const generateInsertTarget = (target) => {
 };
 generateInsertTarget(dolEditor);
 
-const insert = (element, cursor = 0) => {
-  if (selection?.isCollapsed === false) selection.deleteFromDocument();
-  if (position?.startContainer.parentElement.parentElement === insertTarget) {
-    position.startContainer.parentElement.after(element);
-  } else if (position?.startContainer.parentElement === insertTarget) {
-    position.insertNode(element);
-  } else {
-    insertTarget.append(element);
-  }
-  const newSelection = window.getSelection();
-  newSelection.removeAllRanges();
-  const range = document.createRange();
-  range.selectNode(element);
-  if (cursor) range.collapse(0);
-  newSelection.addRange(range);
-};
-
 const wrap = (element) => {
-  element.innerText = selection.toString();
-  selection.getRangeAt(0).surroundContents(element);
+  element.innerText = selection.toString().replaceAll('\n', '');
+  insert(element, true);
 };
 
 const getOptionText = (id) => document.getElementById(id)?.options[document.getElementById(id)?.selectedIndex]?.text;
@@ -295,6 +307,9 @@ document.querySelector('#linkConfirm').addEventListener('click', () => {
   link.setAttribute('endevent', document.querySelector('#endevent').value || '');
   link.setAttribute('linkto', document.querySelector('#linkTo').value || '');
   link.setAttribute('linktime', time);
+  if (position?.startContainer.parentElement !== insertTarget) {
+    selection.collapse(insertTarget);
+  }
   if (selection?.isCollapsed || !selection) {
     link.innerText = '\u200b继续';
     if (time !== '') link.innerText += ` (${Math.floor(time / 60)}:${(`${time % 60}`).padStart(2, '0')})`;
@@ -373,14 +388,12 @@ const getCode = (sourceHTML, isHTML = false) => {
       const linktime = child.getAttribute('linktime') ? `<<pass ${child.getAttribute('linktime')}>>` : '';
       const linkto = child.getAttribute('linkto') || '';
 
+      const code = child.outerHTML.replace('</a>', `\`|${linkto}]]>>${linktime}${endevent}<</link>>`);
+
       if (child.classList.contains('nextWraith')) {
-        child.setAttribute('code', child.outerHTML
-          .replace(/<a.*?>/gi, '<span id="next" class="nextWraith"><<link [[`')
-          .replace('</a>', `\`|${linkto}]]>>${linktime}${endevent}<</link>>`));
+        child.setAttribute('code', code.replace(/<a.*?>/gi, '<span id="next" class="nextWraith"><<link [[`'));
       } else if (child.classList.contains('normalLink')) {
-        child.setAttribute('code', child.outerHTML
-          .replace(/<a.*?>/gi, '<<link [[`')
-          .replace('</a>', `\`|${linkto}]]>>${linktime}${endevent}<</link>>`));
+        child.setAttribute('code', code.replace(/<a.*?>/gi, '<<link [[`'));
       }
     }
     if (child.getAttribute('code')) {
@@ -408,7 +421,7 @@ const getCode = (sourceHTML, isHTML = false) => {
   });
   let code = mockOutput.innerHTML;
   code = code.split('\n').map((line) => (line.endsWith(' ') ? line.slice(0, -1) : line)).join('\n');
-  code = code.replaceAll('\n', '\n<br>\n').replaceAll('\n\n', '\n')
+  code = code.replaceAll('\n', '<br>').replaceAll('<br>', '<br>\n')
     .replaceAll('&lt;', '<').replaceAll('&gt;', '>');
   code = replacePronouns(code, '<<he>>');
   if (isHTML) {
