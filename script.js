@@ -1,6 +1,7 @@
 import {
   colors, npcList, statics, diffiColors, tagColors, hollows,
-} from './data.js';
+} from './lib/data.js';
+import { saveTwee, savePng, saveJSON } from './lib/save.js';
 
 const dolEditor = document.querySelector('div.passage');
 const output = document.querySelector('#output');
@@ -578,11 +579,8 @@ document.querySelector('#customExport').addEventListener('click', () => {
     }\n<</widget>>\n`;
   });
 
-  const link = document.createElement('a');
-  link.download = `widgets-${Date.now()}.twee`;
   const blob = new Blob([twee], { type: 'text/plain' });
-  link.href = URL.createObjectURL(blob);
-  link.click();
+  saveTwee(blob, `widgets-${Date.now()}.twee`);
 });
 
 // 更换主题
@@ -618,11 +616,8 @@ document.querySelector('#pic').addEventListener('click', () => {
 document.querySelector('#pic-down').addEventListener('click', () => {
   document.querySelectorAll('.noDisplay').forEach((e) => { e.style.display = 'none'; });
   output.innerText = '生成图片中……';
-  modernScreenshot.domToPng(document.querySelector('#dol'), { scale: 2 }).then((dataUrl) => {
-    const link = document.createElement('a');
-    link.download = `dol-pancake-${Date.now()}.png`;
-    link.href = dataUrl;
-    link.click();
+  modernScreenshot.domToBlob(document.querySelector('#dol'), { scale: 2 }).then((blob) => {
+    savePng(blob, `dol-pancake-${Date.now()}.png`);
     output.innerText = '';
   }).catch((error) => {
     output.innerText = `出错了（${error}）`;
@@ -750,11 +745,8 @@ document.querySelector('#saveManageConfirm').addEventListener('click', () => {
       });
     }
 
-    const link = document.createElement('a');
-    link.download = `${saveType}s-${Date.now()}.twee`;
     const blob = new Blob([twee], { type: 'text/plain' });
-    link.href = URL.createObjectURL(blob);
-    link.click();
+    saveTwee(blob, `${saveType}s-${Date.now()}.twee`);
   }
   if (saveManage === 'clear') {
     if (overlayManager) {
@@ -793,10 +785,7 @@ document.querySelector('#pancakeManageConfirm').addEventListener('click', () => 
     json += '}';
 
     blob = new Blob([json], { type: 'application/json' });
-    const link = document.createElement('a');
-    link.download = `dol-pancke-config-${Date.now()}.json`;
-    link.href = URL.createObjectURL(blob);
-    link.click();
+    saveJSON(blob, `dol-pancke-config-${Date.now()}.json`);
   }
   if (operate === 'import') {
     const input = document.createElement('input');
