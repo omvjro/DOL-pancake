@@ -1,0 +1,20 @@
+@font-face {
+  font-family: "iconfont"; /* Project id  */
+  src: url('iconfont.ttf?t=1705490579085') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-redo-alt:before {
+  content: "\f094";
+}
+
+.icon-undo-alt:before {
+  content: "\f125";
+}
+

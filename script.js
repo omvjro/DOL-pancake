@@ -4,6 +4,9 @@ import {
 
 const dolEditor = document.querySelector('div.passage');
 const output = document.querySelector('#output');
+let originalHTML;
+const undoData = [];
+let redoData = [];
 
 Object.keys(colors).forEach((id) => {
   let options = '';
@@ -86,15 +89,20 @@ let selection;
 let position;
 let insertTarget;
 
-const positionCursor = (element, cursor = false) => {
+const recordData = () => {
+  undoData.push(insertTarget.innerHTML);
+  redoData = [];
+};
+
+const createSelection = (element, isCollapsed = false) => {
   const newSelection = window.getSelection();
   newSelection.removeAllRanges();
   const range = document.createRange();
   range.selectNode(element);
-  if (cursor) range.collapse(0);
+  if (isCollapsed) range.collapse(0);
   newSelection.addRange(range);
 };
-const insert = (element, cursor) => {
+const insert = (element, isCollapsed) => {
   if (selection?.isCollapsed === false) selection.deleteFromDocument();
   if (position?.startContainer.parentElement.parentElement === insertTarget) {
     position.startContainer.parentElement.after(element);
@@ -103,11 +111,14 @@ const insert = (element, cursor) => {
   } else {
     insertTarget.append(element);
   }
-  positionCursor(element, cursor);
+  createSelection(element, isCollapsed);
+  recordData();
 };
 
 const generateInsertTarget = (target) => {
   insertTarget = target;
+  originalHTML = insertTarget.innerHTML;
+  undoData.push(originalHTML);
   insertTarget.addEventListener('blur', () => {
     selection = window.getSelection();
     position = selection.getRangeAt(0);
@@ -122,11 +133,13 @@ const generateInsertTarget = (target) => {
         if (child.innerHTML.endsWith('\n')) {
           const br = document.createElement('br');
           child.after(br);
-          positionCursor(br, true);
+          createSelection(br, true);
         }
         child.innerHTML = child.innerHTML.replace('\n', '');
       }
     });
+
+    recordData();
   });
   insertTarget.addEventListener('click', () => {
     insertTarget = target;
@@ -575,7 +588,7 @@ document.querySelector('#customExport').addEventListener('click', () => {
 // 更换主题
 const loadTheme = () => {
   document.querySelector('#body').setAttribute('data-theme', localStorage.getItem('theme'));
-  document.querySelector('#theme').value = localStorage.getItem('theme');
+  document.querySelector('#theme').value = localStorage.getItem('theme') || '';
 };
 loadTheme();
 document.querySelector('#theme').addEventListener('change', (event) => {
@@ -717,6 +730,7 @@ document.querySelector('#saveManageConfirm').addEventListener('click', () => {
 
   if (saveManage === 'load') {
     dolEditor.innerHTML = savedCode[saveType][saveName].html;
+    recordData();
   }
   if (saveManage === 'delete') {
     delete savedCode[saveType][saveName];
@@ -814,8 +828,36 @@ document.querySelector('#pancakeManageConfirm').addEventListener('click', () => 
   }
 });
 
+// 撤销
+const undo = () => {
+  const previousHTML = undoData.at(-2);
+  const currentHTML = undoData.pop();
+  if (currentHTML) redoData.push(currentHTML);
+  if (previousHTML) insertTarget.innerHTML = previousHTML;
+};
+const redo = () => {
+  const nextHTML = redoData.pop();
+  if (nextHTML) {
+    insertTarget.innerHTML = nextHTML;
+    undoData.push(nextHTML);
+  }
+};
+
+document.querySelector('#undo').addEventListener('click', undo);
+document.querySelector('#redo').addEventListener('click', redo);
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Control') return;
+  if (event.ctrlKey && event.key === 'z') {
+    undo();
+  }
+  if (event.ctrlKey && event.key === 'y') {
+    redo();
+  }
+});
+
 // 清空内容
 document.querySelector('#clear').addEventListener('click', () => {
   dolEditor.innerText = '';
   output.innerText = '';
+  recordData();
 });
