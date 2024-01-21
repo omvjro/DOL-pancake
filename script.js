@@ -9,26 +9,19 @@ let originalHTML;
 const undoData = [];
 let redoData = [];
 
-Object.keys(colors).forEach((id) => {
-  let options = '';
-  colors[id].forEach((color) => {
-    options += `<option${color.length === 1 ? ` class="${color[0]}"` : ''} value="${color[0]}">${color.at(-1)}</option>`;
-  });
-  document.getElementById(id).innerHTML += options;
+Object.entries(colors).forEach(([id, colorSet]) => {
+  document.getElementById(id).innerHTML += colorSet.reduce((options, [color, name]) => `${options}
+  <option${!name ? ` class="${color}"` : ''} value="${color}">${name || color}</option>`, '');
 });
 
-Object.keys(statics).forEach((type) => {
-  let options = '';
-  Object.keys(statics[type]).forEach((id) => {
-    options += `<option class="${type}" value="${id}">${statics[type][id].name}</option>`;
-  });
-  document.getElementById('static-type').innerHTML += options;
-});
+document.getElementById('static-type').innerHTML = Object.entries(statics).reduce((goptions, [clas, stats]) => `${goptions}${
+  Object.entries(stats).reduce((options, [value, { name }]) => `${options}<option class="${clas}" value="${value}">${name}</option>`, '')
+}`, '');
 
 // 高级选项
 const switchAdvanced = () => {
   document.querySelectorAll('.advanced').forEach((advanced) => {
-    advanced.hidden = advanced.hidden ? 0 : 1;
+    advanced.hidden = !advanced.hidden;
   });
 };
 const loadAdvanced = () => {
@@ -115,6 +108,14 @@ const insert = (element, isCollapsed) => {
   createSelection(element, isCollapsed);
   recordData();
 };
+const insertHard = (html, code, decorate) => {
+  const widget = document.createElement('widget');
+  widget.innerHTML = html;
+  widget.setAttribute('code', code);
+  widget.contentEditable = false;
+  decorate?.(widget);
+  insert(widget, 1);
+};
 
 const generateInsertTarget = (target) => {
   insertTarget = target;
@@ -194,11 +195,9 @@ document.querySelector('#static-type').addEventListener('change', (event) => {
   if (!npcList[type]) return;
   const npcSelect = document.createElement('select');
   event.target.before(npcSelect);
-  let npcOptions = '';
-  Object.keys(npcList[type]).forEach((npc) => {
-    npcOptions += `<option value="${npc}">${npcList[type][npc]}</option>`;
-  });
-  npcSelect.outerHTML = `<select id="static-npc" name="static-npc">${npcOptions}</select> `;
+  npcSelect.outerHTML = `<select id="static-npc" name="static-npc">${
+    Object.entries(npcList[type]).reduce((npcs, [value, npc]) => `${npcs}<option value="${value}">${npc}</option>`, '')
+  }</select>`;
 });
 document.querySelector('#static').addEventListener('click', () => {
   let plus = document.getElementById('static-plus').value;
@@ -233,12 +232,7 @@ document.querySelector('#static').addEventListener('click', () => {
     }
   }
 
-  const widget = document.createElement('widget');
-  widget.innerHTML = ` | <span class="${color}">${text}</span>`;
-  widget.setAttribute('code', code);
-  widget.setAttribute('valueCode', valueCode);
-  widget.contentEditable = false;
-  insert(widget, 1);
+  insertHard(` | <span class="${color}">${text}</span>`, code, (widget) => widget.setAttribute('valueCode', valueCode));
 });
 
 // 插入技能检定
@@ -266,35 +260,26 @@ document.querySelector('#skill-check').addEventListener('click', () => {
     code = `<<skill_difficulty \`${typeValue}\` "${typeDisplay}">>`;
   }
 
-  const skillcheck = document.createElement('skillcheck');
-  skillcheck.innerHTML = ` | <span class="orange">${typeDisplay}</span>：<span class="${diffiColors[diffi]}">${getOptionText('skill-check-diffi')}</span>`;
-  skillcheck.setAttribute('code', code);
-  skillcheck.contentEditable = false;
-  insert(skillcheck, 1);
+  insertHard(` | <span class="orange">${typeDisplay}</span>：<span class="${diffiColors[diffi]}">${getOptionText('skill-check-diffi')}</span>`, code);
 });
 
 // 插入标签
 document.querySelectorAll('.tags').forEach((sel) => {
   sel.addEventListener('change', (event) => {
     const type = event.target.value;
-    const tag = document.createElement('tag');
-    tag.innerHTML = ` | <span class="${tagColors[type]}">${getOptionText(event.target.id)}</span>`;
-    tag.setAttribute('code', `<<${type}>>`);
-    tag.contentEditable = false;
-    insert(tag, 1);
+    insertHard(
+      ` | <span class="${tagColors[type]}">${getOptionText(event.target.id)}</span>`,
+      `<<${type}>>`,
+    );
     event.target.value = '';
   });
 });
 document.querySelector('#lewd-tip').addEventListener('click', () => {
   const type = document.querySelector('#lewd-tip-type').value;
   const grade = document.querySelector('#lewd-tip-grade').value;
-  const tag = document.createElement('tag');
   let text = `${getOptionText('lewd-tip-type')} ${getOptionText('lewd-tip-grade')}`;
   if (grade === '6') text = `!${text}!`;
-  tag.innerHTML = ` | <span class="${tagColors[grade]}">${text}</span>`;
-  tag.setAttribute('code', `<<${type}${grade}>>`);
-  tag.contentEditable = false;
-  insert(tag, 1);
+  insertHard(` | <span class="${tagColors[grade]}">${text}</span>`, `<<${type}${grade}>>`);
 });
 
 // 插入颜色文字
@@ -354,26 +339,16 @@ const updateTip = (tipbox, tip, color = 'red') => {
   tipbox.innerHTML = `<span class="${color}">${tip}</span>`;
 };
 
-// 插入常用不可见部件
-let hollowOptions = '';
-Object.keys(hollows).forEach((key) => {
-  hollowOptions += `<select id=${key}>
-  <option value="" style='display: none'>${key === 'person' ? 'personselect' : key}</option>`;
-  hollows[key].forEach((option) => {
-    hollowOptions += `<option>${option}</option>`;
-  });
-  hollowOptions += '</select>\n';
-});
-document.querySelector('#hollows').innerHTML = hollowOptions;
+document.querySelector('#hollows').innerHTML = Object.keys(hollows).reduce((selects, key) => `
+${selects}
+<select id=${key}>
+  <option value="" style="display: none">${key === 'person' ? 'personselect' : key}</option>
+  ${hollows[key].reduce((options, option) => `${options}<option>${option}</option>`, '')}
+</select>`, '');
 document.querySelectorAll('#hollows select').forEach((select) => {
   select.addEventListener('change', (event) => {
     const hollow = event.target.value;
-    const widget = document.createElement('widget');
-    widget.classList.add('noDisplay');
-    widget.innerText = `${hollow}`;
-    widget.setAttribute('code', `<<${hollow}>>`);
-    widget.contentEditable = false;
-    insert(widget, 1);
+    insertHard(hollow, `<<${hollow}>>`, (widget) => widget.classList.add('noDisplay'));
     event.target.value = '';
   });
 });
@@ -452,14 +427,11 @@ const loadCustomWidgets = () => {
   customWidgets = JSON.parse(localStorage.getItem('customWidgets')) || {};
   if (customWidgets) {
     const customWidgetSelect = document.querySelector('#customNames');
-    let widgetOptions = '';
-    Object.keys(customWidgets).forEach((widget) => {
-      widgetOptions += `<option>${widget}</option>`;
-    });
-    customWidgetSelect.innerHTML = `${widgetOptions}<option>新建</option>`;
+    customWidgetSelect.innerHTML = `${
+      Object.keys(customWidgets).reduce((widgets, widget) => `${widgets}<option>${widget}</option>`, '')
+    }<option>新建</option>`;
   }
 };
-loadCustomWidgets();
 const loadCustomEditor = () => {
   document.querySelector('#customEditor')?.remove();
   const newWidgetEditor = document.createElement('div');
@@ -535,12 +507,8 @@ const loadCustomEditor = () => {
     }
     if (overlayWidget[2]) overlayWidget[2] = false;
 
-    const widget = document.createElement('widget');
-    widget.innerHTML = code || `<span class="noDisplay">${widgetName}</span>`;
-    widget.setAttribute('code', `${twee}`);
-    widget.contentEditable = false;
     generateInsertTarget(dolEditor);
-    insert(widget, 1);
+    insertHard(code || `<span class="noDisplay">${widgetName}</span>`, twee || getCode(code));
   });
   document.querySelector('#customWidgetQuit').addEventListener('click', () => {
     document.querySelector('#customEditor').remove();
@@ -556,12 +524,8 @@ document.querySelector('#customInsert').addEventListener('click', () => {
     loadCustomEditor();
     return;
   }
-  const widget = document.createElement('widget');
-  widget.innerHTML = customWidgets[name].html || customWidgets[name];
-  widget.setAttribute('code', `<<${name}>>`);
-  widget.contentEditable = false;
   generateInsertTarget(dolEditor);
-  insert(widget, 1);
+  insertHard(customWidgets[name].html || customWidgets[name], `<<${name}>>`);
 });
 document.querySelector('#customDelete').addEventListener('click', () => {
   const name = document.querySelector('#customNames').value;
@@ -573,9 +537,9 @@ document.querySelector('#customDelete').addEventListener('click', () => {
 document.querySelector('#customExport').addEventListener('click', () => {
   let twee = `<!-- Generated by DOL-pancake -->\n:: Widget ${Date.now()} [widget]\n`;
 
-  Object.keys(customWidgets).forEach((name) => {
+  Object.entries(customWidgets).forEach(([name, widget]) => {
     twee += `\n<<widget "${name}">>\n${
-      customWidgets[name].twee || getCode(customWidgets[name].html || customWidgets[name])
+      widget.twee || getCode(widget.html || widget)
     }\n<</widget>>\n`;
   });
 
@@ -588,7 +552,6 @@ const loadTheme = () => {
   document.querySelector('#body').setAttribute('data-theme', localStorage.getItem('theme'));
   document.querySelector('#theme').value = localStorage.getItem('theme') || '';
 };
-loadTheme();
 document.querySelector('#theme').addEventListener('change', (event) => {
   localStorage.setItem('theme', event.target.value);
   loadTheme();
@@ -655,22 +618,18 @@ const loadSavedCode = () => {
     widget: {},
     passage: {},
   };
+
+  const genOptions = (type) => Object.keys(savedCode[type]).reduce((names, name) => `${names}<option class="${type}">${name}</option>`, '');
   const options = {
-    widget: '',
-    passage: '',
+    widget: genOptions('widget'),
+    passage: genOptions('passage'),
   };
-  Object.keys(savedCode.passage).forEach((name) => {
-    options.passage += `<option class="passage">${name}</option>`;
-  });
-  Object.keys(savedCode.widget).forEach((name) => {
-    options.widget += `<option class="widget">${name}</option>`;
-  });
+
   document.querySelector('#saveManageSaved').innerHTML = Object.values(options).join('');
   [document.querySelector('#saveManageSaved').value] = Object.keys(savedCode[document.querySelector('#saveManageType').value]);
   document.querySelector('#linkToList').innerHTML = options.passage || '';
   toggleOptionsManage();
 };
-loadSavedCode();
 
 let overlaySave = false;
 document.querySelector('#save').addEventListener('click', () => {
@@ -726,29 +685,26 @@ document.querySelector('#saveManageConfirm').addEventListener('click', () => {
   if (saveManage === 'load') {
     dolEditor.innerHTML = savedCode[saveType][saveName].html;
     recordData();
-  }
-  if (saveManage === 'delete') {
+  } else if (saveManage === 'delete') {
     delete savedCode[saveType][saveName];
     localStorage.setItem('savedCode', JSON.stringify(savedCode));
     loadSavedCode();
-  }
-  if (saveManage === 'export') {
+  } else if (saveManage === 'export') {
     let twee = '<!-- Generated by DOL-pancake -->';
     if (saveType === 'passage') {
-      Object.keys(savedCode.passage).forEach((name) => {
-        twee += `\n:: ${name}\n${savedCode.passage[name].code}\n`;
+      Object.entries(savedCode.passage).forEach(([name, passage]) => {
+        twee += `\n:: ${name}\n${passage.code}\n`;
       });
     } else {
       twee += `\n:: Widgets ${Date.now()} [widget]\n`;
-      Object.keys(savedCode.widget).forEach((name) => {
-        twee += `\n<<widget "${name}">>\n${savedCode.widget[name].code}\n<</widget>>\n`;
+      Object.entries(savedCode.widget).forEach(([name, widget]) => {
+        twee += `\n<<widget "${name}">>\n${widget.code}\n<</widget>>\n`;
       });
     }
 
     const blob = new Blob([twee], { type: 'text/plain' });
     saveTwee(blob, `${saveType}s-${Date.now()}.twee`);
-  }
-  if (saveManage === 'clear') {
+  } else if (saveManage === 'clear') {
     if (overlayManager) {
       updateTipManager(`已删除所有 ${saveType}`);
       overlayManager = false;
@@ -765,29 +721,28 @@ const loadAll = () => {
   loadSavedCode();
   loadTheme();
 };
+loadAll();
 const tipBoxPancake = document.querySelector('#pancakeManager .tipBox');
 document.querySelector('#pancakeManage').addEventListener('change', () => {
   updateTip(tipBoxPancake, '');
 });
 document.querySelector('#pancakeManageConfirm').addEventListener('click', () => {
   const operate = document.querySelector('#pancakeManage').value;
-  let blob;
   const injection = 'injected for recognition';
 
   if (operate === 'export') {
     let json = `{"//":"${injection}",`;
     let count = 0;
-    Object.keys(localStorage).forEach((item) => {
+    Object.entries(localStorage).forEach(([key, item]) => {
       count += 1;
-      json += `"${item}": ${localStorage.getItem(item)}`;
+      json += `"${key}":${JSON.stringify(item) === `"${item}"` ? `"${item}"` : item}`;
       if (count !== Object.keys(localStorage).length) json += ',';
     });
     json += '}';
 
-    blob = new Blob([json], { type: 'application/json' });
+    const blob = new Blob([json], { type: 'application/json' });
     saveJSON(blob, `dol-pancke-config-${Date.now()}.json`);
-  }
-  if (operate === 'import') {
+  } else if (operate === 'import') {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'application/json';
@@ -800,17 +755,17 @@ document.querySelector('#pancakeManageConfirm').addEventListener('click', () => 
           updateTip(tipBoxPancake, '该文件不是有效的烤饼机设置');
           return;
         }
-        Object.keys(json).forEach((item) => {
-          if (item === '//') return;
-          localStorage.setItem(item, JSON.stringify(json[item]));
+        Object.entries(json).forEach(([key, item]) => {
+          if (key === '//') return;
+          const jitem = JSON.stringify(item);
+          localStorage.setItem(key, jitem === `"${item}"` ? item : jitem);
           loadAll();
         });
         updateTip(tipBoxPancake, '导入成功', 'gold');
       };
     });
     input.click();
-  }
-  if (operate === 'reset') {
+  } else if (operate === 'reset') {
     localStorage.clear();
     loadAll();
     updateTip(tipBoxPancake, '重置成功', 'gold');
@@ -835,12 +790,12 @@ const redo = () => {
 document.querySelector('#undo').addEventListener('click', undo);
 document.querySelector('#redo').addEventListener('click', redo);
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Control') return;
-  if (event.ctrlKey && event.key === 'z') {
-    undo();
-  }
-  if (event.ctrlKey && event.key === 'y') {
-    redo();
+  if (event.ctrlKey) {
+    if (event.key === 'z') {
+      undo();
+    } else if (event.key === 'y') {
+      redo();
+    }
   }
 });
 
