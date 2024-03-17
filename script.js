@@ -283,19 +283,27 @@ document.querySelector('#lewd-tip').addEventListener('click', () => {
 });
 
 // 插入颜色文字
+const insertOrWrap = (element) => {
+  if (selection?.isCollapsed || !selection) {
+    element.innerText = '\u200b请输入文本';
+    insert(element);
+    element.after(document.createTextNode(' '));
+  } else {
+    wrap(element);
+  }
+};
 document.querySelectorAll('.colorspan').forEach((sel) => {
   sel.addEventListener('change', (event) => {
     const span = document.createElement('span');
     span.classList.add(event.target.value);
-    if (selection?.isCollapsed || !selection) {
-      span.innerText = '\u200b请输入文本';
-      insert(span);
-      span.after(document.createTextNode(' '));
-    } else {
-      wrap(span);
-    }
+    insertOrWrap(span);
     event.target.value = '';
   });
+});
+document.querySelector('#biu').addEventListener('change', (event) => {
+  const element = document.createElement(event.target.value);
+  insertOrWrap(element);
+  event.target.value = '';
 });
 
 // 插入链接
