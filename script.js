@@ -810,7 +810,7 @@ document.addEventListener('keydown', (event) => {
     append('SPAN', document.createTextNode(' '));
     append('A', document.createElement('br'));
   }
-});
+}, { passive: false });
 
 // 清空内容
 document.querySelector('#clear').addEventListener('click', () => {
