@@ -116,28 +116,21 @@ const insertHard = (html, code, decorate) => {
   decorate?.(widget);
   insert(widget, 1);
 };
+const getSelectionAndPosition = () => {
+  selection = window.getSelection();
+  position = selection.getRangeAt(0);
+};
 
 const generateInsertTarget = (target) => {
   insertTarget = target;
   originalHTML = insertTarget.innerHTML;
   undoData.push(originalHTML);
-  insertTarget.addEventListener('blur', () => {
-    selection = window.getSelection();
-    position = selection.getRangeAt(0);
-  });
+  insertTarget.addEventListener('blur', getSelectionAndPosition);
   insertTarget.addEventListener('input', (event) => {
     Object.values(event.target.children).forEach((child) => {
       if (child?.tagName === 'FONT') {
         child.before(document.createTextNode(child.innerText));
         child.remove();
-      }
-      if (child?.tagName === 'A' && child.innerHTML.includes('\n')) {
-        if (child.innerHTML.endsWith('\n')) {
-          const br = document.createElement('br');
-          child.after(br);
-          createSelection(br, true);
-        }
-        child.innerHTML = child.innerHTML.replace('\n', '');
       }
     });
 
@@ -287,7 +280,6 @@ const insertOrWrap = (element) => {
   if (selection?.isCollapsed || !selection) {
     element.innerText = '\u200b请输入文本';
     insert(element);
-    element.after(document.createTextNode(' '));
   } else {
     wrap(element);
   }
@@ -321,7 +313,6 @@ document.querySelector('#linkConfirm').addEventListener('click', () => {
     link.innerText = '\u200b继续';
     if (time !== '') link.innerText += ` (${Math.floor(time / 60)}:${(`${time % 60}`).padStart(2, '0')})`;
     insert(link);
-    link.after(document.createTextNode(' '));
   } else {
     wrap(link);
   }
@@ -804,6 +795,20 @@ document.addEventListener('keydown', (event) => {
     } else if (event.key === 'y') {
       redo();
     }
+  }
+  // 允许回车退出颜色标签，阻止链接内换行
+  if (event.key === 'Enter' && event.target === insertTarget) {
+    getSelectionAndPosition();
+    const startContainer = position?.startContainer;
+    const append = (targetTag, element) => {
+      if (startContainer.parentElement.tagName !== targetTag) return;
+      event.preventDefault();
+      if (startContainer.textContent.length !== position?.startOffset) return;
+      startContainer.parentElement.after(element);
+      createSelection(element, true);
+    };
+    append('SPAN', document.createTextNode(' '));
+    append('A', document.createElement('br'));
   }
 });
 
