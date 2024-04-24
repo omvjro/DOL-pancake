@@ -51,7 +51,7 @@ document.querySelector('#advanced').addEventListener('change', () => {
 });
 
 // 链接标号
-const toggleIndex = (isChecked) => document.querySelectorAll('#dol a').forEach((a, index) => {
+const toggleIndex = (isChecked = document.querySelector('#link-num').checked) => document.querySelectorAll('#dol a').forEach((a, index) => {
   if (isChecked) {
     a.setAttribute('data-index', `(${index + 1}) `);
     a.setAttribute('data-if-index', '1');
@@ -60,7 +60,7 @@ const toggleIndex = (isChecked) => document.querySelectorAll('#dol a').forEach((
 toggleIndex(true);
 document.querySelector('#link-num').addEventListener('change', (event) => {
   event.target.toggleAttribute('checked');
-  toggleIndex(event.target.checked);
+  toggleIndex();
 });
 
 // 复制游戏原文
@@ -114,7 +114,7 @@ const insert = (element, isCollapsed) => {
   }
   createSelection(element, isCollapsed);
   recordData();
-  toggleIndex(document.querySelector('#link-num').checked);
+  toggleIndex();
 };
 const insertHard = (html, code, decorate) => {
   const widget = document.createElement('widget');
@@ -142,6 +142,7 @@ const generateInsertTarget = (target) => {
       }
     });
 
+    toggleIndex();
     recordData();
   });
   insertTarget.addEventListener('click', () => {
@@ -799,6 +800,7 @@ document.addEventListener('keydown', (event) => {
   }
   // 允许回车退出颜色标签，阻止链接内换行
   if (event.key === 'Enter' && event.target === insertTarget) {
+    event.stopPropagation();
     event.preventDefault();
     getSelectionAndPosition();
     const startContainer = position?.startContainer;
@@ -818,7 +820,6 @@ document.addEventListener('keydown', (event) => {
         a.classList.add('normalLink');
         a.innerText = '\u200b';
         a.insertAdjacentText('beforebegin', '\n');
-        toggleIndex(document.querySelector('#link-num').checked);
         createSelection(a, true);
       });
     }
