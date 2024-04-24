@@ -8,6 +8,16 @@ const output = document.querySelector('#output');
 let originalHTML;
 const undoData = [];
 let redoData = [];
+function findInlineLink(candidate, operator) {
+  if (!candidate) return;
+  const candidateContent = candidate.textContent;
+  if (candidateContent.includes('\n') || candidate.tagName === 'BR') return;
+  if (candidateContent.includes('<</link>>') || candidate.tagName === 'A') {
+    operator(candidate);
+    return;
+  }
+  findInlineLink(candidate.previousSibling, operator);
+}
 
 Object.entries(colors).forEach(([id, colorSet]) => {
   document.getElementById(id).innerHTML += colorSet.reduce((options, [color, name]) => `${options}
@@ -51,9 +61,6 @@ toggleIndex(true);
 document.querySelector('#link-num').addEventListener('change', (event) => {
   event.target.toggleAttribute('checked');
   toggleIndex(event.target.checked);
-});
-document.addEventListener('click', () => {
-  toggleIndex(document.querySelector('#link-num').checked);
 });
 
 // 复制游戏原文
@@ -100,13 +107,14 @@ const insert = (element, isCollapsed) => {
   if (selection?.isCollapsed === false) selection.deleteFromDocument();
   if (position?.startContainer.parentElement.parentElement === insertTarget) {
     position.startContainer.parentElement.after(element);
-  } else if (position?.startContainer.parentElement === insertTarget) {
+  } else if (position?.startContainer.parentElement === insertTarget || position?.startContainer === insertTarget) {
     position.insertNode(element);
   } else {
     insertTarget.append(element);
   }
   createSelection(element, isCollapsed);
   recordData();
+  toggleIndex(document.querySelector('#link-num').checked);
 };
 const insertHard = (html, code, decorate) => {
   const widget = document.createElement('widget');
@@ -387,17 +395,10 @@ const getCode = (sourceHTML, isHTML = false) => {
     if (child.getAttribute('code')) {
       let valueCode = child.getAttribute('valueCode') || '';
       if (valueCode !== '') {
-        (function addValueCodeToInlineLink(candidate) {
-          if (!candidate) return;
-          const candidateContent = candidate.textContent;
-          if (candidateContent.includes('\n')) return;
-          if (candidateContent.includes('<</link>>')) {
-            candidate.textContent = candidateContent.replace('<</link>>', `${valueCode}<</link>>`);
-            valueCode = '';
-            return;
-          }
-          addValueCodeToInlineLink(candidate.previousSibling);
-        }(child.previousSibling));
+        findInlineLink(child.previousSibling, (link) => {
+          link.textContent = link.textContent.replace('<</link>>', `${valueCode}<</link>>`);
+          valueCode = '';
+        });
       }
       const code = document.createTextNode(`${child.getAttribute('code')}${valueCode}`);
       mockOutput.replaceChild(code, child);
@@ -798,17 +799,29 @@ document.addEventListener('keydown', (event) => {
   }
   // 允许回车退出颜色标签，阻止链接内换行
   if (event.key === 'Enter' && event.target === insertTarget) {
+    event.preventDefault();
     getSelectionAndPosition();
     const startContainer = position?.startContainer;
-    const append = (targetTag, element) => {
-      if (startContainer.parentElement.tagName !== targetTag) return;
-      event.preventDefault();
+
+    if (['SPAN', 'A'].includes(startContainer.parentElement.tagName)) {
       if (startContainer.textContent.length !== position?.startOffset) return;
-      startContainer.parentElement.after(element);
-      createSelection(element, true);
-    };
-    append('SPAN', document.createTextNode(' '));
-    append('A', document.createElement('br'));
+      const empty = document.createTextNode(' ');
+      startContainer.parentElement.after(empty);
+      createSelection(empty, true);
+    } else {
+      const br = document.createElement('br');
+      insert(br, 1);
+      findInlineLink(br.previousSibling, () => {
+        br.remove();
+        const a = document.createElement('a');
+        insert(a);
+        a.classList.add('normalLink');
+        a.innerText = '\u200b';
+        a.insertAdjacentText('beforebegin', '\n');
+        toggleIndex(document.querySelector('#link-num').checked);
+        createSelection(a, true);
+      });
+    }
   }
 }, { passive: false });
 
