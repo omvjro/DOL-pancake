@@ -103,9 +103,11 @@ const createSelection = (element, isCollapsed = false) => {
   if (isCollapsed) range.collapse(0);
   newSelection.addRange(range);
 };
-const insert = (element, isCollapsed) => {
+const insert = (element, isCollapsed, forceLocal = false) => {
   if (selection?.isCollapsed === false) selection.deleteFromDocument();
-  if (position?.startContainer.parentElement.parentElement === insertTarget) {
+  if (forceLocal) {
+    position.insertNode(element);
+  } else if (position?.startContainer.parentElement.parentElement === insertTarget) {
     position.startContainer.parentElement.after(element);
   } else if (position?.startContainer.parentElement === insertTarget || position?.startContainer === insertTarget) {
     position.insertNode(element);
@@ -282,6 +284,13 @@ document.querySelector('#lewd-tip').addEventListener('click', () => {
   let text = `${getOptionText('lewd-tip-type')} ${getOptionText('lewd-tip-grade')}`;
   if (grade === '6') text = `!${text}!`;
   insertHard(` | <span class="${tagColors[grade]}">${text}</span>`, `<<${type}${grade}>>`);
+});
+
+// 插入常用符号
+document.querySelector('#symbols').addEventListener('change', (event) => {
+  const symbol = event.target.value;
+  insert(document.createTextNode(symbol), true, symbol === '£');
+  event.target.value = '';
 });
 
 // 插入颜色文字
