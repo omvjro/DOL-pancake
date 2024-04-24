@@ -800,6 +800,7 @@ const redo = () => {
 document.querySelector('#undo').addEventListener('click', undo);
 document.querySelector('#redo').addEventListener('click', redo);
 document.addEventListener('keydown', (event) => {
+  event.stopPropagation();
   if (event.ctrlKey) {
     if (event.key === 'z') {
       undo();
@@ -809,7 +810,6 @@ document.addEventListener('keydown', (event) => {
   }
   // 允许回车退出颜色标签，阻止链接内换行
   if (event.key === 'Enter' && event.target === insertTarget) {
-    event.stopPropagation();
     event.preventDefault();
     getSelectionAndPosition();
     const startContainer = position?.startContainer;
