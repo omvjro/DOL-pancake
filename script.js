@@ -1,11 +1,10 @@
 import {
-  colors, npcList, statics, diffiColors, tagColors, hollows,
+  colors, npcList, statics, diffiColors, lewdColors, tags, hollows,
 } from './lib/data.js';
 import { saveTwee, savePng, saveJSON } from './lib/save.js';
 
 const dolEditor = document.querySelector('div.passage');
 const output = document.querySelector('#output');
-let originalHTML;
 const undoData = [];
 let redoData = [];
 function findInlineLink(candidate, operator) {
@@ -18,15 +17,34 @@ function findInlineLink(candidate, operator) {
   }
   findInlineLink(candidate.previousSibling, operator);
 }
+function updateTip(tipbox, tip, color = 'red') {
+  tipbox.innerHTML = `<span class="${color}">${tip}</span>`;
+}
 
+// 选项初始化
 Object.entries(colors).forEach(([id, colorSet]) => {
   document.getElementById(id).innerHTML += colorSet.reduce((options, [color, name]) => `${options}
   <option${!name ? ` class="${color}"` : ''} value="${color}">${name || color}</option>`, '');
 });
 
+document.getElementById('static-class').innerHTML = Object.entries(statics).reduce((options, [value, { NAME }]) => `${options}<option value=${value}>${NAME}</option>`, '');
 document.getElementById('static-type').innerHTML = Object.entries(statics).reduce((goptions, [clas, stats]) => `${goptions}${
-  Object.entries(stats).reduce((options, [value, { name }]) => `${options}<option class="${clas}" value="${value}">${name}</option>`, '')
+  Object.entries(stats).reduce((options, [value, { name }]) => `${options}${name ? `<option class="${clas}" value="${value}">${name}</option>` : ''}`, '')
 }`, '');
+
+document.querySelector('#symbols').insertAdjacentHTML('beforebegin', Object.entries(tags).reduce((html, [id, itags]) => `${html}
+<select class="tags" id="${id}">
+  <option style='display: none' value="">${itags.NAME}</option>
+  ${Object.entries(itags).reduce(
+    (ihtml, [tag, dis]) => {
+      if (!dis.name) return ihtml;
+      // if (dis.name instanceof Array) return ihtml + dis.name.reduce((iihtml, name) => `${iihtml}<option value=${tag}>${name}</option>`, '');
+      return `${ihtml}<option value=${tag}>${dis.name}</option>`;
+    },
+    '',
+  )
+}
+</select>`, ''));
 
 // 高级选项
 const switchAdvanced = () => {
@@ -133,14 +151,22 @@ const getSelectionAndPosition = () => {
 
 const generateInsertTarget = (target) => {
   insertTarget = target;
-  originalHTML = insertTarget.innerHTML;
-  undoData.push(originalHTML);
+  undoData.push(insertTarget.innerHTML);
   insertTarget.addEventListener('blur', getSelectionAndPosition);
   insertTarget.addEventListener('input', (event) => {
     Object.values(event.target.children).forEach((child) => {
       if (child?.tagName === 'FONT') {
         child.before(document.createTextNode(child.innerText));
         child.remove();
+      }
+      // 阻止由粘贴等方式造成的颜色文字或链接内换行，同时避免移动端允许换行的奇怪bug
+      if (['A', 'SPAN'].includes(child?.tagName) && child.innerHTML.includes('\n')) {
+        if (child.innerHTML.endsWith('\n')) {
+          const br = document.createElement('br');
+          child.after(br);
+          createSelection(br, true);
+        }
+        child.innerHTML = child.innerHTML.replace('\n', '');
       }
     });
 
@@ -178,15 +204,16 @@ document.querySelector('#static-type').addEventListener('change', (event) => {
   document.querySelector('#static-npc')?.remove();
   const type = event.target.value;
   const stat = statics[staticClass.value][type];
+  const limit = stat.limit || statics[staticClass.value]._?.limit;
 
-  if (stat.limit) {
+  if (limit) {
     document.querySelectorAll('#static-plus option').forEach((option) => {
-      if (option.value.includes('g')) {
-        if (option.value.length > stat.limit[0]) {
-          option.hidden = 1;
-        }
-      } else if (option.value.length > stat.limit[1]) {
+      if (option.value.includes('g') && option.value.length > limit[0]) {
         option.hidden = 1;
+      } else if (option.value.includes('l') && option.value.length > limit[1]) {
+        option.hidden = 1;
+      } else {
+        option.hidden = 0;
       }
     });
     document.querySelector('#static-plus').value = 'g';
@@ -209,6 +236,7 @@ document.querySelector('#static').addEventListener('click', () => {
   let type = document.getElementById('static-type').value;
   const npc = document.getElementById('static-npc')?.value;
   const stat = statics[staticClass.value][type];
+  const value = stat.value === false ? undefined : (stat.value || statics[staticClass.value]._?.value);
 
   if (stat.variant) {
     plus = isPlus ? plus.replaceAll('g', 'l') : plus.replaceAll('l', 'g');
@@ -221,20 +249,14 @@ document.querySelector('#static').addEventListener('click', () => {
   }
 
   let code = `<<${plus}${type}${npc ? ` "${npc}"` : ''}>>`;
-  const valueCode = stat.value ? `<<${valueType} ${isPlus ? '' : '-'}${stat.value[plus.length - 1]}>>` : '';
+  const valueCode = value ? `<<${valueType} ${isPlus ? '' : '-'}${value[plus.length - 1]}>>` : '';
   let text = `${getOptionText('static-plus')} ${getOptionText('static-npc') || ''}${stat.name}`;
   [text, , code] = stat.decorate?.({
     text, isPlus, code,
   }) || [text, isPlus, code];
 
-  let color = stat.colors?.[+!isPlus];
-  if (!color) {
-    if (stat.positive || staticClass.value === 'skill') {
-      color = isPlus ? 'green' : 'red';
-    } else {
-      color = isPlus ? 'red' : 'green';
-    }
-  }
+  let color = (stat.colors || statics[staticClass.value]._?.colors)?.[+!isPlus];
+  color ??= isPlus ? 'red' : 'green';
 
   insertHard(` | <span class="${color}">${text}</span>`, code, (widget) => widget.setAttribute('valueCode', valueCode));
 });
@@ -271,8 +293,10 @@ document.querySelector('#skill-check').addEventListener('click', () => {
 document.querySelectorAll('.tags').forEach((sel) => {
   sel.addEventListener('change', (event) => {
     const type = event.target.value;
+    const { id } = event.target.closest('select');
+    const color = tags[id][type].color || tags[id]._?.color;
     insertHard(
-      ` | <span class="${tagColors[type]}">${getOptionText(event.target.id)}</span>`,
+      ` | <span class="${color}">${getOptionText(id)}</span>`,
       `<<${type}>>`,
     );
     event.target.value = '';
@@ -283,7 +307,7 @@ document.querySelector('#lewd-tip').addEventListener('click', () => {
   const grade = document.querySelector('#lewd-tip-grade').value;
   let text = `${getOptionText('lewd-tip-type')} ${getOptionText('lewd-tip-grade')}`;
   if (grade === '6') text = `!${text}!`;
-  insertHard(` | <span class="${tagColors[grade]}">${text}</span>`, `<<${type}${grade}>>`);
+  insertHard(` | <span class="${lewdColors[grade - 1]}">${text}</span>`, `<<${type}${grade}>>`);
 });
 
 // 插入常用符号
@@ -352,10 +376,7 @@ document.querySelector('#insertPic').addEventListener('input', (event) => {
   });
 });
 
-const updateTip = (tipbox, tip, color = 'red') => {
-  tipbox.innerHTML = `<span class="${color}">${tip}</span>`;
-};
-
+// NPC 部件
 document.querySelector('#hollows').innerHTML = Object.keys(hollows).reduce((selects, key) => `
 ${selects}
 <select id=${key}>
@@ -808,7 +829,7 @@ document.addEventListener('keydown', (event) => {
       redo();
     }
   }
-  // 允许回车退出颜色标签，阻止链接内换行
+  // 允许回车退出颜色标签，阻止链接内换行，自动添加下一个链接
   if (event.key === 'Enter' && event.target === insertTarget) {
     event.preventDefault();
     getSelectionAndPosition();
