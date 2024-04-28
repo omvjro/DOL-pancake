@@ -1809,3 +1809,70 @@ mouse.tooltip-image:hover span:last-of-type {
 		flex: 1 1 24.3%;
 	}
 }
+
+// feat
+
+.feat-overlay {
+	/* display: none; */
+	position: absolute;
+	right: 10px;
+	top: 20px;
+	/* height: 81px; */
+	width: 300px; /* 375 * 0.8 */
+	max-width: 400px;
+	z-index: 1000;
+}
+
+.feat {
+	display: flex;
+	flex-direction: row;
+	background-color: var(--gold);
+	padding: 1px;
+	gap: 1px;
+	line-height: 1.75;
+}
+
+.featImage {
+	display: flex;
+	padding: 2px;
+	background-color: var(--800);
+	align-items: center;
+}
+
+.featCoin {
+	padding: 1px;
+}
+
+.dot {
+	height: 74px;
+	width: 74px;
+	background-color: var(--400);
+	border-radius: 50%;
+	padding: 1px;
+}
+
+.featText {
+	background-color: var(--800);
+	flex-grow: 1;
+	padding: 5px;
+}
+
+.featText .title {
+	font-weight: bold;
+	margin: 5px;
+}
+
+.closeFeat {
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 100%;
+	width: 100%;
+	width: calc(100% + 79px);
+	max-width: 400px;
+	z-index: 1001;
+}
+
+.hiddenFeat .closeFeat {
+	display: none;
+}
