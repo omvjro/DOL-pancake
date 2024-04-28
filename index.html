@@ -3,15 +3,70 @@
     <meta charset="UTF-8">
     <title>DOL烤饼机</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <script src="modern-screenshot@4.4.37.min.js"></script>
+    <script src="/src/modern-screenshot@4.4.37.min.js"></script>
+    <script type="module">
+      import { createApp } from '/src/petite-vue.js'
+      createApp({
+        scene: 'default',
+        name: '凯拉尔',
+        title: '不合群者',
+        description: '因嫉妒歇斯底里。',
+        color: 'red',
+        editing: 1,
+        stats: [
+          {
+            name: '好感',
+            progress: 80,
+            direction: 'horizontal',
+            activeicon: 'https://eltirosto.github.io/Degrees-of-Lewdity-Chinese-Localization/img/ui/heart.png',
+            inactiveicon: 'https://eltirosto.github.io/Degrees-of-Lewdity-Chinese-Localization/img/ui/emptyheart.png'
+          },
+          {
+            name: '性欲',
+            progress: 50,
+            direction: 'vertical',
+            activeicon: 'https://eltirosto.github.io/Degrees-of-Lewdity-Chinese-Localization/img/ui/vial.png',
+            inactiveicon: 'https://eltirosto.github.io/Degrees-of-Lewdity-Chinese-Localization/img/ui/emptyvial.png'
+          },
+          {
+            name: '嫉妒',
+            progress: 100,
+            direction: 'horizontal',
+            activeicon: 'https://eltirosto.github.io/Degrees-of-Lewdity-Chinese-Localization/img/ui/wideeye.png'
+          },
+          {
+            name: '',
+            progress: 100,
+            direction: 'horizontal',
+            activeicon: ''
+          }
+        ],
+        loadFile(i, event) {
+          const reader = new FileReader();
+          reader.readAsDataURL(event.target.files[0]);
+          reader.onload = () => {
+            this.stats[i].activeicon = reader.result;
+            this.stats[i].inactiveicon = undefined;
+          };
+        },
+        clear() {
+          if (this.scene === 'default') {
+            const dolEditor = document.querySelector('div.passage');
+            dolEditor.innerText = '';
+          } else if (this.scene === 'npc') {
+            this.stats = [{name: '',},{name: '',},{name: '',},{name: '',}]
+          }
+        }
+      }).mount()
+    </script>
     <script type="module" src="script.js" defer></script>
     <link type="text/css" rel="stylesheet" href="style.css" />
     <link type="image/png" rel="icon" sizes="16x16" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAGJUExURUdwTM5+RYZPI4BVKoRNH4lQIwAAAHU7H6xoMo1SInlRG4ZMIYNGIa5oNJdaLKtnNK5qNo5VHMJ3QKdkMZ1cMJ5dLqBfLaJgMqRfMJhYKYdQKNGvo6FhM6tkNJRVJ4tGF8B4QZ1cLaliM5FUJ5ZWKPbXxuPBs5NWJ4xSJKhiNJlZKPrp39Krmb2qpKBdLdGom927oo9SI7qHZJpaKbiWiruhmYlRIpVbNtqHTP/u4rVpOqhiMr9xP61jM7FnN7hrO7ttPptbK89+RumaVteFSL90PadbHN2PSKVYHLN1S6ZgMuO7n+3j3P/s34NOI/3p3ZRXKadjNOCPUOOTUsh6Qs59QPCiWsh3O7ZmKrh1Oo9NGMJ2Qp9YJrhqOrBkLtvSz694UpBSIOCUU7CFaNikhKdoOq9ySfHby6OZlHR4f6FvRp9TFpVTIP7o15t7ZqmHbY2YqODEruXEr7K3wC5ejfrNsODi5s+omPTazSJSgb29whxOfvLTxfzk1b+Ma8PEyfPj2+Hm63iNotY+v8UAAAA4dFJOUwD8PQYhfQEEtkkJKhexXbrGEu+WdaXC/rPoRln8+HUL++r0vIX1kPSx4p7s9q7OOP6Y1P1r/av8OyD8ogAAAOZJREFUGBk1wIWWglAUBdCjggzqdHd3N/chpWKP6HR3d3d/ubhcbtjczuIiW4kXeVypQ8oJVFR6YHOXBeelPLPaBUB0SAtLy6FwMBLZaGsAULMYWlldM/374XVlq90Drj4eiJrb5zLbPdrUO1ohMtkfvUjdxGMnB6ra6YLIZO0y9f94fUene0oXIDJZ0xN/Hw9EZ4bWAvj6FZah57d3otvjZh+AEd3I0O+PRbQTqxMA9Kks/fJlvVpzidoq2Jy9k0b6+/N+7LCJL0cO5x2fmX2a4Ad4AQVT01dDw6MoEHoGk0TJ7kbYsoQUMAKQPM6bAAAAAElFTkSuQmCC">
   </head>
-  <body>
-    <div id="container">
-      <div id="dol">
-        <div id="html">
+  <body v-scope>
+    <div id="container" :style="scene === 'npc' ? { alignItems: 'center' } : {}">
+      <div id="dol" :style="scene === 'npc' ? { height: 'fit-content' } : {}">
+        <div id="html" v-show="scene === 'default'">
           <div id="body">
             <div id="ui-overlay" class="ui-close"></div>
             <div id="ui-bar" aria-live="polite" class="stowed">
@@ -36,11 +91,37 @@
             <div id="gameVersionDisplay2" contenteditable="plaintext-only">MADE BY DOL烤饼机</div>
           </div>
         </div>
+        <div id="npc-relations" class="relation-box-list" v-show="scene === 'npc'">
+          <div class="relation-box">
+              <div class="relation-top-line">
+                  <span class="relation-name">
+                      {{ name }}
+                      <small class="relation-title black"><i>{{ title }}</i></small>
+                  </span>
+              </div>
+              <div class="relation-description">{{ name }}
+                  <span :class="color">{{ description }}</span><br>
+              </div>
+              <div class="relation-stat-list">
+                <template v-for="stat in stats">
+                  <div v-show="stat.name !== ''" class="relation-stat-block" :style="`--progress: ${ stat.progress }%;`">
+                      <label>{{ stat.name }}</label>
+                      <div class="relation-stat">
+                          <span v-show="stat.name !== '' && stat.activeicon" class="relation-stat-icon" :class="stat.direction">
+                              <img class="active-icon-img" :src="stat.activeicon">
+                              <img class="inactive-icon-img" :class="{ outlined: !stat.inactiveicon }" :src="stat.inactiveicon || stat.activeicon">
+                          </span>
+                          <span v-show="stat.name !== '' && stat.progress" class="relation-stat-percent black">{{ stat.progress }}<small>%</small></span>
+                      </div>
+                  </div>
+                </template>
+              </div>
+          </div>
+        </div>
       </div>
       <div class="toolbox">
         <div class="item">欢迎使用DOL烤饼机！本烤饼机专为高度还原游戏界面而设计，如在传播所生成图片时遇到疑问，请及时说明此为假图，谢谢！如有问题或建议，可前往 <a href="https://github.com/omvjro/DOL-pancake" target="_blank">GitHub 仓库</a>提出。
         </div>
-        <div class="selectors">
         <div class="item">
           <label for="theme">更换主题：</label>
           <select id="theme" name="theme">
@@ -50,7 +131,13 @@
             <option value="monokai">Monokai</option>
             <option value="storm">Storm</option>
           </select>
+          <label for="scene">更换场景：</label>
+          <select name="scene" v-model="scene">
+            <option value="default">默认</option>
+            <option value="npc">NPC</option>
+          </select>
         </div>
+        <div v-show="scene === 'default'">
         <div class="item">
           <label for="advanced">高级选项</label><input type="checkbox" id="advanced" name="advanced" />
           <label for="link-num">链接标号</label><input type="checkbox" id="link-num" name="link-num" checked />
@@ -210,13 +297,33 @@
           <span class="tipBox"></span>
         </div>
         </div>
+        <div v-show="scene === 'npc'">
+          <div class="item">
+            <input type="text" v-model="name" />
+            <input type="text" v-model="title" />
+          </div>
+          <div class="item"><select id="descolor" v-model="color"></select>
+          描述：<input v-model="description" /></div>
+          <template v-for="(stat, i) in stats">
+            <div class="item">
+              <input type="text" v-model="stat.name" />
+              <input type="number" v-model="stat.progress" min="1" max="100" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value > 100) this.value = '100';"></input>%
+              <select v-model="stat.direction">
+                <option value="horizontal">水平</option>
+                <option value="vertical">竖直</option>
+              </select>
+              <label for="activeicon">图标：</label>
+              <input @change="loadFile(i, $event)" id="activeicon" type="file" accept="image/png, image/jpeg, image/webp">
+            </div>
+          </template>
+        </div>
         <div class="item">
           <button id="undo"><span class="iconfont icon-undo-alt"></span></button>
           <button id="redo"><span class="iconfont icon-redo-alt"></span></button>
           <button id="pic">预览图片</button>
           <button id="pic-down">下载图片</button>
-          <button id="code">查看代码</button>
-          <button id="clear">清空内容</button>
+          <button id="code" v-show="scene === 'default'">查看代码</button>
+          <button id="clear" @click="clear">清空内容</button>
         </div>
         <div class="item" id="output"></div>
       </div>

@@ -46,6 +46,8 @@ document.querySelector('#symbols').insertAdjacentHTML('beforebegin', Object.entr
 }
 </select>`, ''));
 
+document.getElementById('descolor').innerHTML = colors.color.reduce((html, name) => `${html}<option>${name}</option>`, '');
+
 // 高级选项
 const switchAdvanced = () => {
   document.querySelectorAll('.advanced').forEach((advanced) => {
@@ -858,7 +860,6 @@ document.addEventListener('keydown', (event) => {
 
 // 清空内容
 document.querySelector('#clear').addEventListener('click', () => {
-  dolEditor.innerText = '';
   output.innerText = '';
   recordData();
 });

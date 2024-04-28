@@ -22,17 +22,17 @@ html, pre {
     ::-webkit-scrollbar {
         width: 10px;
       }
-      
+
       ::-webkit-scrollbar-track {
         background-color: transparent;
       }
-      
+
       ::-webkit-scrollbar-thumb {
         background-color: #666;
         border: 5px solid transparent;
         background-clip: content-box;
       }
-      
+
       ::-webkit-scrollbar-thumb:hover {
         background-color: #aaa;
       }
@@ -113,7 +113,7 @@ body, html {
 	input[type=file] {
 		display: none;
 	}
-	label[for="insertPic"]::after {
+	label:has(+input[type=file])::after {
 		content: '选择文件';
 		font-size: .8em;
 		color: #eee;
@@ -122,7 +122,7 @@ body, html {
 		padding: .34em .4em;
 		cursor: pointer;
 	}
-	label[for="insertPic"]:hover::after {
+	label:has(+input[type=file]):hover::after {
 		background-color: #333;
 		border-color: #eee
 	}
@@ -195,8 +195,10 @@ div#dol {
 	float: right;
 	width: 375px;
 	max-width: 100%;
-	min-height: 667px;
 	flex: 0 1 375px;
+	#html {
+		min-height: 667px;
+	}
 }
 
 div#dol, #customWidgetDisplay {

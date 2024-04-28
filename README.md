@@ -11,11 +11,12 @@
 ## 计划
 由于勉强能用.jpg且作者实力有限，无限鸽，如有实际需求，将更快完成。
 - [ ] 差分
-- [ ] 自定义NPC
+- [ ] Vue 重构
 
 ## 其他问题
-- Safari 上可能存在显示问题。由于没有相关设备，调试不便，暂不计划解决。
+- Safari 上可能存在问题。由于没有相关设备，调试不便，暂不计划解决。
 
 ## 感谢
 - [modern-screenshot](https://github.com/qq15725/modern-screenshot)
 - [less.js](https://github.com/less/less.js) ([less-plugin-clean-css](https://github.com/less/less-plugin-clean-css))
+- [petite-vue](https://github.com/vuejs/petite-vue)
