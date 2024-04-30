@@ -577,7 +577,7 @@ document.querySelector('#customExport').addEventListener('click', () => {
   });
 
   const blob = new Blob([twee], { type: 'text/plain' });
-  saveTwee(blob, `widgets-${Date.now()}.twee`);
+  saveTwee(blob, 'widgets');
 });
 
 // 更换主题
@@ -613,7 +613,7 @@ document.querySelector('#pic-down').addEventListener('click', () => {
   document.querySelectorAll('.noDisplay').forEach((e) => { e.style.display = 'none'; });
   output.innerText = '生成图片中……';
   modernScreenshot.domToBlob(document.querySelector('#dol'), { scale: 2 }).then((blob) => {
-    savePng(blob, `dol-pancake-${Date.now()}.png`);
+    savePng(blob, 'dol-pancake');
     output.innerText = '';
   }).catch((error) => {
     output.innerText = `出错了（${error}）`;
@@ -736,7 +736,7 @@ document.querySelector('#saveManageConfirm').addEventListener('click', () => {
     }
 
     const blob = new Blob([twee], { type: 'text/plain' });
-    saveTwee(blob, `${saveType}s-${Date.now()}.twee`);
+    saveTwee(blob, `${saveType}s`);
   } else if (saveManage === 'clear') {
     if (overlayManager) {
       updateTipManager(`已删除所有 ${saveType}`);
@@ -774,7 +774,7 @@ document.querySelector('#pancakeManageConfirm').addEventListener('click', () => 
     json += '}';
 
     const blob = new Blob([json], { type: 'application/json' });
-    saveJSON(blob, `dol-pancke-config-${Date.now()}.json`);
+    saveJSON(blob, 'dol-pancke-config');
   } else if (operate === 'import') {
     const input = document.createElement('input');
     input.type = 'file';
