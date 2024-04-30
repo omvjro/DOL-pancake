@@ -851,7 +851,7 @@ document.addEventListener('keydown', (event) => {
         insert(a);
         a.classList.add('normalLink');
         a.innerText = '\u200b';
-        a.insertAdjacentText('beforebegin', '\n');
+        a.insertAdjacentHTML('beforebegin', '<br>');
         createSelection(a, true);
       });
     }
