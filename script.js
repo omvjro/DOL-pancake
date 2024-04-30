@@ -46,7 +46,7 @@ document.querySelector('#symbols').insertAdjacentHTML('beforebegin', Object.entr
 }
 </select>`, ''));
 
-document.getElementById('descolor').innerHTML = colors.color.reduce((html, name) => `${html}<option>${name}</option>`, '');
+document.getElementById('descolor').innerHTML = `${colors.color.reduce((html, name) => `${html}<option>${name}</option>`, '')}<option>white</option>`;
 
 // 高级选项
 const switchAdvanced = () => {
