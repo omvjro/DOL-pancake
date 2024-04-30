@@ -541,7 +541,7 @@ const loadCustomEditor = () => {
     if (overlayWidget[2]) overlayWidget[2] = false;
 
     generateInsertTarget(dolEditor);
-    insertHard(code || `<span class="noDisplay">${widgetName}</span>`, twee || getCode(code));
+    insertHard(code || `<span class="noDisplay">${widgetName || twee}</span>`, twee || getCode(code));
   });
   document.querySelector('#customWidgetQuit').addEventListener('click', () => {
     document.querySelector('#customEditor').remove();
