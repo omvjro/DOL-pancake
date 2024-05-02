@@ -41,12 +41,12 @@
             activeicon: ''
           },
         ],
-        loadFile(i, event) {
+        loadFile(stat, event) {
           const reader = new FileReader();
           reader.readAsDataURL(event.target.files[0]);
           reader.onload = () => {
-            this.stats[i].activeicon = reader.result;
-            this.stats[i].inactiveicon = undefined;
+            stat.activeicon = reader.result;
+            stat.inactiveicon = undefined;
           };
         },
         clear() {
@@ -338,8 +338,8 @@
                 <option value="horizontal">水平</option>
                 <option value="vertical">竖直</option>
               </select>
-              <label for="activeicon">图标：</label>
-              <input @change="loadFile(i, $event)" id="activeicon" type="file" accept="image/png, image/jpeg, image/webp">
+              <label :for="'activeicon' + i">图标：</label>
+              <input @change="loadFile(stat, $event)" :id="'activeicon' + i" type="file" accept="image/png, image/jpeg, image/webp">
             </div>
           </template>
         </div>
