@@ -22,7 +22,8 @@ function updateTip(tipbox, tip, color = 'red') {
 }
 
 // 自动保存
-dolEditor.innerHTML = localStorage.getItem('temp') || `欢迎游玩欲都孤儿！
+const loadHTML = () => {
+  dolEditor.innerHTML = localStorage.getItem('temp') || `欢迎游玩欲都孤儿！
 
 倘若你不想被卷入麻烦，那么请牢记要穿着得体，并待在安全、明亮的地方。夜晚是非常危险的，尤其当你身穿色情下流的服饰时，那将引起某些人的注意——而这究竟会给你带来好运还是霉头，谁知道呢？
 
@@ -30,6 +31,8 @@ dolEditor.innerHTML = localStorage.getItem('temp') || `欢迎游玩欲都孤儿�
 巴士是这个小镇里最便捷的交通方式，可以通过巴士站快速移动到想要去的地方。
 
 <a class="normalLink">&ZeroWidthSpace;继续</a>`;
+};
+loadHTML();
 
 window.addEventListener('beforeunload', () => {
   localStorage.setItem('temp', dolEditor.innerHTML);
@@ -764,11 +767,12 @@ document.querySelector('#saveManageConfirm').addEventListener('click', () => {
   }
 });
 
-// 设置管理
 const loadAll = () => {
   loadCustomWidgets();
   loadSavedCode();
   loadTheme();
+  loadHTML();
+  toggleIndex();
 };
 loadAll();
 const tipBoxPancake = document.querySelector('#pancakeManager .tipBox');
@@ -777,18 +781,9 @@ document.querySelector('#pancakeManage').addEventListener('change', () => {
 });
 document.querySelector('#pancakeManageConfirm').addEventListener('click', () => {
   const operate = document.querySelector('#pancakeManage').value;
-  const injection = 'injected for recognition';
 
   if (operate === 'export') {
-    let json = `{"//":"${injection}",`;
-    let count = 0;
-    Object.entries(localStorage).forEach(([key, item]) => {
-      count += 1;
-      json += `"${key}":${JSON.stringify(item) === `"${item}"` ? `"${item}"` : item}`;
-      if (count !== Object.keys(localStorage).length) json += ',';
-    });
-    json += '}';
-
+    const json = JSON.stringify(localStorage);
     const blob = new Blob([json], { type: 'application/json' });
     saveJSON(blob, 'dol-pancke-config');
   } else if (operate === 'import') {
@@ -800,16 +795,11 @@ document.querySelector('#pancakeManageConfirm').addEventListener('click', () => 
       reader.readAsText(event.target.files[0]);
       reader.onload = () => {
         const json = JSON.parse(reader.result);
-        if (json['//'] !== injection) {
-          updateTip(tipBoxPancake, '该文件不是有效的烤饼机设置');
-          return;
-        }
+
         Object.entries(json).forEach(([key, item]) => {
-          if (key === '//') return;
-          const jitem = JSON.stringify(item);
-          localStorage.setItem(key, jitem === `"${item}"` ? item : jitem);
-          loadAll();
+          localStorage.setItem(key, item);
         });
+        loadAll();
         updateTip(tipBoxPancake, '导入成功', 'gold');
       };
     });
