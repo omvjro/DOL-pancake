@@ -90,7 +90,18 @@ document.querySelector('#advanced').addEventListener('change', () => {
 // 链接标号
 const toggleIndex = (isChecked = document.querySelector('#link-num').checked) => document.querySelectorAll('#dol a').forEach((a, index) => {
   if (isChecked) {
-    a.setAttribute('data-index', `(${index + 1}) `);
+    const n = (index + 1) % 10;
+    const np1 = (`${n + 1}`).slice(-1);
+    const prefxdn = {
+      0: n,
+      1: `Shift + ${np1}`,
+      2: `Ctrl + ${np1}`,
+      3: `Alt + ${np1}`,
+    };
+    const dataIndex = prefxdn[Math.floor((index + 1) / 10)];
+    if (dataIndex) {
+      a.setAttribute('data-index', `(${dataIndex}) `);
+    }
     a.setAttribute('data-if-index', '1');
   } else { a.setAttribute('data-if-index', '0'); }
 });
