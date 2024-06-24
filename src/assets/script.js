@@ -22,23 +22,6 @@ function updateTip(tipbox, tip, color = 'red') {
   tipbox.innerHTML = `<span class="${color}">${tip}</span>`;
 }
 
-// 自动保存
-const loadHTML = () => {
-  dolEditor.innerHTML = localStorage.getItem('temp') || `欢迎使用DOL烤饼机！
-
-倘若你不想被卷入麻烦，那么请牢记要穿着得体，并待在安全、明亮的地方。夜晚是非常危险的，尤其当你身穿色情下流的服饰时，那将引起某些人的注意——而这究竟会给你带来好运还是霉头，谁知道呢？
-
-新学期将在明日09:00开始，上学的时候别忘记穿校服！
-巴士是这个小镇里最便捷的交通方式，可以通过巴士站快速移动到想要去的地方。
-
-<a class="normalLink">&ZeroWidthSpace;继续</a>`;
-};
-loadHTML();
-
-window.addEventListener('beforeunload', () => {
-  localStorage.setItem('temp', dolEditor.innerHTML);
-});
-
 // 选项初始化
 Object.entries(colors).forEach(([id, colorSet]) => {
   document.getElementById(id).innerHTML += colorSet.reduce((options, [color, name]) => `${options}
@@ -771,7 +754,6 @@ document.querySelector('#saveManageConfirm').addEventListener('click', () => {
 const loadAll = () => {
   loadCustomWidgets();
   loadSavedCode();
-  loadHTML();
   toggleIndex();
 };
 loadAll();

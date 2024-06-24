@@ -1,11 +1,19 @@
 <script setup>
 import { watch } from 'vue';
 import { ref } from 'vue'
+import { computed } from 'vue';
 import RelationBox from './components/RelationBox.vue';
 
-const scene = ref('default')
-const theme = ref(localStorage.getItem('theme'))
-const feat = ref('none'),
+const isFirefox = computed(() => {
+  return navigator.userAgent.includes('Firefox')
+})
+const contenteditable = computed(() => {
+  return isFirefox.value ? 'true' : 'plaintext-only'
+})
+const scene = ref('default'),
+      theme = ref(localStorage.getItem('theme')),
+
+      feat = ref('none'),
       featTitle = ref(''),
       featText = ref(''),
 
@@ -42,8 +50,8 @@ const feat = ref('none'),
           },
       ])
 
-watch(theme, (newTheme) => {
-  localStorage.setItem('theme', newTheme)
+watch(theme, (newValue) => {
+  localStorage.setItem('theme', newValue)
 })
 </script>
 
@@ -67,11 +75,11 @@ watch(theme, (newTheme) => {
                 <div class="closeFeat"></div>
               </div>
               <div id="passages" aria-live="polite">
-                <div class="passage" contenteditable="plaintext-only"></div>
+                <div class="passage" :contenteditable="contenteditable" v-html="temp || $t('placeholder')"></div>
               </div>
             </div>
-            <div id="gameVersionDisplay" contenteditable="plaintext-only"> MADE BY DOL烤饼机 </div>
-            <div id="gameVersionDisplay2" contenteditable="plaintext-only">MADE BY DOL烤饼机</div>
+            <div id="gameVersionDisplay" :contenteditable="contenteditable"> {{ $t('watermark') }} </div>
+            <div id="gameVersionDisplay2" :contenteditable="contenteditable">{{ $t('watermark') }}</div>
           </div>
         </div>
         <RelationBox v-show="scene === 'npc'"
@@ -82,34 +90,39 @@ watch(theme, (newTheme) => {
                      :stats />
       </div>
       <div class="toolbox">
-        <div class="item">欢迎使用DOL烤饼机！本烤饼机专为高度还原游戏界面而设计，如在传播所生成图片时遇到疑问，请及时说明此为假图，谢谢！如有问题或建议，可前往 <a href="https://github.com/omvjro/DOL-pancake" target="_blank">GitHub 仓库</a>提出。
-        </div>
         <div class="item">
-          <label for="theme">更换主题：</label>
+          <label for="theme">{{ $t('theme') }}：</label>
           <select name="theme" v-model="theme">
-            <option value="">Default</option>
+            <option value="">{{ $t('default') }}</option>
             <option value="zen">Zen</option>
             <option value="arctic">Arctic</option>
             <option value="monokai">Monokai</option>
             <option value="storm">Storm</option>
           </select>
-          <label for="scene">更换场景：</label>
+          <label for="scene">{{ $t('scene') }}：</label>
           <select name="scene" v-model="scene">
-            <option value="default">默认</option>
+            <option value="default">{{ $t('default') }}</option>
             <option value="npc">NPC</option>
+          </select>
+          <label for="language">{{ $t('language') }}：</label>
+          <select name="language" v-model="$i18n.locale">
+            <option>zh</option>
+            <option>en</option>
           </select>
         </div>
         <div v-show="scene === 'default'">
         <div class="item">
-          <label for="advanced">高级选项</label><input type="checkbox" id="advanced" name="advanced" />
-          <label for="link-num">链接标号</label><input type="checkbox" id="link-num" name="link-num" checked />
-          <label for="html-mode">导出 HTML</label><input type="checkbox" id="html-mode" name="html-mode" />
-          <label for="direct-paste">直接粘贴</label><input type="checkbox" id="direct-paste" name="direct-paste" />
+          <label for="advanced">{{ $t('advance') }}</label><input type="checkbox" id="advanced" name="advanced" />
+          <label for="link-num">{{ $t('indexed') }}</label><input type="checkbox" id="link-num" name="link-num" checked />
+          <label for="html-mode">{{ $t('exportHTML') }}</label><input type="checkbox" id="html-mode" name="html-mode" />
+          <template :v-if="isFirefox">
+          <label for="direct-paste">{{ $t('pasteDirectly') }}</label><input type="checkbox" id="direct-paste" name="direct-paste" :checked="isFirefox" />
+          </template>
         </div>
         <div class="item">
-          <label>插入
+          <label>{{ $t('insert') }}
           <select id="static-class" name="static-class"></select>
-          数据变化：</label>
+          {{ $t('statChange') }}：</label>
           <select id="static-plus" name="static-plus">
             <option value="g">+</option>
             <option value="gg">+ +</option>
@@ -120,10 +133,10 @@ watch(theme, (newTheme) => {
           </select>
           <select id="static-type" name="static-type">
           </select>
-          <button id="static" class="small">确认</button>
+          <button id="static" class="small">{{ $t('confirm') }}</button>
         </div>
         <div class="item">
-          插入技能检定：
+          {{ $t('insertSkillChecks') }}：
           <select id="skill-check-type" name="static-check-type">
             <option value="skulduggery">诡术</option>
             <option value="physique">体能</option>
@@ -145,10 +158,10 @@ watch(theme, (newTheme) => {
             <option value="very_hard">极难</option>
             <option value="impossible">不可能</option>
           </select>
-          <button id="skill-check" class="small">确认</button>
+          <button id="skill-check" class="small">{{ $t('confirm') }}</button>
         </div>
         <div class="item">
-          插入淫秽提示：
+          {{ $t('insertLewdTips') }}：
           <select id="lewd-tip-type" name="lewd-tip-type">
             <option value="exhibitionist">露出癖</option>
             <option value="promiscuous">淫乱</option>
@@ -162,9 +175,9 @@ watch(theme, (newTheme) => {
             <option value="5">5级</option>
             <option value="6">6级</option>
           </select>
-          <button id="lewd-tip" class="small">确认</button>
+          <button id="lewd-tip" class="small">{{ $t('confirm') }}</button>
         </div>
-        <div class="item otherTags">插入其他提示：
+        <div class="item otherTags">{{ $t('insertOtherTips') }}：
           <select name="symbols" id="symbols">
             <option style="display: none" value="">常用符号</option>
             <option value=" | ">|</option>
@@ -172,25 +185,25 @@ watch(theme, (newTheme) => {
           </select>
         </div>
         <div class="item">
-          插入颜色文本：
+          {{ $t('insertColoredText') }}：
           <select id="color" name="color" class="colorspan">
-            <option style='display: none' value="">常规</option>
+            <option style='display: none' value="">{{ $t('normal') }}</option>
           </select>
           <select id="statusColor" name="statusColor" class="colorspan">
-            <option style='display: none' value="">态度</option>
+            <option style='display: none' value="">{{ $t('attitude') }}</option>
           </select>
           <select id="specialColor" name="specialColor" class="colorspan">
-            <option style='display: none' value="">特效</option>
+            <option style='display: none' value="">{{ $t('effected') }}</option>
           </select>
           <select id="biu" name="biu">
-            <option style='display: none' value="">粗/斜/划</option>
-            <option value="b">粗体</option>
-            <option value="i">斜体</option>
-            <option value="u">下划线</option>
+            <option style='display: none' value="">{{ $t('biu') }}</option>
+            <option value="b">{{ $t('bold') }}</option>
+            <option value="i">{{ $t('italic') }}</option>
+            <option value="u">{{ $t('underlined') }}</option>
           </select>
         </div>
         <div class="item">
-          插入<temp hidden="1" class="advanced"><label for="linkTime">耗时</label>
+          {{ $t('insert') }}<temp hidden="1" class="advanced"><label for="linkTime">耗时</label>
           <input type="number" name="linkTime" id="linkTime" min="1" max="599" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value > 599) this.value = '599';">
           分钟、<label for="linkTo">前往</label>
           <input list="linkToList" id="linkTo" name="linkTo" />
@@ -202,13 +215,13 @@ watch(theme, (newTheme) => {
           </select>
           结束事件的</temp>
           <select id="link" name="link">
-            <option value="normalLink">普通链接</option>
-            <option value="nextWraith">幽灵链接</option>
+            <option value="normalLink">{{ $t('link') }}</option>
+            <option value="nextWraith">{{ $t('wraithLink') }}</option>
           </select>
-          <button id="linkConfirm" class="small">确认</button>
+          <button id="linkConfirm" class="small">{{ $t('confirm') }}</button>
         </div>
         <div class="item">
-        <label for="insertPic">插入图片：</label>
+        <label for="insertPic">{{ $t('insertPics') }}：</label>
         <input id="insertPic" for="insertPic" type="file" accept="image/png, image/jpeg, image/webp">
         </div>
         <div class="item advanced" hidden="1">
@@ -217,9 +230,9 @@ watch(theme, (newTheme) => {
           <mouse class="tooltip-tiny"><sup class="linkBlue">(?)</sup><span>不可见部件，在编辑框中显示，在导出图片中不显示</span></mouse>
         </div>
         <div class="item" id="feat">
-          弹出成就：
+          {{ $t('achievementPopup') }}：
           <select id="featClass" v-model="feat">
-            <option value="none">不弹出</option>
+            <option value="none">{{ $t('noPopup') }}</option>
             <option>Copper</option>
             <option>Silver</option>
             <option>Gold</option>
@@ -229,22 +242,22 @@ watch(theme, (newTheme) => {
             <option>Emerald</option>
             <option>Ruby</option>
           </select>
-          <input type="text" v-model="featTitle" placeholder="成就名">
-          <input type="text" v-model="featText" placeholder="成就描述">
+          <input type="text" v-model="featTitle" :placeholder="$t('achvName')">
+          <input type="text" v-model="featText" :placeholder="$t('achvDesc')">
         </div>
         <div class="item" id="customWidget">
-          插入自定义部件：
+          {{ $t('insertCustomWidgets') }}：
           <select id="customNames"><option>新建</option></select>
-          <button id="customInsert" class="small">确认</button>
-          <button id="customDelete" class="small">删除</button>
-          <button id="customExport" class="small">导出所有</button>
+          <button id="customInsert" class="small">{{ $t('confirm') }}</button>
+          <button id="customDelete" class="small">{{ $t('delete') }}</button>
+          <button id="customExport" class="small">{{ $t('exportAll') }}</button>
         </div>
         <div class="item advanced" hidden="1" id="codeSaver">
           <label for="saveName">保存为名为</label>
           <input type="text" name="saveName" id="saveName">
           的
           <select id="saveType"><option>passage</option><option>widget</option></select>
-          <button id="save" class="small">确认</button>
+          <button id="save" class="small">{{ $t('confirm') }}</button>
           <span class="tipBox"></span>
         </div>
         <div class="item advanced" id="saveManager" hidden="1">
@@ -260,7 +273,7 @@ watch(theme, (newTheme) => {
             <option>widget</option>
           </select>
           <select id="saveManageSaved" name="saveManageSaved"></select>
-          <button id="saveManageConfirm" class="small">确认</button>
+          <button id="saveManageConfirm" class="small">{{ $t('confirm') }}</button>
           <span class="tipBox"></span>
         </div>
         <div class="item advanced" id="pancakeManager" hidden="1">
@@ -270,7 +283,7 @@ watch(theme, (newTheme) => {
             <option value="reset">重置</option>
           </select>
           <label for="pancakeManage">烤饼机设置</label>
-          <button id="pancakeManageConfirm" class="small">确认</button>
+          <button id="pancakeManageConfirm" class="small">{{ $t('confirm') }}</button>
           <mouse class="tooltip-tiny"><sup class="linkBlue">(?)</sup><span>包括已保存 passage 等，导入将覆盖当前设置</span></mouse>
           <span class="tipBox"></span>
         </div>
@@ -296,10 +309,10 @@ watch(theme, (newTheme) => {
         <div class="item">
           <button id="undo"><span class="iconfont icon-undo-alt"></span></button>
           <button id="redo"><span class="iconfont icon-redo-alt"></span></button>
-          <button id="pic">预览图片</button>
-          <button id="pic-down">下载图片</button>
-          <button id="code" v-show="scene === 'default'">查看代码</button>
-          <button id="clear" @click="clear">清空内容</button>
+          <button id="pic">{{ $t('preview') }}</button>
+          <button id="pic-down">{{ $t('download') }}</button>
+          <button id="code" v-show="scene === 'default'">{{ $t('code') }}</button>
+          <button id="clear" @click="clear">{{ $t('clear') }}</button>
         </div>
         <div class="item" id="output"></div>
       </div>
