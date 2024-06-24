@@ -1,7 +1,8 @@
+import { domToPng, domToBlob } from 'modern-screenshot'
 import {
   colors, npcList, statics, diffiColors, lewdColors, tags, hollows,
-} from './lib/data.js';
-import { saveTwee, savePng, saveJSON } from './lib/save.js';
+} from './data.js';
+import { saveTwee, savePng, saveJSON } from './save.js';
 
 const dolEditor = document.querySelector('div.passage');
 const output = document.querySelector('#output');
@@ -23,7 +24,7 @@ function updateTip(tipbox, tip, color = 'red') {
 
 // 自动保存
 const loadHTML = () => {
-  dolEditor.innerHTML = localStorage.getItem('temp') || `欢迎游玩欲都孤儿！
+  dolEditor.innerHTML = localStorage.getItem('temp') || `欢迎使用DOL烤饼机！
 
 倘若你不想被卷入麻烦，那么请牢记要穿着得体，并待在安全、明亮的地方。夜晚是非常危险的，尤其当你身穿色情下流的服饰时，那将引起某些人的注意——而这究竟会给你带来好运还是霉头，谁知道呢？
 
@@ -610,22 +611,11 @@ document.querySelector('#customExport').addEventListener('click', () => {
   saveTwee(blob, 'widgets');
 });
 
-// 更换主题
-const loadTheme = () => {
-  document.querySelector('#body').setAttribute('data-theme', localStorage.getItem('theme'));
-  document.querySelector('#theme').value = localStorage.getItem('theme') || '';
-};
-document.querySelector('#theme').addEventListener('change', (event) => {
-  localStorage.setItem('theme', event.target.value);
-  loadTheme();
-});
-
-/* global modernScreenshot */
 // 预览图片
 document.querySelector('#pic').addEventListener('click', () => {
   document.querySelectorAll('.noDisplay').forEach((e) => { e.style.display = 'none'; });
   output.innerText = '生成图片中……';
-  modernScreenshot.domToPng(document.querySelector('#dol'), { scale: 2 }).then((dataUrl) => {
+  domToPng(document.querySelector('#dol'), { scale: 2 }).then((dataUrl) => {
     const img = new Image();
     img.src = dataUrl;
     img.alt = 'dol-pancake';
@@ -642,7 +632,7 @@ document.querySelector('#pic').addEventListener('click', () => {
 document.querySelector('#pic-down').addEventListener('click', () => {
   document.querySelectorAll('.noDisplay').forEach((e) => { e.style.display = 'none'; });
   output.innerText = '生成图片中……';
-  modernScreenshot.domToBlob(document.querySelector('#dol'), { scale: 2 }).then((blob) => {
+  domToBlob(document.querySelector('#dol'), { scale: 2 }).then((blob) => {
     savePng(blob, 'dol-pancake');
     output.innerText = '';
   }).catch((error) => {
@@ -781,7 +771,6 @@ document.querySelector('#saveManageConfirm').addEventListener('click', () => {
 const loadAll = () => {
   loadCustomWidgets();
   loadSavedCode();
-  loadTheme();
   loadHTML();
   toggleIndex();
 };

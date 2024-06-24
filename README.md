@@ -1,4 +1,5 @@
 # DOL-pancake / DOL烤饼机
+
 本烤饼机用于快速生成高度还原 [Degrees of Lewdity](https://www.vrelnir.com/) 游戏原文的伪截图，亦图帮助文本方面的 MOD 制作，为四处抄代码缝合而来，如有 bug，请多担待，欢迎 issue 或 PR。
 
 ## 特性
@@ -15,7 +16,37 @@
 ## 其他问题
 - Safari 上可能存在问题。由于没有相关设备，调试不便，暂不计划解决。
 
+## 开发
+### Recommended IDE Setup
+
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+
+### Customize configuration
+
+See [Vite Configuration Reference](https://vitejs.dev/config/).
+
+### Project Setup
+
+```sh
+npm install
+```
+
+#### Compile and Hot-Reload for Development
+
+```sh
+npm run dev
+```
+
+#### Compile and Minify for Production
+
+```sh
+npm run build
+```
+
+#### Lint with [ESLint](https://eslint.org/)
+
+```sh
+npm run lint
+```
 ## 感谢
 - [modern-screenshot](https://github.com/qq15725/modern-screenshot)
-- [less.js](https://github.com/less/less.js) ([less-plugin-clean-css](https://github.com/less/less-plugin-clean-css))
-- [petite-vue](https://github.com/vuejs/petite-vue)
