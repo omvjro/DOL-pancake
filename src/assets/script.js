@@ -3,6 +3,12 @@ import {
   npcList, statics, diffiColors, lewdColors, tags, hollows,
 } from './data.js';
 import { saveTwee, savePng, saveJSON } from './save.js';
+import {
+  selection, position, insertTarget,
+  generateInsertTarget,
+  insertHard, insert, wrap,
+  getSelectionAndPosition, createSelection,
+} from './insert.js'
 
 const dolEditor = document.querySelector('div.passage');
 const output = document.querySelector('#output');
@@ -21,12 +27,6 @@ function findInlineLink(candidate, operator) {
 function updateTip(tipbox, tip, color = 'red') {
   tipbox.innerHTML = `<span class="${color}">${tip}</span>`;
 }
-
-// 自动保存
-// window.addEventListener('beforeunload', () => {
-//   if (!localStorage.getItem('temp')) return;
-//   localStorage.setItem('temp', document.querySelector('div.passage').innerHTML);
-// });
 
 // 选项初始化
 // Object.entries(colors).forEach(([id, colorSet]) => {
@@ -52,8 +52,6 @@ function updateTip(tipbox, tip, color = 'red') {
 //   )
 // }
 // </select>`, ''));
-
-// document.getElementById('descolor').innerHTML = `${colors.color.reduce((html, name) => `${html}<option>${name}</option>`, '')}<option>white</option>`;
 
 // 高级选项
 const switchAdvanced = () => {
@@ -123,88 +121,7 @@ document.querySelector('#direct-paste').addEventListener('change', (event) => {
   editableSwitch(event.target.checked);
 });
 
-// 准备插入元素
-let selection;
-let position;
-let insertTarget;
-
-const recordData = () => {
-  undoData.push(insertTarget.innerHTML);
-  redoData = [];
-};
-const afterInput = () => {
-  recordData();
-  toggleIndex();
-};
-
-const createSelection = (element, isCollapsed = false) => {
-  const newSelection = window.getSelection();
-  newSelection.removeAllRanges();
-  const range = document.createRange();
-  range.selectNode(element);
-  if (isCollapsed) range.collapse(0);
-  newSelection.addRange(range);
-};
-const insert = (element, isCollapsed, forceLocal = false) => {
-  if (selection?.isCollapsed === false) selection.deleteFromDocument();
-  if (forceLocal) {
-    position.insertNode(element);
-  } else if (position?.startContainer.parentElement.parentElement === insertTarget) {
-    position.startContainer.parentElement.after(element);
-  } else if (position?.startContainer.parentElement === insertTarget || position?.startContainer === insertTarget) {
-    position.insertNode(element);
-  } else {
-    insertTarget.append(element);
-  }
-  createSelection(element, isCollapsed);
-  afterInput();
-};
-const insertHard = (html, code, decorate) => {
-  const widget = document.createElement('widget');
-  widget.innerHTML = html;
-  widget.setAttribute('code', code);
-  widget.contentEditable = false;
-  decorate?.(widget);
-  insert(widget, 1);
-};
-const getSelectionAndPosition = () => {
-  selection = window.getSelection();
-  position = selection.getRangeAt(0);
-};
-
-const generateInsertTarget = (target) => {
-  insertTarget = target;
-  undoData.push(insertTarget.innerHTML);
-  insertTarget.addEventListener('blur', getSelectionAndPosition);
-  insertTarget.addEventListener('input', (event) => {
-    Object.values(event.target.children).forEach((child) => {
-      if (child?.tagName === 'FONT') {
-        child.before(document.createTextNode(child.innerText));
-        child.remove();
-      }
-      // 阻止由粘贴等方式造成的颜色文字或链接内换行，同时避免移动端允许换行的奇怪bug
-      if (['A', 'SPAN'].includes(child?.tagName) && child.innerHTML.includes('\n')) {
-        if (child.innerHTML.endsWith('\n')) {
-          const br = document.createElement('br');
-          child.after(br);
-          createSelection(br, true);
-        }
-        child.innerHTML = child.innerHTML.replace('\n', '');
-      }
-    });
-
-    afterInput();
-  });
-  insertTarget.addEventListener('click', () => {
-    insertTarget = target;
-  });
-};
 generateInsertTarget(dolEditor);
-
-const wrap = (element) => {
-  element.innerText = selection.toString().replaceAll('\n', '');
-  insert(element, true);
-};
 
 const getOptionText = (id) => document.getElementById(id)?.options[document.getElementById(id)?.selectedIndex]?.text;
 
@@ -380,22 +297,6 @@ document.querySelector('#linkConfirm').addEventListener('click', () => {
   } else {
     wrap(link);
   }
-});
-
-// 插入图片
-document.querySelector('#insertPic').addEventListener('input', (event) => {
-  const img = new Image();
-  const reader = new FileReader();
-  reader.readAsDataURL(event.target.files[0]);
-  reader.onload = () => {
-    img.src = reader.result;
-    insert(img, 1);
-    event.target.value = '';
-  };
-  img.addEventListener('dragstart', () => {
-    document.querySelector('#direct-paste').checked = true;
-    editableSwitch(true, true);
-  });
 });
 
 // NPC 部件
@@ -726,7 +627,7 @@ document.querySelector('#saveManageConfirm').addEventListener('click', () => {
 
   if (saveManage === 'load') {
     dolEditor.innerHTML = savedCode[saveType][saveName].html;
-    afterInput();
+    // afterInput();
   } else if (saveManage === 'delete') {
     delete savedCode[saveType][saveName];
     localStorage.setItem('savedCode', JSON.stringify(savedCode));
@@ -855,5 +756,5 @@ document.addEventListener('keydown', (event) => {
 // 清空内容
 document.querySelector('#clear').addEventListener('click', () => {
   output.innerText = '';
-  afterInput();
+  // afterInput();
 });

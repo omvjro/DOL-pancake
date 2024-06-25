@@ -108,7 +108,7 @@ body, html {
 			cursor: not-allowed;
 		}
 	}
-	input[type=file] {
+	/* input[type=file] {
 		display: none;
 	}
 	label:has(+input[type=file])::after {
@@ -123,7 +123,7 @@ body, html {
 	label:has(+input[type=file]):hover::after {
 		background-color: #333;
 		border-color: #eee
-	}
+	} */
 
 }
 .toolbox {

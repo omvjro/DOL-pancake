@@ -4,9 +4,11 @@ import { ref } from 'vue'
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import RelationBox from './components/RelationBox.vue';
+import FileInput from './components/FileInput.vue';
 import {
   colors, npcList, statics, diffiColors, lewdColors, tags, hollows,
 } from './assets/data.js';
+import { insert } from './assets/insert'
 
 const { t, locale } = useI18n();
 const placeholder = localStorage.getItem('temp') || t('placeholder')
@@ -69,6 +71,34 @@ watch(theme, (newValue) => {
 watch(locale, (newValue) => {
   localStorage.setItem('locale', newValue)
 })
+
+function loadFile(stat) {
+  return function(e) {
+    const reader = new FileReader();
+    reader.readAsDataURL(e.target.files[0]);
+    reader.onload = () => {
+      stat.activeicon = reader.result;
+      stat.inactiveicon = undefined;
+    };
+  }
+}
+
+function insertPic() {
+  return function(e) {
+    const img = new Image();
+    const reader = new FileReader();
+    reader.readAsDataURL(e.target.files[0]);
+    reader.onload = () => {
+      img.src = reader.result;
+      insert(img, 1);
+      e.target.value = '';
+    };
+    img.addEventListener('dragstart', () => {
+      document.querySelector('#direct-paste').checked = true;
+      // editableSwitch(true, true);
+    });
+  }
+}
 </script>
 
 <template>
@@ -240,8 +270,7 @@ watch(locale, (newValue) => {
           <button id="linkConfirm" class="small">{{ $t('confirm') }}</button>
         </div>
         <div class="item">
-        <label for="insertPic">{{ $t('insertPics') }}：</label>
-        <input id="insertPic" for="insertPic" type="file" accept="image/png, image/jpeg, image/webp">
+        <FileInput id="insertPic" :label="`${t('insertPics')}：`" :func="insertPic()" />
         </div>
         <div class="item advanced" hidden="1">
           {{ $t('insertNPCwidgets') }}：
@@ -324,8 +353,7 @@ watch(locale, (newValue) => {
               <option value="horizontal">{{ $t('relationBox.horizontal') }}</option>
               <option value="vertical">{{ $t('relationBox.vertical') }}</option>
             </select>
-            <label :for="'activeicon' + i">{{ $t('relationBox.icon') }}：</label>
-            <input @change="loadFile(stat, $event)" :id="'activeicon' + i" type="file" accept="image/png, image/jpeg, image/webp">
+            <FileInput :id="`activeicon${i}`" :label="`${t('relationBox.icon')}：`" :func="loadFile(stat)" />
           </div>
         </div>
         <div class="item">
