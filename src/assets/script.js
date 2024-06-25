@@ -1,6 +1,6 @@
 import { domToPng, domToBlob } from 'modern-screenshot'
 import {
-  diffiColors, lewdColors, tags, hollows,
+  lewdColors, tags, hollows,
 } from './data.js';
 import { saveTwee, savePng, saveJSON } from './save.js';
 import {
@@ -115,34 +115,6 @@ document.querySelector('#direct-paste').addEventListener('change', (event) => {
 generateInsertTarget(dolEditor);
 
 const getOptionText = (id) => document.getElementById(id)?.options[document.getElementById(id)?.selectedIndex]?.text;
-
-// 插入技能检定
-document.querySelector('#skill-check-type').addEventListener('change', (event) => {
-  document.querySelectorAll('.custom')?.forEach((e) => e.remove());
-  if (document.getElementById('skill-check-type').value === 'custom') {
-    const customInput = document.createElement('input');
-    event.target.after(customInput);
-    customInput.outerHTML = `
-      <input type="text" class="custom" name="custom_skill" id="custom_skill" placeholder="技能名称"></input>
-      <input type="text" class="custom" name="custom_value" id="custom_value" placeholder="判定变量"></input>`;
-  }
-});
-document.querySelector('#skill-check').addEventListener('click', () => {
-  const type = document.getElementById('skill-check-type').value;
-  const diffi = document.getElementById('skill-check-diffi').value;
-  let code;
-  let typeDisplay = getOptionText('skill-check-type');
-
-  if (type !== 'custom') {
-    code = `<<${type}difficulty>>`;
-  } else { // 自定义技能
-    typeDisplay = document.getElementById('custom_skill').value;
-    const typeValue = document.getElementById('custom_value').value;
-    code = `<<skill_difficulty \`${typeValue}\` "${typeDisplay}">>`;
-  }
-
-  insertHard(` | <span class="orange">${typeDisplay}</span>：<span class="${diffiColors[diffi]}">${getOptionText('skill-check-diffi')}</span>`, code);
-});
 
 // 插入标签
 document.querySelectorAll('.tags').forEach((sel) => {

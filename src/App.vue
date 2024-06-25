@@ -6,8 +6,9 @@ import { useI18n } from 'vue-i18n';
 import RelationBox from './components/RelationBox.vue';
 import FileInput from './components/FileInput.vue';
 import StatChange from './components/panel/StatChange.vue';
+import SkillCheck from './components/panel/SkillCheck.vue';
 import {
-  colors, diffiColors, lewdColors, tags, hollows,
+  colors, lewdColors, tags, hollows,
 } from './assets/data.js';
 import { insert } from './assets/insert'
 import ToolTip from './components/ToolTip.vue';
@@ -173,31 +174,7 @@ function insertPic() {
           </template>
         </div>
         <StatChange />
-        <div class="item">
-          {{ $t('insertSkillChecks') }}：
-          <select id="skill-check-type" name="static-check-type">
-            <option value="skulduggery">{{ $t('skill.skulduggery') }}</option>
-            <option value="physique">{{ $t('skill.physique') }}</option>
-            <option value="willpower">{{ $t('skill.willpower') }}</option>
-            <option value="english">{{ $t('skill.english') }}</option>
-            <option value="swimming">{{ $t('skill.swimming') }}</option>
-            <option value="athletics">{{ $t('skill.athletics') }}</option>
-            <option value="tending">{{ $t('skill.tending') }}</option>
-            <option value="housekeeping">{{ $t('skill.housekeeping') }}</option>
-            <option value="dance">{{ $t('skill.dance') }}</option>
-            <option value="custom">{{ $t('skill.custom') }}</option>
-          </select>
-          <select id="skill-check-diffi" name="skill-check-diffi">
-            <option value="very_easy">{{ $t('skillDiff.very_easy') }}</option>
-            <option value="easy">{{ $t('skillDiff.easy') }}</option>
-            <option value="medium">{{ $t('skillDiff.medium') }}</option>
-            <option value="challenging">{{ $t('skillDiff.challenging') }}</option>
-            <option value="hard">{{ $t('skillDiff.hard') }}</option>
-            <option value="very_hard">{{ $t('skillDiff.very_hard') }}</option>
-            <option value="impossible">{{ $t('skillDiff.impossible') }}</option>
-          </select>
-          <button id="skill-check" class="small">{{ $t('confirm') }}</button>
-        </div>
+        <SkillCheck />
         <div class="item">
           {{ $t('insertLewd') }}：
           <select id="lewd-tip-type" name="lewd-tip-type">

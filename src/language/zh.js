@@ -241,5 +241,10 @@ export default {
         hunger: '饥饿',
         acceptance: '接受',
         tanned: '日晒',
+    },
+
+    skillCheck: {
+        name: '技能名称',
+        var: '判定变量',
     }
 }

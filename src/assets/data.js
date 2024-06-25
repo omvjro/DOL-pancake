@@ -335,15 +335,6 @@ const statics = {
     },
   },
 };
-const diffiColors = {
-  very_easy: 'green',
-  easy: 'teal',
-  medium: 'lblue',
-  challenging: 'blue',
-  hard: 'purple',
-  very_hard: 'pink',
-  impossible: 'red',
-};
 const lewdColors = [
   'teal',
   'lblue',
@@ -453,5 +444,5 @@ for (let i = 1; i <= 6; i += 1) {
 // });
 
 export {
-  colors,  statics, diffiColors, lewdColors, tags, hollows,
+  colors,  statics, lewdColors, tags, hollows,
 };

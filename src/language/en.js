@@ -241,5 +241,10 @@ export default {
         hunger: 'Hunger',
         acceptance: 'Acceptance',
         tanned: 'Tanned',
+    },
+
+    skillCheck: {
+        name: 'name',
+        var: 'var',
     }
 }
