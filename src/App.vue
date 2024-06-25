@@ -9,13 +9,20 @@ import {
   colors, npcList, statics, diffiColors, lewdColors, tags, hollows,
 } from './assets/data.js';
 import { insert } from './assets/insert'
+import ToolTip from './components/ToolTip.vue';
 
 const { t, locale } = useI18n();
 const placeholder = localStorage.getItem('temp') || t('placeholder')
+const isRestored = computed(() => {
+  return localStorage.getItem('temp');
+})
+function restoreInit(e) {
+  localStorage.removeItem('temp');
+  e.target.hidden = true;
+  document.querySelector('div.passage').innerHTML = t('placeholder');
+}
 window.addEventListener('beforeunload', () => {
-  const currentHTML = document.querySelector('div.passage').innerHTML;
-  if (!localStorage.getItem('temp') && currentHTML === t('placeholder')) return;
-  localStorage.setItem('temp', currentHTML);
+  localStorage.setItem('temp', document.querySelector('div.passage').innerHTML);
 });
 
 const isFirefox = computed(() => {
@@ -113,7 +120,9 @@ function insertPic() {
               </div>
               <div id="ui-bar-body"></div>
             </div>
-            <div id="story" role="main" class=""><div class="feat feat-overlay" v-show="feat !== 'none'">
+            <div id="story" role="main" class="">
+              <ToolTip fixed="true" v-if="isRestored" @click="restoreInit($event)">{{ $t('restoreTip') }}</ToolTip>
+              <div class="feat feat-overlay" v-show="feat !== 'none'">
                 <div class="featImage">
                     <img :src="`https://eltirosto.github.io/Degrees-of-Lewdity-Chinese-Localization/img/ui/${feat}Coin.gif`" class="featCoin">
                 </div>
@@ -275,7 +284,7 @@ function insertPic() {
         <div class="item advanced" hidden="1">
           {{ $t('insertNPCwidgets') }}：
           <span id="hollows"></span>
-          <mouse class="tooltip-tiny"><sup class="linkBlue">(?)</sup><span>{{ $t('invisibleTip') }}</span></mouse>
+          <ToolTip>{{ $t('invisibleTip') }}</ToolTip>
         </div>
         <div class="item" id="feat">
           {{ $t('achievementPopup') }}：
@@ -332,7 +341,7 @@ function insertPic() {
           </select>
           <label for="pancakeManage">{{ $t('settings') }}</label>
           <button id="pancakeManageConfirm" class="small">{{ $t('confirm') }}</button>
-          <mouse class="tooltip-tiny"><sup class="linkBlue">(?)</sup><span>{{ $t('settingsTip') }}</span></mouse>
+          <ToolTip>{{ $t('settingsTip') }}</ToolTip>
           <span class="tipBox"></span>
         </div>
         </div>

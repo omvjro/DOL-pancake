@@ -49,6 +49,7 @@ export default {
 
     invisibleTip: 'Invisible widgets, only visible when editing',
     settingsTip: 'Including saved passages; import will override current settings',
+    restoreTip: 'Last editted content restored. Click here to restore initial content.',
 
     insertLink: {
         1: ' which takes ',

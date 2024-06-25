@@ -49,6 +49,7 @@ export default {
 
     invisibleTip: '不可见部件，在编辑框中显示，在导出图片中不显示',
     settingsTip: '包括已保存 passage 等，导入将覆盖当前设置',
+    restoreTip: '已复原上次编辑，点此恢复初始内容。',
 
     insertLink: {
         1: '，耗时',
