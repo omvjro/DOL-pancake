@@ -5,8 +5,9 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import RelationBox from './components/RelationBox.vue';
 import FileInput from './components/FileInput.vue';
+import StatChange from './components/panel/StatChange.vue';
 import {
-  colors, npcList, statics, diffiColors, lewdColors, tags, hollows,
+  colors, diffiColors, lewdColors, tags, hollows,
 } from './assets/data.js';
 import { insert } from './assets/insert'
 import ToolTip from './components/ToolTip.vue';
@@ -122,7 +123,7 @@ function insertPic() {
               <div id="ui-bar-body"></div>
             </div>
             <div id="story" role="main" class="">
-              <ToolTip fixed="true" v-if="isRestored" @click="restoreInit($event)">{{ $t('restoreTip') }}</ToolTip>
+              <ToolTip :fixed="true" v-if="isRestored" @click="restoreInit($event)">{{ $t('restoreTip') }}</ToolTip>
               <FeatBox :feat
                        :featTitle
                        :featText />
@@ -171,22 +172,7 @@ function insertPic() {
             <label for="direct-paste">{{ $t('pasteDirectly') }}</label><input type="checkbox" id="direct-paste" name="direct-paste" :checked="isFirefox" />
           </template>
         </div>
-        <div class="item">
-          <label>{{ $t('insert') }}
-          <select id="static-class" name="static-class"></select>
-          {{ $t('statChange') }}：</label>
-          <select id="static-plus" name="static-plus">
-            <option value="g">+</option>
-            <option value="gg">+ +</option>
-            <option value="ggg">+ + +</option>
-            <option value="l">-</option>
-            <option value="ll">- -</option>
-            <option value="lll">- - -</option>
-          </select>
-          <select id="static-type" name="static-type">
-          </select>
-          <button id="static" class="small">{{ $t('confirm') }}</button>
-        </div>
+        <StatChange />
         <div class="item">
           {{ $t('insertSkillChecks') }}：
           <select id="skill-check-type" name="static-check-type">

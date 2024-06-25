@@ -1,6 +1,6 @@
 import { domToPng, domToBlob } from 'modern-screenshot'
 import {
-  npcList, statics, diffiColors, lewdColors, tags, hollows,
+  diffiColors, lewdColors, tags, hollows,
 } from './data.js';
 import { saveTwee, savePng, saveJSON } from './save.js';
 import {
@@ -29,15 +29,6 @@ function updateTip(tipbox, tip, color = 'red') {
 }
 
 // 选项初始化
-// Object.entries(colors).forEach(([id, colorSet]) => {
-//   document.getElementById(id).innerHTML += colorSet.reduce((options, [color, name]) => `${options}
-//   <option${!name ? ` class="${color}"` : ''} value="${color}">${name || color}</option>`, '');
-// });
-
-// document.getElementById('static-class').innerHTML = Object.entries(statics).reduce((options, [value, { NAME }]) => `${options}<option value=${value}>${NAME}</option>`, '');
-// document.getElementById('static-type').innerHTML = Object.entries(statics).reduce((goptions, [clas, stats]) => `${goptions}${
-//   Object.entries(stats).reduce((options, [value, { name }]) => `${options}${name ? `<option class="${clas}" value="${value}">${name}</option>` : ''}`, '')
-// }`, '');
 
 // document.querySelector('#symbols').insertAdjacentHTML('beforebegin', Object.entries(tags).reduce((html, [id, itags]) => `${html}
 // <select class="tags" id="${id}">
@@ -124,81 +115,6 @@ document.querySelector('#direct-paste').addEventListener('change', (event) => {
 generateInsertTarget(dolEditor);
 
 const getOptionText = (id) => document.getElementById(id)?.options[document.getElementById(id)?.selectedIndex]?.text;
-
-// 分类显示数据变化
-const staticClass = document.querySelector('#static-class');
-// const toggleOptions = () => {
-//   document.querySelectorAll('#static-type option').forEach((e) => { e.hidden = 1; });
-//   document.querySelectorAll(`.${staticClass.value}`).forEach((e) => { e.hidden = 0; });
-// };
-// toggleOptions();
-// staticClass.addEventListener('change', () => {
-//   toggleOptions();
-//   document.querySelector('#static-type').value = document.querySelectorAll(`.${staticClass.value}`)[0].value;
-//   document.querySelector('#static-type').dispatchEvent(new Event('change'));
-// });
-
-// 插入数据变化
-document.querySelector('#static-type').addEventListener('change', (event) => {
-  document.querySelector('#static-npc')?.remove();
-  const type = event.target.value;
-  const stat = statics[staticClass.value][type];
-  const limit = stat.limit || statics[staticClass.value]._?.limit;
-
-  if (limit) {
-    document.querySelectorAll('#static-plus option').forEach((option) => {
-      if (option.value.includes('g') && option.value.length > limit[0]) {
-        option.hidden = 1;
-      } else if (option.value.includes('l') && option.value.length > limit[1]) {
-        option.hidden = 1;
-      } else {
-        option.hidden = 0;
-      }
-    });
-    document.querySelector('#static-plus').value = 'g';
-  } else {
-    document.querySelectorAll('#static-plus option').forEach((option) => {
-      option.hidden = 0;
-    });
-  }
-
-  if (!npcList[type]) return;
-  const npcSelect = document.createElement('select');
-  event.target.before(npcSelect);
-  npcSelect.outerHTML = `<select id="static-npc" name="static-npc">${
-    Object.entries(npcList[type]).reduce((npcs, [value, npc]) => `${npcs}<option value="${value}">${npc}</option>`, '')
-  }</select>`;
-});
-document.querySelector('#static').addEventListener('click', () => {
-  let plus = document.getElementById('static-plus').value;
-  const isPlus = plus.includes('g');
-  let type = document.getElementById('static-type').value;
-  const npc = document.getElementById('static-npc')?.value;
-  const stat = statics[staticClass.value][type];
-  const value = stat.value === false ? undefined : (stat.value || statics[staticClass.value]._?.value);
-
-  if (stat.variant) {
-    plus = isPlus ? plus.replaceAll('g', 'l') : plus.replaceAll('l', 'g');
-    type = stat.variant;
-  }
-
-  let valueType = stat.valueMacro || type;
-  if (staticClass.value === 'npc') {
-    valueType = `npcincr "${stat.npc || npc}" ${stat.valueType || type}`;
-  }
-
-  let code = `<<${plus}${type}${npc ? ` "${npc}"` : ''}>>`;
-  const valueCode = value ? `<<${valueType} ${isPlus ? '' : '-'}${value[plus.length - 1]}>>` : '';
-  let text = `${getOptionText('static-plus')} ${getOptionText('static-npc') || ''}${stat.name}`;
-  [text, , code] = stat.decorate?.({
-    text, isPlus, code,
-  }) || [text, isPlus, code];
-
-  let color = (stat.colors || statics[staticClass.value]._?.colors)?.[+!isPlus];
-  color ??= isPlus ? 'red' : 'green';
-
-  insertHard(` | <span class="${color}">${text}</span>`, code, (widget) => widget.setAttribute('valueCode', valueCode));
-});
 
 // 插入技能检定
 document.querySelector('#skill-check-type').addEventListener('change', (event) => {
