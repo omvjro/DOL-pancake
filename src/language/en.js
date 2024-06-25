@@ -1,5 +1,5 @@
 export default {
-    placeholder: `Welcome to use DOL-pancake!<br><br>The tool helps you to forge fake screenshots for Degrees of Lewdity, just type here, and click buttons 👉 (or 👇) to insert special objects.<br><br>Please clarify the screenshot is fake if others are confused. If any problems or advice, feel free to tell me on <a contenteditable="false" href="https://github.com/omvjro/DOL-pancake" target="_blank">GitHub</a>.<br><br><a class="normalLink">&ZeroWidthSpace;Next</a>`,
+    placeholder: `Welcome to DOL-pancake!<br><br>The tool helps you to forge fake screenshots for Degrees of Lewdity, just type here, and click buttons 👉 (or 👇) to insert special objects.<br><br>Please clarify the screenshot is fake if others are confused. If any problems or advice, feel free to tell me on <a contenteditable="false" href="https://github.com/omvjro/DOL-pancake" target="_blank">GitHub</a>.<br><br><a class="normalLink">&ZeroWidthSpace;Next</a>`,
     watermark: 'MADE BY DOL PANCAKE',
     theme: 'Theme',
     default: 'Default',

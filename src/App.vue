@@ -10,6 +10,7 @@ import {
 } from './assets/data.js';
 import { insert } from './assets/insert'
 import ToolTip from './components/ToolTip.vue';
+import FeatBox from './components/FeatBox.vue';
 
 const { t, locale } = useI18n();
 const placeholder = localStorage.getItem('temp') || t('placeholder')
@@ -122,13 +123,9 @@ function insertPic() {
             </div>
             <div id="story" role="main" class="">
               <ToolTip fixed="true" v-if="isRestored" @click="restoreInit($event)">{{ $t('restoreTip') }}</ToolTip>
-              <div class="feat feat-overlay" v-show="feat !== 'none'">
-                <div class="featImage">
-                    <img :src="`https://eltirosto.github.io/Degrees-of-Lewdity-Chinese-Localization/img/ui/${feat}Coin.gif`" class="featCoin">
-                </div>
-                <div class="featText"><span class="title">{{ featTitle }}</span><br><span class="text">{{ featText }}</span></div>
-                <div class="closeFeat"></div>
-              </div>
+              <FeatBox :feat
+                       :featTitle
+                       :featText />
               <div id="passages" aria-live="polite">
                 <div class="passage" :contenteditable="contenteditable" v-html="placeholder"></div>
               </div>
