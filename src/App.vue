@@ -2,7 +2,19 @@
 import { watch } from 'vue';
 import { ref } from 'vue'
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import RelationBox from './components/RelationBox.vue';
+import {
+  colors, npcList, statics, diffiColors, lewdColors, tags, hollows,
+} from './assets/data.js';
+
+const { t, locale } = useI18n();
+const placeholder = localStorage.getItem('temp') || t('placeholder')
+window.addEventListener('beforeunload', () => {
+  const currentHTML = document.querySelector('div.passage').innerHTML;
+  if (!localStorage.getItem('temp') && currentHTML === t('placeholder')) return;
+  localStorage.setItem('temp', currentHTML);
+});
 
 const isFirefox = computed(() => {
   return navigator.userAgent.includes('Firefox')
@@ -10,6 +22,7 @@ const isFirefox = computed(() => {
 const contenteditable = computed(() => {
   return isFirefox.value ? 'true' : 'plaintext-only'
 })
+
 const scene = ref('default'),
       theme = ref(localStorage.getItem('theme')),
 
@@ -17,27 +30,27 @@ const scene = ref('default'),
       featTitle = ref(''),
       featText = ref(''),
 
-      name = ref('凯拉尔'),
-      title = ref('不合群者'),
-      description = ref('因嫉妒歇斯底里。'),
+      name = ref(t('relationBox.kylar')),
+      title = ref(t('relationBox.loner')),
+      description = ref(t('relationBox.isHysterical')),
       color = ref('red'),
       stats = ref([
           {
-            name: '好感',
+            name: t('relationBox.love'),
             progress: 80,
             direction: 'horizontal',
             activeicon: 'https://eltirosto.github.io/Degrees-of-Lewdity-Chinese-Localization/img/ui/heart.png',
             inactiveicon: 'https://eltirosto.github.io/Degrees-of-Lewdity-Chinese-Localization/img/ui/emptyheart.png'
           },
           {
-            name: '性欲',
+            name: t('relationBox.lust'),
             progress: 50,
             direction: 'vertical',
             activeicon: 'https://eltirosto.github.io/Degrees-of-Lewdity-Chinese-Localization/img/ui/vial.png',
             inactiveicon: 'https://eltirosto.github.io/Degrees-of-Lewdity-Chinese-Localization/img/ui/emptyvial.png'
           },
           {
-            name: '嫉妒',
+            name: t('relationBox.jealousy'),
             progress: 100,
             direction: 'horizontal',
             activeicon: 'https://eltirosto.github.io/Degrees-of-Lewdity-Chinese-Localization/img/ui/wideeye.png'
@@ -52,6 +65,9 @@ const scene = ref('default'),
 
 watch(theme, (newValue) => {
   localStorage.setItem('theme', newValue)
+})
+watch(locale, (newValue) => {
+  localStorage.setItem('locale', newValue)
 })
 </script>
 
@@ -75,7 +91,7 @@ watch(theme, (newValue) => {
                 <div class="closeFeat"></div>
               </div>
               <div id="passages" aria-live="polite">
-                <div class="passage" :contenteditable="contenteditable" v-html="temp || $t('placeholder')"></div>
+                <div class="passage" :contenteditable="contenteditable" v-html="placeholder"></div>
               </div>
             </div>
             <div id="gameVersionDisplay" :contenteditable="contenteditable"> {{ $t('watermark') }} </div>
@@ -105,7 +121,7 @@ watch(theme, (newValue) => {
             <option value="npc">NPC</option>
           </select>
           <label for="language">{{ $t('language') }}：</label>
-          <select name="language" v-model="$i18n.locale">
+          <select name="language" v-model="locale">
             <option>zh</option>
             <option>en</option>
           </select>
@@ -116,7 +132,7 @@ watch(theme, (newValue) => {
           <label for="link-num">{{ $t('indexed') }}</label><input type="checkbox" id="link-num" name="link-num" checked />
           <label for="html-mode">{{ $t('exportHTML') }}</label><input type="checkbox" id="html-mode" name="html-mode" />
           <template :v-if="isFirefox">
-          <label for="direct-paste">{{ $t('pasteDirectly') }}</label><input type="checkbox" id="direct-paste" name="direct-paste" :checked="isFirefox" />
+            <label for="direct-paste">{{ $t('pasteDirectly') }}</label><input type="checkbox" id="direct-paste" name="direct-paste" :checked="isFirefox" />
           </template>
         </div>
         <div class="item">
@@ -138,48 +154,48 @@ watch(theme, (newValue) => {
         <div class="item">
           {{ $t('insertSkillChecks') }}：
           <select id="skill-check-type" name="static-check-type">
-            <option value="skulduggery">诡术</option>
-            <option value="physique">体能</option>
-            <option value="willpower">意志</option>
-            <option value="english">语文</option>
-            <option value="swimming">游泳</option>
-            <option value="athletics">运动</option>
-            <option value="tending">护理</option>
-            <option value="housekeeping">家务</option>
-            <option value="dance">舞蹈</option>
-            <option value="custom">自定义</option>
+            <option value="skulduggery">{{ $t('skill.skulduggery') }}</option>
+            <option value="physique">{{ $t('skill.physique') }}</option>
+            <option value="willpower">{{ $t('skill.willpower') }}</option>
+            <option value="english">{{ $t('skill.english') }}</option>
+            <option value="swimming">{{ $t('skill.swimming') }}</option>
+            <option value="athletics">{{ $t('skill.athletics') }}</option>
+            <option value="tending">{{ $t('skill.tending') }}</option>
+            <option value="housekeeping">{{ $t('skill.housekeeping') }}</option>
+            <option value="dance">{{ $t('skill.dance') }}</option>
+            <option value="custom">{{ $t('skill.custom') }}</option>
           </select>
           <select id="skill-check-diffi" name="skill-check-diffi">
-            <option value="very_easy">易如反掌</option>
-            <option value="easy">简单</option>
-            <option value="medium">普通</option>
-            <option value="challenging">挑战</option>
-            <option value="hard">困难</option>
-            <option value="very_hard">极难</option>
-            <option value="impossible">不可能</option>
+            <option value="very_easy">{{ $t('skillDiff.very_easy') }}</option>
+            <option value="easy">{{ $t('skillDiff.easy') }}</option>
+            <option value="medium">{{ $t('skillDiff.medium') }}</option>
+            <option value="challenging">{{ $t('skillDiff.challenging') }}</option>
+            <option value="hard">{{ $t('skillDiff.hard') }}</option>
+            <option value="very_hard">{{ $t('skillDiff.very_hard') }}</option>
+            <option value="impossible">{{ $t('skillDiff.impossible') }}</option>
           </select>
           <button id="skill-check" class="small">{{ $t('confirm') }}</button>
         </div>
         <div class="item">
-          {{ $t('insertLewdTips') }}：
+          {{ $t('insertLewd') }}：
           <select id="lewd-tip-type" name="lewd-tip-type">
-            <option value="exhibitionist">露出癖</option>
-            <option value="promiscuous">淫乱</option>
-            <option value="deviant">异种癖</option>
+            <option value="exhibitionist">{{ $t('lewd.exhibitionist') }}</option>
+            <option value="promiscuous">{{ $t('lewd.promiscuous') }}</option>
+            <option value="deviant">{{ $t('lewd.deviant') }}</option>
           </select>
           <select id="lewd-tip-grade" name="lewd-tip-grade">
-            <option value="1">1级</option>
-            <option value="2">2级</option>
-            <option value="3">3级</option>
-            <option value="4">4级</option>
-            <option value="5">5级</option>
-            <option value="6">6级</option>
+            <option value="1">{{ $t('lewdGrade.1') }}</option>
+            <option value="2">{{ $t('lewdGrade.2') }}</option>
+            <option value="3">{{ $t('lewdGrade.3') }}</option>
+            <option value="4">{{ $t('lewdGrade.4') }}</option>
+            <option value="5">{{ $t('lewdGrade.5') }}</option>
+            <option value="6">{{ $t('lewdGrade.6') }}</option>
           </select>
           <button id="lewd-tip" class="small">{{ $t('confirm') }}</button>
         </div>
-        <div class="item otherTags">{{ $t('insertOtherTips') }}：
+        <div class="item otherTags">{{ $t('insertOther') }}：
           <select name="symbols" id="symbols">
-            <option style="display: none" value="">常用符号</option>
+            <option style="display: none" value="">{{ $t('symbols') }}</option>
             <option value=" | ">|</option>
             <option>£</option>
           </select>
@@ -188,12 +204,15 @@ watch(theme, (newValue) => {
           {{ $t('insertColoredText') }}：
           <select id="color" name="color" class="colorspan">
             <option style='display: none' value="">{{ $t('normal') }}</option>
+            <option v-for="color in colors.color" :class="color" :key="color">{{ color }}</option>
           </select>
           <select id="statusColor" name="statusColor" class="colorspan">
             <option style='display: none' value="">{{ $t('attitude') }}</option>
+            <option v-for="color in colors.statusColor" :class="color" :key="color">{{ color }}</option>
           </select>
           <select id="specialColor" name="specialColor" class="colorspan">
             <option style='display: none' value="">{{ $t('effected') }}</option>
+            <option v-for="color in colors.specialColor" :key="color[0]" :value="color[0]">{{ color[1] }}</option>
           </select>
           <select id="biu" name="biu">
             <option style='display: none' value="">{{ $t('biu') }}</option>
@@ -203,21 +222,21 @@ watch(theme, (newValue) => {
           </select>
         </div>
         <div class="item">
-          {{ $t('insert') }}<temp hidden="1" class="advanced"><label for="linkTime">耗时</label>
-          <input type="number" name="linkTime" id="linkTime" min="1" max="599" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value > 599) this.value = '599';">
-          分钟、<label for="linkTo">前往</label>
-          <input list="linkToList" id="linkTo" name="linkTo" />
-          <datalist id="linkToList"></datalist>
-          且
-          <select id="endevent" name="endevent">
-            <option value="">不</option>
-            <option value="endevent"></option>
-          </select>
-          结束事件的</temp>
+          {{ $t('insert') }}
           <select id="link" name="link">
             <option value="normalLink">{{ $t('link') }}</option>
             <option value="nextWraith">{{ $t('wraithLink') }}</option>
+          </select><temp hidden="1" class="advanced"><label for="linkTime">{{ $t('insertLink.1') }}</label>
+          <input type="number" name="linkTime" id="linkTime" min="1" max="599" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value > 599) this.value = '599';">
+          {{ $t('insertLink.2') }}<label for="linkTo">{{ $t('insertLink.3') }}</label>
+          <input list="linkToList" id="linkTo" name="linkTo" />
+          <datalist id="linkToList"></datalist>
+          {{ $t('insertLink.4') }}
+          <select id="endevent" name="endevent">
+            <option value="">{{ $t('insertLink.5') }}</option>
+            <option value="endevent">{{ $t('insertLink.6') }}</option>
           </select>
+          {{ $t('insertLink.7') }}</temp>
           <button id="linkConfirm" class="small">{{ $t('confirm') }}</button>
         </div>
         <div class="item">
@@ -225,9 +244,9 @@ watch(theme, (newValue) => {
         <input id="insertPic" for="insertPic" type="file" accept="image/png, image/jpeg, image/webp">
         </div>
         <div class="item advanced" hidden="1">
-          插入NPC部件：
+          {{ $t('insertNPCwidgets') }}：
           <span id="hollows"></span>
-          <mouse class="tooltip-tiny"><sup class="linkBlue">(?)</sup><span>不可见部件，在编辑框中显示，在导出图片中不显示</span></mouse>
+          <mouse class="tooltip-tiny"><sup class="linkBlue">(?)</sup><span>{{ $t('invisibleTip') }}</span></mouse>
         </div>
         <div class="item" id="feat">
           {{ $t('achievementPopup') }}：
@@ -247,27 +266,27 @@ watch(theme, (newValue) => {
         </div>
         <div class="item" id="customWidget">
           {{ $t('insertCustomWidgets') }}：
-          <select id="customNames"><option>新建</option></select>
+          <select id="customNames"><option value="new">新建</option></select>
           <button id="customInsert" class="small">{{ $t('confirm') }}</button>
           <button id="customDelete" class="small">{{ $t('delete') }}</button>
           <button id="customExport" class="small">{{ $t('exportAll') }}</button>
         </div>
         <div class="item advanced" hidden="1" id="codeSaver">
-          <label for="saveName">保存为名为</label>
+          <label for="saveName">{{ $t('savePassage.1') }}</label>
           <input type="text" name="saveName" id="saveName">
-          的
+          {{ $t('savePassage.2') }}
           <select id="saveType"><option>passage</option><option>widget</option></select>
           <button id="save" class="small">{{ $t('confirm') }}</button>
           <span class="tipBox"></span>
         </div>
         <div class="item advanced" id="saveManager" hidden="1">
           <select id="saveManage">
-            <option value="load">载入</option>
-            <option value="delete">删除</option>
-            <option value="export">导出所有</option>
-            <option value="clear">删除所有</option>
+            <option value="load">{{ $t('load') }}</option>
+            <option value="delete">{{ $t('delete') }}</option>
+            <option value="export">{{ $t('exportAll') }}</option>
+            <option value="clear">{{ $t('deleteAll') }}</option>
           </select>
-          <label for="saveManage">已保存的</label>
+          <label for="saveManage">{{ $t('saved') }}</label>
           <select id="saveManageType">
             <option>passage</option>
             <option>widget</option>
@@ -278,13 +297,13 @@ watch(theme, (newValue) => {
         </div>
         <div class="item advanced" id="pancakeManager" hidden="1">
           <select id="pancakeManage">
-            <option value="export">导出</option>
-            <option value="import">导入</option>
-            <option value="reset">重置</option>
+            <option value="export">{{ $t('export') }}</option>
+            <option value="import">{{ $t('import') }}</option>
+            <option value="reset">{{ $t('reset') }}</option>
           </select>
-          <label for="pancakeManage">烤饼机设置</label>
+          <label for="pancakeManage">{{ $t('settings') }}</label>
           <button id="pancakeManageConfirm" class="small">{{ $t('confirm') }}</button>
-          <mouse class="tooltip-tiny"><sup class="linkBlue">(?)</sup><span>包括已保存 passage 等，导入将覆盖当前设置</span></mouse>
+          <mouse class="tooltip-tiny"><sup class="linkBlue">(?)</sup><span>{{ $t('settingsTip') }}</span></mouse>
           <span class="tipBox"></span>
         </div>
         </div>
@@ -293,16 +312,19 @@ watch(theme, (newValue) => {
             <input type="text" v-model="name" />
             <input type="text" v-model="title" />
           </div>
-          <div class="item"><select id="descolor" v-model="color"></select>
-          描述：<input v-model="description" /></div>
+          <div class="item"><select v-model="color">
+            <option v-for="color in colors.color" :class="color" :key="color">{{ color }}</option>
+            <option>white</option>
+          </select>
+          {{ $t('relationBox.desc') }}：<input v-model="description" /></div>
           <div v-for="(stat, i) in stats" class="item" :key="stat.name">
             <input type="text" v-model="stat.name" />
             <input type="number" v-model="stat.progress" min="1" max="100" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value > 100) this.value = '100';">%
             <select v-model="stat.direction">
-              <option value="horizontal">水平</option>
-              <option value="vertical">竖直</option>
+              <option value="horizontal">{{ $t('relationBox.horizontal') }}</option>
+              <option value="vertical">{{ $t('relationBox.vertical') }}</option>
             </select>
-            <label :for="'activeicon' + i">图标：</label>
+            <label :for="'activeicon' + i">{{ $t('relationBox.icon') }}：</label>
             <input @change="loadFile(stat, $event)" :id="'activeicon' + i" type="file" accept="image/png, image/jpeg, image/webp">
           </div>
         </div>

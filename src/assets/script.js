@@ -1,6 +1,6 @@
 import { domToPng, domToBlob } from 'modern-screenshot'
 import {
-  colors, npcList, statics, diffiColors, lewdColors, tags, hollows,
+  npcList, statics, diffiColors, lewdColors, tags, hollows,
 } from './data.js';
 import { saveTwee, savePng, saveJSON } from './save.js';
 
@@ -22,32 +22,38 @@ function updateTip(tipbox, tip, color = 'red') {
   tipbox.innerHTML = `<span class="${color}">${tip}</span>`;
 }
 
+// 自动保存
+// window.addEventListener('beforeunload', () => {
+//   if (!localStorage.getItem('temp')) return;
+//   localStorage.setItem('temp', document.querySelector('div.passage').innerHTML);
+// });
+
 // 选项初始化
-Object.entries(colors).forEach(([id, colorSet]) => {
-  document.getElementById(id).innerHTML += colorSet.reduce((options, [color, name]) => `${options}
-  <option${!name ? ` class="${color}"` : ''} value="${color}">${name || color}</option>`, '');
-});
+// Object.entries(colors).forEach(([id, colorSet]) => {
+//   document.getElementById(id).innerHTML += colorSet.reduce((options, [color, name]) => `${options}
+//   <option${!name ? ` class="${color}"` : ''} value="${color}">${name || color}</option>`, '');
+// });
 
-document.getElementById('static-class').innerHTML = Object.entries(statics).reduce((options, [value, { NAME }]) => `${options}<option value=${value}>${NAME}</option>`, '');
-document.getElementById('static-type').innerHTML = Object.entries(statics).reduce((goptions, [clas, stats]) => `${goptions}${
-  Object.entries(stats).reduce((options, [value, { name }]) => `${options}${name ? `<option class="${clas}" value="${value}">${name}</option>` : ''}`, '')
-}`, '');
+// document.getElementById('static-class').innerHTML = Object.entries(statics).reduce((options, [value, { NAME }]) => `${options}<option value=${value}>${NAME}</option>`, '');
+// document.getElementById('static-type').innerHTML = Object.entries(statics).reduce((goptions, [clas, stats]) => `${goptions}${
+//   Object.entries(stats).reduce((options, [value, { name }]) => `${options}${name ? `<option class="${clas}" value="${value}">${name}</option>` : ''}`, '')
+// }`, '');
 
-document.querySelector('#symbols').insertAdjacentHTML('beforebegin', Object.entries(tags).reduce((html, [id, itags]) => `${html}
-<select class="tags" id="${id}">
-  <option style='display: none' value="">${itags.NAME}</option>
-  ${Object.entries(itags).reduce(
-    (ihtml, [tag, dis]) => {
-      if (!dis.name) return ihtml;
-      // if (dis.name instanceof Array) return ihtml + dis.name.reduce((iihtml, name) => `${iihtml}<option value=${tag}>${name}</option>`, '');
-      return `${ihtml}<option value=${tag}>${dis.name}</option>`;
-    },
-    '',
-  )
-}
-</select>`, ''));
+// document.querySelector('#symbols').insertAdjacentHTML('beforebegin', Object.entries(tags).reduce((html, [id, itags]) => `${html}
+// <select class="tags" id="${id}">
+//   <option style='display: none' value="">${itags.NAME}</option>
+//   ${Object.entries(itags).reduce(
+//     (ihtml, [tag, dis]) => {
+//       if (!dis.name) return ihtml;
+//       // if (dis.name instanceof Array) return ihtml + dis.name.reduce((iihtml, name) => `${iihtml}<option value=${tag}>${name}</option>`, '');
+//       return `${ihtml}<option value=${tag}>${dis.name}</option>`;
+//     },
+//     '',
+//   )
+// }
+// </select>`, ''));
 
-document.getElementById('descolor').innerHTML = `${colors.color.reduce((html, name) => `${html}<option>${name}</option>`, '')}<option>white</option>`;
+// document.getElementById('descolor').innerHTML = `${colors.color.reduce((html, name) => `${html}<option>${name}</option>`, '')}<option>white</option>`;
 
 // 高级选项
 const switchAdvanced = () => {
@@ -204,16 +210,16 @@ const getOptionText = (id) => document.getElementById(id)?.options[document.getE
 
 // 分类显示数据变化
 const staticClass = document.querySelector('#static-class');
-const toggleOptions = () => {
-  document.querySelectorAll('#static-type option').forEach((e) => { e.hidden = 1; });
-  document.querySelectorAll(`.${staticClass.value}`).forEach((e) => { e.hidden = 0; });
-};
-toggleOptions();
-staticClass.addEventListener('change', () => {
-  toggleOptions();
-  document.querySelector('#static-type').value = document.querySelectorAll(`.${staticClass.value}`)[0].value;
-  document.querySelector('#static-type').dispatchEvent(new Event('change'));
-});
+// const toggleOptions = () => {
+//   document.querySelectorAll('#static-type option').forEach((e) => { e.hidden = 1; });
+//   document.querySelectorAll(`.${staticClass.value}`).forEach((e) => { e.hidden = 0; });
+// };
+// toggleOptions();
+// staticClass.addEventListener('change', () => {
+//   toggleOptions();
+//   document.querySelector('#static-type').value = document.querySelectorAll(`.${staticClass.value}`)[0].value;
+//   document.querySelector('#static-type').dispatchEvent(new Event('change'));
+// });
 
 // 插入数据变化
 document.querySelector('#static-type').addEventListener('change', (event) => {
