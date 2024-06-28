@@ -28,22 +28,6 @@ function updateTip(tipbox, tip, color = 'red') {
   tipbox.innerHTML = `<span class="${color}">${tip}</span>`;
 }
 
-// 选项初始化
-
-// document.querySelector('#symbols').insertAdjacentHTML('beforebegin', Object.entries(tags).reduce((html, [id, itags]) => `${html}
-// <select class="tags" id="${id}">
-//   <option style='display: none' value="">${itags.NAME}</option>
-//   ${Object.entries(itags).reduce(
-//     (ihtml, [tag, dis]) => {
-//       if (!dis.name) return ihtml;
-//       // if (dis.name instanceof Array) return ihtml + dis.name.reduce((iihtml, name) => `${iihtml}<option value=${tag}>${name}</option>`, '');
-//       return `${ihtml}<option value=${tag}>${dis.name}</option>`;
-//     },
-//     '',
-//   )
-// }
-// </select>`, ''));
-
 // 高级选项
 const switchAdvanced = () => {
   document.querySelectorAll('.advanced').forEach((advanced) => {
@@ -113,56 +97,6 @@ document.querySelector('#direct-paste').addEventListener('change', (event) => {
 });
 
 generateInsertTarget(dolEditor);
-
-// 插入常用符号
-// document.querySelector('#symbols').addEventListener('change', (event) => {
-//   const symbol = event.target.value;
-//   insert(document.createTextNode(symbol), true, symbol === '£');
-//   event.target.value = '';
-// });
-
-// 插入颜色文字
-const insertOrWrap = (element) => {
-  if (selection?.isCollapsed || !selection) {
-    element.innerText = '\u200b请输入文本';
-    insert(element);
-  } else {
-    wrap(element);
-  }
-};
-document.querySelectorAll('.colorspan').forEach((sel) => {
-  sel.addEventListener('change', (event) => {
-    const span = document.createElement('span');
-    span.classList.add(event.target.value);
-    insertOrWrap(span);
-    event.target.value = '';
-  });
-});
-document.querySelector('#biu').addEventListener('change', (event) => {
-  const element = document.createElement(event.target.value);
-  insertOrWrap(element);
-  event.target.value = '';
-});
-
-// 插入链接
-document.querySelector('#linkConfirm').addEventListener('click', () => {
-  const link = document.createElement('a');
-  const time = document.querySelector('#linkTime').value || '';
-  link.classList.add(document.querySelector('#link').value);
-  link.setAttribute('endevent', document.querySelector('#endevent').value || '');
-  link.setAttribute('linkto', document.querySelector('#linkTo').value || '');
-  link.setAttribute('linktime', time);
-  if (position?.startContainer.parentElement !== insertTarget) {
-    selection.collapse(insertTarget);
-  }
-  if (selection?.isCollapsed || !selection) {
-    link.innerText = '\u200b继续';
-    if (time !== '') link.innerText += ` (${Math.floor(time / 60)}:${(`${time % 60}`).padStart(2, '0')})`;
-    insert(link);
-  } else {
-    wrap(link);
-  }
-});
 
 // NPC 部件
 document.querySelector('#hollows').innerHTML = Object.keys(hollows).reduce((selects, key) => `

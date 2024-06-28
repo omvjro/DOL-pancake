@@ -8,6 +8,7 @@ import FileInput from './components/FileInput.vue';
 import StatChange from './components/panel/StatChange.vue';
 import SkillCheck from './components/panel/SkillCheck.vue';
 import InsertTags from './components/panel/InsertTags.vue';
+import ColouredText from './components/panel/ColouredText.vue'
 import { insert } from './assets/insert'
 import ToolTip from './components/ToolTip.vue';
 import FeatBox from './components/FeatBox.vue';
@@ -179,45 +180,7 @@ function insertPic() {
         <StatChange />
         <SkillCheck />
         <InsertTags />
-        <div class="item">
-          {{ $t('insertColoredText') }}：
-          <select id="color" name="color" class="colorspan">
-            <option style='display: none' value="">{{ $t('normal') }}</option>
-            <option v-for="color in colors.color" :class="color" :key="color">{{ color }}</option>
-          </select>
-          <select id="statusColor" name="statusColor" class="colorspan">
-            <option style='display: none' value="">{{ $t('attitude') }}</option>
-            <option v-for="color in colors.statusColor" :class="color" :key="color">{{ color }}</option>
-          </select>
-          <select id="specialColor" name="specialColor" class="colorspan">
-            <option style='display: none' value="">{{ $t('effected') }}</option>
-            <option v-for="color in colors.specialColor" :key="color[0]" :value="color[0]">{{ color[1] }}</option>
-          </select>
-          <select id="biu" name="biu">
-            <option style='display: none' value="">{{ $t('biu') }}</option>
-            <option value="b">{{ $t('bold') }}</option>
-            <option value="i">{{ $t('italic') }}</option>
-            <option value="u">{{ $t('underlined') }}</option>
-          </select>
-        </div>
-        <div class="item">
-          {{ $t('insert') }}
-          <select id="link" name="link">
-            <option value="normalLink">{{ $t('link') }}</option>
-            <option value="nextWraith">{{ $t('wraithLink') }}</option>
-          </select><temp hidden="1" class="advanced"><label for="linkTime">{{ $t('insertLink.1') }}</label>
-          <input type="number" name="linkTime" id="linkTime" min="1" max="599" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value > 599) this.value = '599';">
-          {{ $t('insertLink.2') }}<label for="linkTo">{{ $t('insertLink.3') }}</label>
-          <input list="linkToList" id="linkTo" name="linkTo" />
-          <datalist id="linkToList"></datalist>
-          {{ $t('insertLink.4') }}
-          <select id="endevent" name="endevent">
-            <option value="">{{ $t('insertLink.5') }}</option>
-            <option value="endevent">{{ $t('insertLink.6') }}</option>
-          </select>
-          {{ $t('insertLink.7') }}</temp>
-          <button id="linkConfirm" class="small">{{ $t('confirm') }}</button>
-        </div>
+        <ColouredText />
         <div class="item">
         <FileInput id="insertPic" :label="`${t('insertPics')}：`" :func="insertPic()" />
         </div>

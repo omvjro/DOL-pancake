@@ -267,5 +267,8 @@ export default {
         defianttext: 'Defiant',
         submissivetext: 'Submissive',
         dangerousText: 'Dangerous',
-    }
+    },
+
+    inputPrompt: 'Text here',
+    next: 'Next',
 }

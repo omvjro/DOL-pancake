@@ -82,6 +82,3 @@ function insertSkillCheck() {
   <button @click="insertSkillCheck" id="skill-check" class="small">{{ $t('confirm') }}</button>
 </div>
 </template>
-
-<style scoped>
-</style>

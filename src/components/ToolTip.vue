@@ -9,7 +9,6 @@ defineProps({
     default: false
   }
 })
-
 </script>
 
 <template>

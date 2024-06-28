@@ -75,4 +75,4 @@ export {
     generateInsertTarget,
     insertHard, insert, wrap,
     getSelectionAndPosition, createSelection,
- }
+}

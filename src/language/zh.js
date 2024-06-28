@@ -267,5 +267,8 @@ export default {
         defianttext: '反抗',
         submissivetext: '顺从',
         dangerousText: '危险的',
-    }
+    },
+
+    inputPrompt: '请输入文本',
+    next: '继续',
 }
