@@ -335,100 +335,6 @@ const statics = {
     },
   },
 };
-const lewdColors = [
-  'teal',
-  'lblue',
-  'blue',
-  'purple',
-  'pink',
-  'red',
-];
-const tags = {
-  trans: {
-    NAME: '转化',
-    wolfgirl: {
-      name: '狼',
-      color: 'blue',
-    },
-    cat: {
-      name: '猫',
-      color: 'blue',
-    },
-    cow: {
-      name: '奶牛',
-      color: 'blue',
-    },
-    harpy: {
-      name: '哈比',
-      color: 'gold',
-    },
-    fox: {
-      name: '狐狸',
-      color: 'orange',
-    },
-    angel: {
-      name: '天使',
-      color: 'gold',
-    },
-    fallenangel: {
-      name: '堕天使',
-      color: 'black',
-    },
-    demon: {
-      name: '恶魔',
-      color: 'red',
-    },
-  },
-  // traits: {
-  //   NAME: '特质',
-  //   _: {
-  //     color: 'lewd',
-  //   },
-  //   orgasmTrait: {
-  //     name: ['享乐主义', '高潮上瘾'],
-  //   },
-  //   chokeTrait: {
-  //     name: '窒息上瘾',
-  //   },
-  //   ejacTrait: {
-  //     name: ['粘液专家', '储精罐'],
-  //   },
-  //   molestTrait: {
-  //     name: ['优雅', '消遣玩物'],
-  //   },
-  //   repeTrait: {
-  //     name: ['幸存者', '性玩具'],
-  //   },
-  //   bestialityTrait: {
-  //     name: ['驯兽师', '母狗'],
-  //   },
-  //   voreTrait: {
-  //     name: ['探险者', '美味可口'],
-  //   },
-  //   milkTrait: {
-  //     name: ['牛奶发烧友', '牛奶瘾君子'],
-  //   },
-  // },
-  others: {
-    NAME: '其他',
-    crime: {
-      name: '犯罪',
-      color: 'red',
-    },
-    defianttext: {
-      name: '反抗',
-      color: 'def',
-    },
-    submissivetext: {
-      name: '顺从',
-      color: 'sub',
-    },
-    dangerousText: {
-      name: '危险的',
-      color: 'red',
-    },
-  },
-};
 
 const hollows = {
   generate: [],
@@ -444,5 +350,5 @@ for (let i = 1; i <= 6; i += 1) {
 // });
 
 export {
-  colors,  statics, lewdColors, tags, hollows,
+  colors,  statics, hollows,
 };

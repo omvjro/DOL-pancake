@@ -13,11 +13,6 @@ defineProps({
     type: Function
   }
 })
-
-// function ifunc(func) {
-//   func()
-// }
-
 </script>
 
 <template>

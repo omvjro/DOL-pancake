@@ -49,7 +49,7 @@ export default {
 
     invisibleTip: 'Invisible widgets, only visible when editing',
     settingsTip: 'Including saved passages; import will override current settings',
-    restoreTip: 'Last editted content restored. Click here to restore initial content.',
+    restoreTip: 'Last edited content restored. Click here to restore initial content.',
 
     insertLink: {
         1: ' which takes ',
@@ -89,9 +89,9 @@ export default {
     },
 
     lewd: {
-        exhibitionist: 'Exhibitionist',
-        promiscuous: 'Promiscusous',
-        deviant: 'Deviant',
+        exhibitionist: 'Exhibitionism',
+        promiscuous: 'Promiscuity',
+        deviant: 'Deviancy',
     },
     lewdGrade: {
         1: '1',
@@ -163,7 +163,7 @@ export default {
         others: 'other',
 
         stress: 'Stress',
-        tiredness: 'Tiredness',
+        tiredness: 'Fatigue',
         arousal: 'Arousal',
         trauma: 'Trauma',
         control: 'Control',
@@ -175,13 +175,13 @@ export default {
 
         love: 'Love',
         lust: 'Lust',
-        dom: 'Dominancy',
-        rtrauma: 'Robin\'s trauma',
-        rdom: 'Robin\'s confidence',
+        dom: 'Dominance',
+        rtrauma: 'Robin\'s Trauma',
+        rdom: 'Robin\'s Confidence',
         ksuspicion: 'Jealousy',
-        spurity: 'Sydney\'s purity',
-        scorruption: 'Sydney\'s corruption',
-        slust: 'Sydney\'s lust',
+        spurity: 'Sydney\'s Purity',
+        scorruption: 'Sydney\'s Corruption',
+        slust: 'Sydney\'s Lust',
         arage: 'Rage',
         endear: 'Endearment',
         obsession: 'Obsession',
@@ -195,32 +195,32 @@ export default {
         athletics: 'Athletics',
         tending: 'Tending',
         housekeeping: 'Housekeeping',
-        danceskill: 'Dance Skill',
-        net: 'Net Proficiency',
-        baton: 'Baton Proficiency',
-        whip: 'Whip Proficiency',
+        danceskill: 'Dance skill',
+        net: 'Net proficiency',
+        baton: 'Baton proficiency',
+        whip: 'Whip proficiency',
 
-        handskill: 'Hand Skill',
-        oralskill: 'Oral Skill',
-        thighskill: 'Thigh Skill',
-        bottomskill: 'Bottom Skill',
-        vaginalskill: 'Vaginal Skill',
-        penileskill: 'Penial Skill',
-        analskill: 'Anal Skill',
-        feetskill: 'Feet Skill',
-        chestskill: 'Chest Skill',
+        handskill: 'Hand skill',
+        oralskill: 'Oral skill',
+        thighskill: 'Thigh skill',
+        bottomskill: 'Bottom skill',
+        vaginalskill: 'Vaginal skill',
+        penileskill: 'Penial skill',
+        analskill: 'Anal skill',
+        feetskill: 'Feet skill',
+        chestskill: 'Chest skill',
 
         hope: 'Hope',
-        reb: 'Rebelliance',
+        reb: 'Rebelliousness',
 
         delinquency: 'Delinquency',
         cool: 'Status',
 
         chaos: 'Chaos',
-        aggro: 'Remy\'s Aggro',
-        farm: 'Yield',
+        aggro: 'Remy\'s Encroachment',
+        farm: 'Farm yield',
         daring: 'Daring',
-        obey: 'Obey',
+        obey: 'Obedience',
 
         grace: 'Grace',
         hallucinogens: 'Hallucinogens',
@@ -244,7 +244,28 @@ export default {
     },
 
     skillCheck: {
-        name: 'name',
-        var: 'var',
+        name: 'Skill',
+        var: 'Var',
+    },
+
+    tags: {
+        trans: 'Trans',
+        wolfgirl: 'Wolfgirl',
+        wolfboy: 'Wolfboy',
+        cat: 'Cat',
+        cow: 'Cow',
+        harpy: 'Harpy',
+        bird: 'Bird',
+        fox: 'Foxboy',
+        vixen: 'Vixen',
+        angel: 'Angel',
+        fallenangel: 'Fallen Angel',
+        demon: 'Demon',
+
+        others: 'Others',
+        crime: 'Crime',
+        defianttext: 'Defiant',
+        submissivetext: 'Submissive',
+        dangerousText: 'Dangerous',
     }
 }

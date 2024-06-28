@@ -1,6 +1,6 @@
 import { domToPng, domToBlob } from 'modern-screenshot'
 import {
-  lewdColors, tags, hollows,
+  hollows,
 } from './data.js';
 import { saveTwee, savePng, saveJSON } from './save.js';
 import {
@@ -114,35 +114,12 @@ document.querySelector('#direct-paste').addEventListener('change', (event) => {
 
 generateInsertTarget(dolEditor);
 
-const getOptionText = (id) => document.getElementById(id)?.options[document.getElementById(id)?.selectedIndex]?.text;
-
-// 插入标签
-document.querySelectorAll('.tags').forEach((sel) => {
-  sel.addEventListener('change', (event) => {
-    const type = event.target.value;
-    const { id } = event.target.closest('select');
-    const color = tags[id][type].color || tags[id]._?.color;
-    insertHard(
-      ` | <span class="${color}">${getOptionText(id)}</span>`,
-      `<<${type}>>`,
-    );
-    event.target.value = '';
-  });
-});
-document.querySelector('#lewd-tip').addEventListener('click', () => {
-  const type = document.querySelector('#lewd-tip-type').value;
-  const grade = document.querySelector('#lewd-tip-grade').value;
-  let text = `${getOptionText('lewd-tip-type')} ${getOptionText('lewd-tip-grade')}`;
-  if (grade === '6') text = `!${text}!`;
-  insertHard(` | <span class="${lewdColors[grade - 1]}">${text}</span>`, `<<${type}${grade}>>`);
-});
-
 // 插入常用符号
-document.querySelector('#symbols').addEventListener('change', (event) => {
-  const symbol = event.target.value;
-  insert(document.createTextNode(symbol), true, symbol === '£');
-  event.target.value = '';
-});
+// document.querySelector('#symbols').addEventListener('change', (event) => {
+//   const symbol = event.target.value;
+//   insert(document.createTextNode(symbol), true, symbol === '£');
+//   event.target.value = '';
+// });
 
 // 插入颜色文字
 const insertOrWrap = (element) => {

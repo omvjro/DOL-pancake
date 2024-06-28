@@ -7,12 +7,11 @@ import RelationBox from './components/RelationBox.vue';
 import FileInput from './components/FileInput.vue';
 import StatChange from './components/panel/StatChange.vue';
 import SkillCheck from './components/panel/SkillCheck.vue';
-import {
-  colors, lewdColors, tags, hollows,
-} from './assets/data.js';
+import InsertTags from './components/panel/InsertTags.vue';
 import { insert } from './assets/insert'
 import ToolTip from './components/ToolTip.vue';
 import FeatBox from './components/FeatBox.vue';
+import { colors } from './assets/data';
 
 const { t, locale } = useI18n();
 const placeholder = localStorage.getItem('temp') || t('placeholder')
@@ -175,30 +174,7 @@ function insertPic() {
         </div>
         <StatChange />
         <SkillCheck />
-        <div class="item">
-          {{ $t('insertLewd') }}：
-          <select id="lewd-tip-type" name="lewd-tip-type">
-            <option value="exhibitionist">{{ $t('lewd.exhibitionist') }}</option>
-            <option value="promiscuous">{{ $t('lewd.promiscuous') }}</option>
-            <option value="deviant">{{ $t('lewd.deviant') }}</option>
-          </select>
-          <select id="lewd-tip-grade" name="lewd-tip-grade">
-            <option value="1">{{ $t('lewdGrade.1') }}</option>
-            <option value="2">{{ $t('lewdGrade.2') }}</option>
-            <option value="3">{{ $t('lewdGrade.3') }}</option>
-            <option value="4">{{ $t('lewdGrade.4') }}</option>
-            <option value="5">{{ $t('lewdGrade.5') }}</option>
-            <option value="6">{{ $t('lewdGrade.6') }}</option>
-          </select>
-          <button id="lewd-tip" class="small">{{ $t('confirm') }}</button>
-        </div>
-        <div class="item otherTags">{{ $t('insertOther') }}：
-          <select name="symbols" id="symbols">
-            <option style="display: none" value="">{{ $t('symbols') }}</option>
-            <option value=" | ">|</option>
-            <option>£</option>
-          </select>
-        </div>
+        <InsertTags />
         <div class="item">
           {{ $t('insertColoredText') }}：
           <select id="color" name="color" class="colorspan">

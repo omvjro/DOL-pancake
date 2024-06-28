@@ -1,4 +1,6 @@
-
+import {
+  insertTarget
+} from './insert.js'
 
 const undoData = [];
 let redoData = [];

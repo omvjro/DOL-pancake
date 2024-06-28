@@ -246,5 +246,26 @@ export default {
     skillCheck: {
         name: '技能名称',
         var: '判定变量',
+    },
+
+    tags: {
+        trans: '转化',
+        wolfgirl: '狼女',
+        wolfboy: '狼人',
+        cat: '猫',
+        cow: '奶牛',
+        harpy: '哈比',
+        bird: '鸟',
+        fox: '雄狐',
+        vixen: '雌狐',
+        angel: '天使',
+        fallenangel: '堕天使',
+        demon: '恶魔',
+
+        others: '其他',
+        crime: '犯罪',
+        defianttext: '反抗',
+        submissivetext: '顺从',
+        dangerousText: '危险的',
     }
 }
