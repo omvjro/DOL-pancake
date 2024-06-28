@@ -151,6 +151,10 @@ function insertPic() {
             <option value="arctic">Arctic</option>
             <option value="monokai">Monokai</option>
             <option value="storm">Storm</option>
+            <option value="latte">Catppuccin Latte</option>
+            <option value="frappe">Catppuccin Frappé</option>
+            <option value="macchiato">Catppuccin Macchiato</option>
+            <option value="mocha">Catppuccin Mocha</option>
           </select>
           <label for="scene">{{ $t('scene') }}：</label>
           <select name="scene" v-model="scene">
