@@ -526,12 +526,6 @@ document.addEventListener('keydown', (event) => {
   }
 }, { passive: false });
 
-// 清空内容
-document.querySelector('#clear').addEventListener('click', () => {
-  output.innerText = '';
-  // afterInput();
-});
-
 // 撤销重做
 let undoData = [dolEditor.innerHTML]
 let currentIndex = 0

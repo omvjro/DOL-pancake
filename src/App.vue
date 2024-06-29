@@ -36,7 +36,7 @@ const contenteditable = computed(() => {
 })
 
 const scene = ref('default'),
-      theme = ref(localStorage.getItem('theme')),
+      theme = ref(localStorage.getItem('theme') || ''),
 
       feat = ref('none'),
       featTitle = ref(''),
@@ -51,21 +51,21 @@ const scene = ref('default'),
             name: t('relationBox.love'),
             progress: 80,
             direction: 'horizontal',
-            activeicon: 'https://eltirosto.github.io/Degrees-of-Lewdity-Chinese-Localization/img/ui/heart.png',
-            inactiveicon: 'https://eltirosto.github.io/Degrees-of-Lewdity-Chinese-Localization/img/ui/emptyheart.png'
+            activeicon: '/img/ui/heart.png',
+            inactiveicon: '/img/ui/emptyheart.png'
           },
           {
             name: t('relationBox.lust'),
             progress: 50,
             direction: 'vertical',
-            activeicon: 'https://eltirosto.github.io/Degrees-of-Lewdity-Chinese-Localization/img/ui/vial.png',
-            inactiveicon: 'https://eltirosto.github.io/Degrees-of-Lewdity-Chinese-Localization/img/ui/emptyvial.png'
+            activeicon: '/img/ui/vial.png',
+            inactiveicon: '/img/ui/emptyvial.png'
           },
           {
             name: t('relationBox.jealousy'),
             progress: 100,
             direction: 'horizontal',
-            activeicon: 'https://eltirosto.github.io/Degrees-of-Lewdity-Chinese-Localization/img/ui/wideeye.png'
+            activeicon: '/img/ui/wideeye.png'
           },
           {
             name: '',
@@ -107,6 +107,18 @@ function insertPic() {
       document.querySelector('#direct-paste').checked = true;
       // editableSwitch(true, true);
     });
+  }
+}
+
+function clear() {
+  if (scene.value === 'default') {
+    const dolEditor = document.querySelector('div.passage');
+    dolEditor.innerText = '';
+  } else if (scene.value === 'npc') {
+    stats.value = [{name: '',},{name: '',},{name: '',},{name: '',}]
+    name.value = ''
+    title.value = ''
+    description.value = ''
   }
 }
 </script>
@@ -166,6 +178,8 @@ function insertPic() {
           <select name="language" v-model="locale">
             <option>zh</option>
             <option>en</option>
+            <option>zh-TW</option>
+            <option>zh-HK</option>
           </select>
         </div>
         <div v-show="scene === 'default'">
@@ -173,7 +187,7 @@ function insertPic() {
           <label for="advanced">{{ $t('advance') }}</label><input type="checkbox" id="advanced" name="advanced" />
           <label for="link-num">{{ $t('indexed') }}</label><input type="checkbox" id="link-num" name="link-num" checked />
           <label for="html-mode">{{ $t('exportHTML') }}</label><input type="checkbox" id="html-mode" name="html-mode" />
-          <template :v-if="isFirefox">
+          <template v-if="!isFirefox">
             <label for="direct-paste">{{ $t('pasteDirectly') }}</label><input type="checkbox" id="direct-paste" name="direct-paste" :checked="isFirefox" />
           </template>
         </div>

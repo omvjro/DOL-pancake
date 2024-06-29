@@ -16,7 +16,7 @@ defineProps({
 </script>
 
 <template>
-    <label :class="{ zh: locale === 'zh' }" :for="id">{{ label }}</label>
+    <label :class="locale.replace('-', '')" :for="id">{{ label }}</label>
     <input @change="func($event)" :id type="file" accept="image/png, image/jpeg, image/webp">
 </template>
 
@@ -34,7 +34,13 @@ label::after {
 	cursor: pointer;
 }
 label.zh::after {
-    content: '选择文件';
+  content: '选择文件';
+}
+label.zhTW::after {
+  content: '選擇檔案';
+}
+label.zhHK::after {
+  content: '選擇文件'
 }
 label:hover::after {
 	background-color: #333;
