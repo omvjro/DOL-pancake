@@ -532,6 +532,7 @@ document.querySelector('#clear').addEventListener('click', () => {
   // afterInput();
 });
 
+// 撤销重做
 let undoData = [dolEditor.innerHTML]
 let currentIndex = 0
 
@@ -544,6 +545,7 @@ const observer = new MutationObserver(function(mutations) {
     currentIndex = undoData.length - 1
     console.log(undoData.length, currentIndex)
   });
+  toggleIndex();
 });
 
 observer.observe(dolEditor, {
