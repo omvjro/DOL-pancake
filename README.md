@@ -14,7 +14,8 @@
 - [ ] 差分
 
 ## 其他问题
-- Safari 上可能存在问题。由于没有相关设备，调试不便，暂不计划解决。
+- 部分 Safari 版本 CSS 失效
+- Firefox 上输出图片时链接标号无法正常显示（https://github.com/qq15725/modern-screenshot/issues/97）
 
 ## 开发
 ### Recommended IDE Setup

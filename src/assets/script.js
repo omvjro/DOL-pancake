@@ -90,9 +90,11 @@ const editableSwitch = (isTrue, isNum = false) => {
     document.querySelector('#code').disabled = false;
   }
 };
-document.querySelector('#direct-paste').addEventListener('change', (event) => {
-  editableSwitch(event.target.checked);
-});
+if (document.querySelector('#direct-paste')) {
+  document.querySelector('#direct-paste').addEventListener('change', (event) => {
+    editableSwitch(event.target.checked);
+  });
+}
 
 generateInsertTarget(dolEditor);
 
@@ -302,7 +304,12 @@ document.querySelector('#customExport').addEventListener('click', () => {
 document.querySelector('#pic').addEventListener('click', () => {
   document.querySelectorAll('.noDisplay').forEach((e) => { e.style.display = 'none'; });
   output.innerText = '生成图片中……';
-  domToPng(document.querySelector('#dol'), { scale: 2 }).then((dataUrl) => {
+  domToPng(document.querySelector('#dol'), {
+    scale: 2,
+    features: {
+      removeControlCharacter: false
+    }
+  }).then((dataUrl) => {
     const img = new Image();
     img.src = dataUrl;
     img.alt = 'dol-pancake';
@@ -319,7 +326,12 @@ document.querySelector('#pic').addEventListener('click', () => {
 document.querySelector('#pic-down').addEventListener('click', () => {
   document.querySelectorAll('.noDisplay').forEach((e) => { e.style.display = 'none'; });
   output.innerText = '生成图片中……';
-  domToBlob(document.querySelector('#dol'), { scale: 2 }).then((blob) => {
+  domToBlob(document.querySelector('#dol'), {
+    scale: 2,
+    features: {
+      removeControlCharacter: false
+    }
+  }).then((blob) => {
     savePng(blob, 'dol-pancake');
     output.innerText = '';
   }).catch((error) => {
