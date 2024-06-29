@@ -108,22 +108,6 @@ body, html {
 			cursor: not-allowed;
 		}
 	}
-	/* input[type=file] {
-		display: none;
-	}
-	label:has(+input[type=file])::after {
-		content: '选择文件';
-		font-size: .8em;
-		color: #eee;
-		background-color: transparent;
-		border: 1px solid #444;
-		padding: .34em .4em;
-		cursor: pointer;
-	}
-	label:has(+input[type=file]):hover::after {
-		background-color: #333;
-		border-color: #eee
-	} */
 
 }
 .toolbox {
@@ -146,12 +130,6 @@ body, html {
 	a:hover {
 		color: #8af;
 		text-decoration: underline;
-	}
-	.colorspan, .otherTags select, #hollows select, select#biu {
-		color: gray;
-		option:not([class]) {
-			color: #eee;
-		}
 	}
 	.tipBox {
 		font-size: .9em;

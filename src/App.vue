@@ -280,7 +280,3 @@ function insertPic() {
       </div>
     </div>
 </template>
-
-<style scoped>
-
-</style>

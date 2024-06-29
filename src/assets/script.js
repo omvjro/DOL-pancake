@@ -4,16 +4,14 @@ import {
 } from './data.js';
 import { saveTwee, savePng, saveJSON } from './save.js';
 import {
-  selection, position, insertTarget,
+  position, insertTarget,
   generateInsertTarget,
-  insertHard, insert, wrap,
+  insertHard, insert,
   getSelectionAndPosition, createSelection,
 } from './insert.js'
 
 const dolEditor = document.querySelector('div.passage');
 const output = document.querySelector('#output');
-const undoData = [];
-let redoData = [];
 function findInlineLink(candidate, operator) {
   if (!candidate) return;
   const candidateContent = candidate.textContent;
@@ -499,32 +497,8 @@ document.querySelector('#pancakeManageConfirm').addEventListener('click', () => 
   }
 });
 
-// 撤销
-const undo = () => {
-  const previousHTML = undoData.at(-2);
-  const currentHTML = undoData.pop();
-  if (currentHTML) redoData.push(currentHTML);
-  if (previousHTML) insertTarget.innerHTML = previousHTML;
-};
-const redo = () => {
-  const nextHTML = redoData.pop();
-  if (nextHTML) {
-    insertTarget.innerHTML = nextHTML;
-    undoData.push(nextHTML);
-  }
-};
-
-document.querySelector('#undo').addEventListener('click', undo);
-document.querySelector('#redo').addEventListener('click', redo);
 document.addEventListener('keydown', (event) => {
   event.stopPropagation();
-  if (event.ctrlKey) {
-    if (event.key === 'z') {
-      undo();
-    } else if (event.key === 'y') {
-      redo();
-    }
-  }
   // 允许回车退出颜色标签，阻止链接内换行，自动添加下一个链接
   if (event.key === 'Enter' && event.target === insertTarget) {
     event.preventDefault();
@@ -557,3 +531,57 @@ document.querySelector('#clear').addEventListener('click', () => {
   output.innerText = '';
   // afterInput();
 });
+
+let undoData = [dolEditor.innerHTML]
+let currentIndex = 0
+
+const observer = new MutationObserver(function(mutations) {
+  mutations.forEach(function(mutation) {
+    undoData = undoData.slice(0, currentIndex + 1)
+    if (undoData.at(-1) !== mutation.target.innerHTML) {
+      undoData.push(mutation.target.innerHTML)
+    }
+    currentIndex = undoData.length - 1
+    console.log(undoData.length, currentIndex)
+  });
+});
+
+observer.observe(dolEditor, {
+  childList: true,
+});
+
+function undo() {
+  observer.disconnect()
+  currentIndex -= 1
+  if (currentIndex < 0) currentIndex = 0
+  if (undoData[currentIndex]) dolEditor.innerHTML = undoData[currentIndex]
+  observer.observe(dolEditor, {
+    childList: true,
+  })
+  console.log(undoData.length, currentIndex)
+}
+
+function redo() {
+  observer.disconnect()
+  currentIndex += 1
+  if (currentIndex > undoData.length) currentIndex = undoData.length
+  if(undoData[currentIndex]) dolEditor.innerHTML = undoData[currentIndex]
+  observer.observe(dolEditor, {
+    childList: true,
+  })
+  console.log(undoData.length, currentIndex)
+}
+
+document.addEventListener('keydown', (event) => {
+  event.stopPropagation();
+  if (event.ctrlKey) {
+    if (event.key === 'z') {
+      undo()
+    } else if (event.key === 'y') {
+      redo()
+    }
+  }
+})
+
+document.querySelector('#undo').addEventListener('click', undo);
+document.querySelector('#redo').addEventListener('click', redo);
