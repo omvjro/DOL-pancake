@@ -1,7 +1,5 @@
 <script setup>
-import { watch } from 'vue';
-import { ref } from 'vue'
-import { computed } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import RelationBox from './components/RelationBox.vue';
 import FileInput from './components/FileInput.vue';
@@ -81,6 +79,7 @@ watch(theme, (newValue) => {
 })
 watch(locale, (newValue) => {
   localStorage.setItem('locale', newValue)
+  document.title = t('title')
 })
 
 function loadFile(stat) {
@@ -122,6 +121,10 @@ function clear() {
     description.value = ''
   }
 }
+
+onMounted(() => {
+  document.title = t('title')
+})
 </script>
 
 <template>
