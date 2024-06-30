@@ -22,7 +22,6 @@ const insert = (element, isCollapsed, forceLocal = false) => {
     insertTarget.append(element);
   }
   createSelection(element, isCollapsed);
-//   afterInput();
 };
 const insertHard = (html, code, decorate) => {
   const widget = document.createElement('widget');
@@ -31,6 +30,7 @@ const insertHard = (html, code, decorate) => {
   widget.contentEditable = false;
   decorate?.(widget);
   insert(widget, 1);
+  widget.insertAdjacentHTML('afterend', '\u200b')
 };
 const getSelectionAndPosition = () => {
   selection = window.getSelection();
@@ -39,7 +39,6 @@ const getSelectionAndPosition = () => {
 
 const generateInsertTarget = (target) => {
   insertTarget = target;
-//   undoData.push(insertTarget.innerHTML);
   insertTarget.addEventListener('blur', getSelectionAndPosition);
   insertTarget.addEventListener('input', (event) => {
     Object.values(event.target.children).forEach((child) => {
@@ -57,8 +56,6 @@ const generateInsertTarget = (target) => {
         child.innerHTML = child.innerHTML.replace('\n', '');
       }
     });
-
-    // afterInput();
   });
   insertTarget.addEventListener('click', () => {
     insertTarget = target;
