@@ -1,4 +1,6 @@
 <script setup>
+import { onMounted, ref } from 'vue'
+
 defineProps({
   sup: {
     type: Boolean,
@@ -9,10 +11,18 @@ defineProps({
     default: false
   }
 })
+
+const tip = ref(null)
+
+onMounted(() => {
+  setTimeout(() => {
+	tip.value.remove()
+  }, 3000);
+})
 </script>
 
 <template>
-    <mouse :class="{
+    <mouse ref="tip" :class="{
         'tooltip-centertop' : fixed,
         'tooltip-tiny' : !fixed
         }"><sup v-if="!fixed" class="linkBlue">(?)</sup><span><slot>text</slot></span></mouse>
@@ -157,24 +167,7 @@ mouse.tooltip-centertop span:last-of-type {
 	text-decoration: none;
 	font-size: 90%;
 	background: var(--tooltip-background) repeat-x 0 0;
-    animation-name: fading;
-	animation-duration: 2s;
-	animation-iteration-count: 1;
-	opacity: 0;
 }
-
-@keyframes fading {
-	0% {
-		opacity: 1;
-	}
-    90% {
-		opacity: 1;
-	}
-	100% {
-		opacity: 0;
-	}
-}
-
 
 mouse.tooltip-image {
 	cursor: help;

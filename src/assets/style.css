@@ -16,6 +16,9 @@
 		max-width: 600px;
 	}
 }
+html {
+	font-size: 1em;
+}
 html, pre {
     ::-webkit-scrollbar {
         width: 10px;
@@ -133,38 +136,6 @@ body, html {
 	}
 	.tipBox {
 		font-size: .9em;
-	}
-}
-#customEditor {
-	margin-left: 1em;
-	input[type="text"] {
-		width: auto;
-	}
-	textarea {
-		color: #eee;
-		background-color: transparent;
-		border: 1px solid #444;
-		padding: .34em .4em;
-		width: 250px;
-		height: 70px;
-	}
-	#customWidgetDisplay {
-		color: #eee;
-		background-color: transparent;
-		border: 1px solid #444;
-		padding: .34em .4em;
-		width: 300px;
-		height: 70px;
-		display: inline-block;
-		overflow: auto;
-		resize: both;
-		cursor: text;
-
-		&:empty::before {
-			content: '请直接使用上方按钮插入内容，或勾选“使用HTML”后输入HTML';
-			font-size: .9em;
-			color: gray;
-		}
 	}
 }
 div#dol {

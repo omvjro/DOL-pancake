@@ -9,6 +9,7 @@ import {
   insertHard, insert,
   getSelectionAndPosition, createSelection,
 } from './insert.js'
+import { getCode } from '@/assets/utils';
 
 const dolEditor = document.querySelector('div.passage');
 const output = document.querySelector('#output');
@@ -111,193 +112,6 @@ document.querySelectorAll('#hollows select').forEach((select) => {
     insertHard(hollow, `<<${hollow}>>`, (widget) => widget.classList.add('noDisplay'));
     event.target.value = '';
   });
-});
-
-// 生成 twee 代码
-const replacePronouns = (string, replacement) => string.replaceAll('\u200b', '')
-  .replaceAll('他们', '\u200b们')
-  .replaceAll('她们', '\u200c们')
-  .replaceAll('其他', '其\u200b')
-  .replaceAll('他妈', '\u200b妈')
-  .replaceAll('他人', '\u200b人')
-  .replaceAll('他娘', '\u200b娘')
-  .replaceAll('他', replacement)
-  .replaceAll('她', replacement)
-  .replaceAll('\u200b', '他')
-  .replaceAll('\u200c', '她');
-const getCode = (sourceHTML, isHTML = false) => {
-  const mockOutput = document.createElement('div');
-  mockOutput.innerHTML = sourceHTML;
-
-  Object.values(mockOutput.children).forEach((child) => {
-    if (child.tagName === 'A') {
-      child.textContent = replacePronouns(child.textContent, '${$NPCList[0].pronouns.him}');
-
-      const endevent = child.getAttribute('endevent') ? `<<${child.getAttribute('endevent')}>>` : '';
-      const linktime = child.getAttribute('linktime') ? `<<pass ${child.getAttribute('linktime')}>>` : '';
-      const linkto = child.getAttribute('linkto') || '';
-
-      const code = child.outerHTML.replace('</a>', `\`|${linkto}]]>>${linktime}${endevent}<</link>>`);
-
-      if (child.classList.contains('nextWraith')) {
-        child.setAttribute('code', code.replace(/<a.*?>/gi, '<span id="next" class="nextWraith"><<link [[`'));
-      } else if (child.classList.contains('normalLink')) {
-        child.setAttribute('code', code.replace(/<a.*?>/gi, '<<link [[`'));
-      }
-    }
-    if (child.getAttribute('code')) {
-      let valueCode = child.getAttribute('valueCode') || '';
-      if (valueCode !== '') {
-        findInlineLink(child.previousSibling, (link) => {
-          link.textContent = link.textContent.replace('<</link>>', `${valueCode}<</link>>`);
-          valueCode = '';
-        });
-      }
-      const code = document.createTextNode(`${child.getAttribute('code')}${valueCode}`);
-      mockOutput.replaceChild(code, child);
-    }
-    if (Array.from(child.childNodes).every((grandChild) => grandChild.nodeType !== 3 || grandChild.textContent === '') && child.tagName === 'SPAN') {
-      child.outerHTML = child.innerHTML;
-    }
-    if (child.innerText === '\u200b') child.remove();
-  });
-  let code = mockOutput.innerHTML;
-  code = code.split('\n').map((line) => (line.endsWith(' ') ? line.slice(0, -1) : line)).join('\n');
-  code = code.replaceAll('\n', '<br>').replaceAll('<br>', '<br>\n')
-    .replaceAll('&lt;', '<').replaceAll('&gt;', '>');
-  code = replacePronouns(code, '<<he>>');
-  if (isHTML) {
-    code = code.replaceAll('<', '&lt;').replaceAll('>', '&gt;')
-      .replaceAll('"', '&quot;').replaceAll("'", '&#39;');
-  }
-
-  return code;
-};
-
-// 自定义部件
-let customWidgets;
-const loadCustomWidgets = () => {
-  customWidgets = JSON.parse(localStorage.getItem('customWidgets')) || {};
-  if (customWidgets) {
-    const customWidgetSelect = document.querySelector('#customNames');
-    customWidgetSelect.innerHTML = `${
-      Object.keys(customWidgets).reduce((widgets, widget) => `${widgets}<option>${widget}</option>`, '')
-    }<option>新建</option>`;
-  }
-};
-const loadCustomEditor = () => {
-  document.querySelector('#customEditor')?.remove();
-  const newWidgetEditor = document.createElement('div');
-  document.querySelector('#customWidget').after(newWidgetEditor);
-  newWidgetEditor.outerHTML = `<div id="customEditor"><div class="item">
-      <label>部件名称：</label>
-      <input type="text" id="customWidgetName" placeholder="将置入<<>>中为导出代码所用"></input></div>
-      <div class="item" style="display: flex; flex-wrap: wrap;">
-      <label>部件显示：</label>
-      <div id="customWidgetDisplay" contenteditable="plaintext-only"></div></div>
-      <div class="item" style="display: flex; flex-wrap: wrap;">
-      <label for="twee">twee 代码：</label>
-      <textarea name="twee" id="twee" placeholder="可留空，在“插入”时，为“导出代码”所用；在“导出所有”时，替代由“部件显示”自动转化的代码"></textarea></div>
-      <div class="item">
-      <button id="customWidgetSave" class="small">保存</button>
-      <button id="customWidgetInsert" class="small">插入</button>
-      <button id="customWidgetQuit" class="small">取消</button>
-      <label for="useHTML" style="font-size: .9em;">使用HTML</label><input type="checkbox" id="useHTML" name="useHTML" /></div>
-      <div class="item" style="font-size: .9em;" id="tipBox"></div>
-      </div>`;
-  const newWidgetDisplay = document.querySelector('#customWidgetDisplay');
-  generateInsertTarget(newWidgetDisplay);
-  const overlayWidget = [false, false, false];
-  const tipBox = document.getElementById('tipBox');
-  const updateTipWidget = (tip, color) => { updateTip(tipBox, tip, color); };
-  document.querySelector('#customWidgetSave').addEventListener('click', () => {
-    const display = document.querySelector('#customWidgetDisplay');
-    const widgetName = document.querySelector('#customWidgetName').value;
-    const code = document.querySelector('#useHTML').checked ? display.textContent : display.innerHTML;
-    const twee = document.querySelector('#twee').value;
-
-    if (widgetName === '新建' || widgetName.includes('<') || widgetName.includes('>')) {
-      updateTipWidget('用这种名字会出bug的QAQ');
-      return;
-    }
-    if (customWidgets[widgetName] && !overlayWidget[0]) {
-      updateTipWidget('存在同名部件，再次点击“确认”将覆盖');
-      overlayWidget[0] = true;
-      return;
-    }
-    if (widgetName === '') {
-      updateTipWidget('请输入名字！');
-      return;
-    }
-    if (code === '' && !overlayWidget[1]) {
-      updateTipWidget(`显示没填哦！
-      如果确定要创建空显示部件，请再次点击“确认”，创建的部件会显示在编辑框中，而不会出现在生成的图片里。`);
-      overlayWidget[1] = true;
-      return;
-    }
-    if (overlayWidget[0]) overlayWidget[0] = false;
-    if (overlayWidget[1]) overlayWidget[1] = false;
-    customWidgets[widgetName] = {
-      html: code || `<span class="noDisplay">${widgetName}</span>`,
-      twee,
-    };
-    localStorage.setItem('customWidgets', JSON.stringify(customWidgets));
-    loadCustomWidgets();
-    document.querySelector('#customNames').value = '新建';
-    updateTipWidget(`${widgetName} 创建成功`, 'gold');
-  });
-  document.querySelector('#customWidgetInsert').addEventListener('click', () => {
-    const twee = document.querySelector('#twee').value;
-    const widgetName = document.querySelector('#customWidgetName').value;
-    const display = document.querySelector('#customWidgetDisplay');
-    const code = document.querySelector('#useHTML').checked ? display.textContent : display.innerHTML;
-
-    if (code === '' && !overlayWidget[2]) {
-      updateTipWidget(`显示没填哦！
-      如果确定要插入空显示部件，请再次点击“确认”，插入的部件会显示在编辑框中，而不会出现在生成的图片里。`);
-      overlayWidget[2] = true;
-      return;
-    }
-    if (overlayWidget[2]) overlayWidget[2] = false;
-
-    generateInsertTarget(dolEditor);
-    insertHard(code || `<span class="noDisplay">${widgetName || twee}</span>`, twee || getCode(code));
-  });
-  document.querySelector('#customWidgetQuit').addEventListener('click', () => {
-    document.querySelector('#customEditor').remove();
-  });
-};
-document.querySelector('#customNames').addEventListener('change', (event) => {
-  if (event.target.value !== '新建') return;
-  loadCustomEditor();
-});
-document.querySelector('#customInsert').addEventListener('click', () => {
-  const name = document.querySelector('#customNames').value;
-  if (name === '新建') {
-    loadCustomEditor();
-    return;
-  }
-  generateInsertTarget(dolEditor);
-  insertHard(customWidgets[name].html || customWidgets[name], `<<${name}>>`);
-});
-document.querySelector('#customDelete').addEventListener('click', () => {
-  const name = document.querySelector('#customNames').value;
-  if (name === '新建') return;
-  delete customWidgets[name];
-  localStorage.setItem('customWidgets', JSON.stringify(customWidgets));
-  loadCustomWidgets();
-});
-document.querySelector('#customExport').addEventListener('click', () => {
-  let twee = `<!-- Generated by DOL-pancake -->\n:: Widget ${Date.now()} [widget]\n`;
-
-  Object.entries(customWidgets).forEach(([name, widget]) => {
-    twee += `\n<<widget "${name}">>\n${
-      widget.twee || getCode(widget.html || widget)
-    }\n<</widget>>\n`;
-  });
-
-  const blob = new Blob([twee], { type: 'text/plain' });
-  saveTwee(blob, 'widgets');
 });
 
 // 预览图片
@@ -468,7 +282,7 @@ document.querySelector('#saveManageConfirm').addEventListener('click', () => {
 });
 
 const loadAll = () => {
-  loadCustomWidgets();
+  // loadCustomWidgets();
   loadSavedCode();
   toggleIndex();
 };

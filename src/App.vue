@@ -9,6 +9,7 @@ import StatChange from './components/panel/StatChange.vue';
 import SkillCheck from './components/panel/SkillCheck.vue';
 import InsertTags from './components/panel/InsertTags.vue';
 import ColouredText from './components/panel/ColouredText.vue'
+import CustomWidget from './components/panel/CustomWidget.vue';
 import { insert } from './assets/insert'
 import ToolTip from './components/ToolTip.vue';
 import FeatBox from './components/FeatBox.vue';
@@ -184,7 +185,7 @@ function clear() {
         </div>
         <div v-show="scene === 'default'">
         <div class="item">
-          <label for="advanced">{{ $t('advance') }}</label><input type="checkbox" id="advanced" name="advanced" />
+          <label for="advanced">{{ $t('experimental') }}</label><input type="checkbox" id="advanced" name="advanced" />
           <label for="link-num">{{ $t('indexed') }}</label><input type="checkbox" id="link-num" name="link-num" checked />
           <label for="html-mode">{{ $t('exportHTML') }}</label><input type="checkbox" id="html-mode" name="html-mode" />
           <template v-if="!isFirefox">
@@ -219,13 +220,7 @@ function clear() {
           <input type="text" v-model="featTitle" :placeholder="$t('achvName')">
           <input type="text" v-model="featText" :placeholder="$t('achvDesc')">
         </div>
-        <div class="item" id="customWidget">
-          {{ $t('insertCustomWidgets') }}：
-          <select id="customNames"><option value="new">新建</option></select>
-          <button id="customInsert" class="small">{{ $t('confirm') }}</button>
-          <button id="customDelete" class="small">{{ $t('delete') }}</button>
-          <button id="customExport" class="small">{{ $t('exportAll') }}</button>
-        </div>
+        <CustomWidget />
         <div class="item advanced" hidden="1" id="codeSaver">
           <label for="saveName">{{ $t('savePassage.1') }}</label>
           <input type="text" name="saveName" id="saveName">
