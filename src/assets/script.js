@@ -121,7 +121,8 @@ document.querySelector('#pic').addEventListener('click', () => {
   domToPng(document.querySelector('#dol'), {
     scale: 2,
     features: {
-      removeControlCharacter: false
+      removeControlCharacter: false,
+      fixSvgXmlDecode: false,
     }
   }).then((dataUrl) => {
     const img = new Image();
@@ -143,7 +144,8 @@ document.querySelector('#pic-down').addEventListener('click', () => {
   domToBlob(document.querySelector('#dol'), {
     scale: 2,
     features: {
-      removeControlCharacter: false
+      removeControlCharacter: false,
+      fixSvgXmlDecode: false,
     }
   }).then((blob) => {
     savePng(blob, 'dol-pancake');
