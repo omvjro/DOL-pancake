@@ -1,24 +1,17 @@
 <script setup>
-import { ref, watch } from 'vue'
-
 const { tip, operator } = defineProps({
   tip: { type: String },
   operator: { type: Function }
 })
 
-const val = ref('')
 function insertOption(e) {
-  operator(val.value)
+  operator(e.target.value)
   e.target.value = ''
 }
-
-watch(val, () => {
-    val.value = ''
-})
 </script>
 
 <template>
-    <select @change="insertOption($event)" v-model="val">
+    <select @change="insertOption($event)">
         <option style="display: none" value="">{{ tip }}</option>
         <slot></slot>
     </select>

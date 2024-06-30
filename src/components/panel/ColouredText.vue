@@ -21,14 +21,14 @@ const insertOrWrap = (element) => {
 };
 
 function coloredOperator(v) {
-    const span = document.createElement('span');
-    span.classList.add(v);
-    insertOrWrap(span);
+  const span = document.createElement('span');
+  span.classList.add(v);
+  insertOrWrap(span);
 }
 
 function BIUOperator(v) {
-    const element = document.createElement(v);
-    insertOrWrap(element);
+  const element = document.createElement(v);
+  insertOrWrap(element);
 }
 
 const linkClass = ref('normalLink'),
