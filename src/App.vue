@@ -27,6 +27,7 @@ window.addEventListener('beforeunload', () => {
   localStorage.setItem('temp', document.querySelector('div.passage').innerHTML);
 });
 
+// Firefox bug https://bugzilla.mozilla.org/show_bug.cgi?id=1291467
 const isFirefox = computed(() => {
   return navigator.userAgent.includes('Firefox')
 })

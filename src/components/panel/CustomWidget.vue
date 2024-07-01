@@ -7,6 +7,8 @@ import { saveTwee } from '@/assets/save.js';
 
 const { t, locale } = useI18n();
 
+const isFirefox = computed(() => navigator.userAgent.includes('Firefox'))
+
 const customWidgets = ref(JSON.parse(localStorage.getItem('customWidgets')) || {})
 const savedNames = computed(() => Object.keys(customWidgets.value))
 const widgetName = ref(savedNames.value[0] || 'new')
@@ -125,7 +127,9 @@ onMounted(() => {
 </div>
 <div class="item" style="display: flex; flex-wrap: wrap;">
     <label>{{ $t('widget.display') }}：</label>
-    <div ref="editingDisplay" id="editingDisplay" :class="locale.replace('-', '')" contenteditable="true"></div>
+    <!-- Firefox bug https://bugzilla.mozilla.org/show_bug.cgi?id=1291467 -->
+    <div ref="editingDisplay" id="editingDisplay" :class="locale.replace('-', '')"
+         :contenteditable="isFirefox ? true : 'plaintext-only'"></div>
 </div>
 <div class="item" style="display: flex; flex-wrap: wrap;">
     <label for="twee">twee：</label>

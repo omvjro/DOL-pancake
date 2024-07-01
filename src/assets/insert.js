@@ -30,7 +30,12 @@ const insertHard = (html, code, decorate) => {
   widget.contentEditable = false;
   decorate?.(widget);
   insert(widget, true);
-  widget.insertAdjacentHTML('afterend', '\u200b')
+  // Firefox bug https://bugzilla.mozilla.org/show_bug.cgi?id=685445
+  if (navigator.userAgent.includes('Firefox')) {
+    const invisible = document.createTextNode('\u200b')
+    widget.after(invisible)
+    createSelection(invisible, true)
+  }
 };
 const getSelectionAndPosition = () => {
   selection = window.getSelection();
