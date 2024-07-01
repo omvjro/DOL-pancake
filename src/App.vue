@@ -100,7 +100,7 @@ function insertPic() {
     reader.readAsDataURL(e.target.files[0]);
     reader.onload = () => {
       img.src = reader.result;
-      insert(img, 1);
+      insert(img, true);
       e.target.value = '';
     };
     img.addEventListener('dragstart', () => {

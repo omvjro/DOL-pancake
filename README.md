@@ -16,6 +16,7 @@
 ## 其他问题
 - 部分 Safari 版本 CSS 失效
 - Firefox 上输出图片时链接标号无法正常显示（https://github.com/qq15725/modern-screenshot/issues/97）
+- Firefox 插入部件时换行和空格异常（https://bugzilla.mozilla.org/show_bug.cgi?id=1615852）
 
 ## 开发
 ### Recommended IDE Setup

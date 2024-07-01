@@ -29,7 +29,7 @@ const insertHard = (html, code, decorate) => {
   widget.setAttribute('code', code);
   widget.contentEditable = false;
   decorate?.(widget);
-  insert(widget, 1);
+  insert(widget, true);
   widget.insertAdjacentHTML('afterend', '\u200b')
 };
 const getSelectionAndPosition = () => {

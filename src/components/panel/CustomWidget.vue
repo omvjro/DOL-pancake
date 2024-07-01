@@ -19,6 +19,7 @@ const editingName = ref(''),
 let showEditor,
     customInsert, customDelete, customExport,
     editingSave, editingInsert, editingCancel
+let editingHTML = ''
 
 onMounted(() => {
   const dolEditor = document.querySelector('div.passage');
@@ -26,9 +27,25 @@ onMounted(() => {
     isShown.value = true
     generateInsertTarget(editingDisplay.value)
   }
-  const editingHTML = computed(() => {
-    return useHTML.value ? editingDisplay.value.textContent : editingDisplay.value.innerHTML;
-  })
+
+  // Firefox bug https://bugzilla.mozilla.org/show_bug.cgi?id=1615852
+  if (navigator.userAgent.includes('Firefox')) {
+
+    const observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.addedNodes.length === 1 && mutation.addedNodes[0].tagName === 'BR') {
+          if (mutation.previousSibling === null) return mutation.addedNodes[0].remove()
+          if (mutation.previousSibling.nodeValue?.endsWith(' ')) {
+            mutation.target.insertAdjacentText('beforeend', ' ')
+            mutation.addedNodes[0].remove()
+          }
+        }
+      });
+    })
+
+    observer.observe(editingDisplay.value, { childList: true })
+
+  }
 
   customInsert = () => {
     if (widgetName.value === 'new') {
@@ -42,6 +59,7 @@ onMounted(() => {
   customDelete = () => {
     if (widgetName.value === 'new') return;
     delete customWidgets.value[widgetName.value];
+    widgetName.value = savedNames.value[0] || 'new'
     localStorage.setItem('customWidgets', JSON.stringify(customWidgets.value));
   }
 
@@ -64,8 +82,9 @@ onMounted(() => {
       tip.value = { text: `${t('widget.duplicated')} ${editingName.value}`, color: 'red' }
       return
     }
+    editingHTML = useHTML.value ? editingDisplay.value.textContent : editingDisplay.value.innerHTML
     customWidgets.value[editingName.value] = {
-      html: editingHTML.value || `<span class="noDisplay">${editingName.value}</span>`,
+      html: editingHTML || `<span class="noDisplay">${editingName.value}</span>`,
       twee: editingTwee.value,
     };
     localStorage.setItem('customWidgets', JSON.stringify(customWidgets.value));
@@ -73,10 +92,11 @@ onMounted(() => {
   }
 
   editingInsert = () => {
-    if (editingName.value === '' && editingHTML.value === '') return
+    editingHTML = useHTML.value ? editingDisplay.value.textContent : editingDisplay.value.innerHTML
+    if (editingName.value === '' && editingHTML === '') return
     generateInsertTarget(dolEditor);
-    insertHard(editingHTML.value || `<span class="noDisplay">${editingName.value || editingTwee.value}</span>`,
-               editingTwee.value || getCode(editingHTML.value));
+    insertHard(editingHTML || `<span class="noDisplay">${editingName.value || editingTwee.value}</span>`,
+               editingTwee.value || getCode(editingHTML));
   }
 
   editingCancel = () => {

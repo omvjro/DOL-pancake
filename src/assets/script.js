@@ -340,7 +340,7 @@ document.addEventListener('keydown', (event) => {
       createSelection(empty, true);
     } else {
       const br = document.createElement('br');
-      insert(br, 1);
+      insert(br, true);
       findInlineLink(br.previousSibling, () => {
         br.remove();
         const a = document.createElement('a');
@@ -365,7 +365,6 @@ const observer = new MutationObserver(function(mutations) {
       undoData.push(mutation.target.innerHTML)
     }
     currentIndex = undoData.length - 1
-    console.log(undoData.length, currentIndex)
   });
   toggleIndex();
 });
@@ -382,7 +381,6 @@ function undo() {
   observer.observe(dolEditor, {
     childList: true,
   })
-  console.log(undoData.length, currentIndex)
 }
 
 function redo() {
@@ -393,7 +391,6 @@ function redo() {
   observer.observe(dolEditor, {
     childList: true,
   })
-  console.log(undoData.length, currentIndex)
 }
 
 document.addEventListener('keydown', (event) => {
