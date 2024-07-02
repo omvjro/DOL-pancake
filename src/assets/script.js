@@ -158,22 +158,6 @@ document.querySelector('#pic-down').addEventListener('click', () => {
   });
 });
 
-// 导出代码
-document.querySelector('#code').addEventListener('click', () => {
-  const code = getCode(dolEditor.innerHTML, document.querySelector('#html-mode').checked);
-
-  output.innerHTML = `点击<a id="copyCode">此处</a>复制代码。
-  请注意，由于显示部件存在歧义，导出代码不一定包含全部数据实际变化部件，且人称代词可能需要手动修改和补充&lt;&lt;personselect&gt;&gt;类代码。<div class="tempTip"></div>
-  <pre contenteditable="plaintext-only"></pre>`;
-  document.querySelector('#output pre').innerText = code;
-
-  document.querySelector('#copyCode').addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(code); } catch (err) {
-      updateTip(document.querySelector('.tempTip'), '复制失败，请手动复制！');
-    }
-  });
-});
-
 // 存储管理
 const toggleOptionsManage = () => {
   document.querySelectorAll('#saveManageSaved option').forEach((e) => { e.hidden = 1; });
@@ -377,7 +361,7 @@ insertTarget.addEventListener('keydown', (event) => {
     }
   }
 
-  // TODO：避免重复删除零宽等号
+  // TODO：避免重复删除零宽空格
 
 }, { passive: false });
 

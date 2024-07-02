@@ -263,5 +263,9 @@
   },
   "useHTML": "使用HTML",
   "cancel": "取消",
-  "save": "保存"
+  "save": "保存",
+  "copy": {
+    "caption": "点击<a id=\"copyCode\">此处</a>复制代码。请注意，由于显示部件存在歧义，导出代码不一定包含全部数据实际变化部件，且人称代词可能需要手动修改和补充&lt;&lt;personselect&gt;&gt;类代码。",
+    "fail": "复制失败，请手动复制！"
+  }
 }

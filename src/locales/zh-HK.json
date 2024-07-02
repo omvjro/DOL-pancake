@@ -263,5 +263,9 @@
   },
   "save": "保存",
   "cancel": "取消",
-  "useHTML": "使用HTML"
+  "useHTML": "使用HTML",
+  "copy": {
+    "caption": "點擊<a id=\"copyCode\">此處</a>複製代碼。請注意，由於顯示部件存在歧義，導出代碼不一定包含全部數據實際變化部件，且人稱代詞可能需要手動修改和補充&lt;&lt;personselect&gt;&gt;類代碼。",
+    "fail": "複製失敗，請手動複製！"
+  }
 }

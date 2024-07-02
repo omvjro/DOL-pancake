@@ -263,5 +263,9 @@
   "new": "新建",
   "save": "儲存",
   "cancel": "取消",
-  "useHTML": "使用HTML"
+  "useHTML": "使用HTML",
+  "copy": {
+    "caption": "點選<a id=\"copyCode\">此處</a>複製程式碼。請注意，由於顯示部件存在歧義，匯出程式碼不一定包含全部資料實際變化部件，且人稱代詞可能需要手動修改和補充&lt;&lt;personselect&gt;&gt;類程式碼。",
+    "fail": "複製失敗，請手動複製！"
+  }
 }
