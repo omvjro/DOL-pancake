@@ -19,7 +19,7 @@ defineProps({
 </script>
 
 <template>
-  <div id="npc-relations" class="relation-box-list" v-show="scene === 'npc'">
+  <div id="npc-relations" class="relation-box-list">
           <div class="relation-box">
               <div class="relation-top-line">
                   <span class="relation-name">
