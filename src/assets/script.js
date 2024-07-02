@@ -335,7 +335,7 @@ insertTarget.addEventListener('keydown', (event) => {
         a.innerText = '\u200b';
         a.insertAdjacentHTML('beforebegin', '<br>');
         a.insertAdjacentText('beforebegin', '\u200b');
-        createSelection(a, true);
+        selection.collapse(a, 1)
       });
     }
   }
@@ -361,11 +361,12 @@ insertTarget.addEventListener('keydown', (event) => {
     }
   }
 
-  // TODO：避免重复删除零宽空格
+  // TODO 避免重复删除零宽空格
 
 }, { passive: false });
 
 // 撤销重做
+// TODO 撤销重做后光标位置
 let undoData = [dolEditor.innerHTML]
 let currentIndex = 0
 

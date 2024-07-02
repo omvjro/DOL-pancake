@@ -7,7 +7,12 @@ const createSelection = (element, isCollapsed = false) => {
   newSelection.removeAllRanges();
   const range = document.createRange();
   range.selectNode(element);
-  if (isCollapsed) range.collapse(false);
+  if (isCollapsed) {
+    range.collapse(false)
+  } else if (navigator.userAgent.includes('Firefox')) { // 避免输入替换节点
+    const elementText = Array.from(element.childNodes).find(node => node.nodeType === 3)
+    if (elementText) range.selectNode(elementText)
+  }
   newSelection.addRange(range);
 };
 const insert = (element, isCollapsed, forceLocal = false) => {
