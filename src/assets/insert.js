@@ -7,7 +7,7 @@ const createSelection = (element, isCollapsed = false) => {
   newSelection.removeAllRanges();
   const range = document.createRange();
   range.selectNode(element);
-  if (isCollapsed) range.collapse(0);
+  if (isCollapsed) range.collapse(false);
   newSelection.addRange(range);
 };
 const insert = (element, isCollapsed, forceLocal = false) => {
@@ -30,9 +30,13 @@ const insertHard = (html, code, decorate) => {
   widget.contentEditable = false;
   decorate?.(widget);
   insert(widget, true);
+  const invisible = document.createTextNode('\u200b')
+  if (widget.previousSibling === null || widget.previousSibling.tagName === 'BR') {
+    widget.before(invisible.cloneNode())
+    createSelection(widget, true)
+  }
   // Firefox bug https://bugzilla.mozilla.org/show_bug.cgi?id=685445
   if (navigator.userAgent.includes('Firefox')) {
-    const invisible = document.createTextNode('\u200b')
     widget.after(invisible)
     createSelection(invisible, true)
   }

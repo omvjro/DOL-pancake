@@ -8,6 +8,7 @@ import {
   generateInsertTarget,
   insertHard, insert,
   getSelectionAndPosition, createSelection,
+  selection,
 } from './insert.js'
 import { getCode } from '@/assets/utils';
 
@@ -325,14 +326,14 @@ document.querySelector('#pancakeManageConfirm').addEventListener('click', () => 
   }
 });
 
-document.addEventListener('keydown', (event) => {
-  event.stopPropagation();
-  // 允许回车退出颜色标签，阻止链接内换行，自动添加下一个链接
-  if (event.key === 'Enter' && event.target === insertTarget) {
-    event.preventDefault();
-    getSelectionAndPosition();
-    const startContainer = position?.startContainer;
+insertTarget.addEventListener('keydown', (event) => {
+  event.stopPropagation()
+  getSelectionAndPosition()
 
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    const startContainer = position?.startContainer;
+    // 允许回车退出颜色标签，阻止链接或颜色文字内换行
     if (['SPAN', 'A'].includes(startContainer.parentElement.tagName)) {
       if (startContainer.textContent.length !== position?.startOffset) return;
       const empty = document.createTextNode(' ');
@@ -341,6 +342,7 @@ document.addEventListener('keydown', (event) => {
     } else {
       const br = document.createElement('br');
       insert(br, true);
+      // 自动添加下一个链接
       findInlineLink(br.previousSibling, () => {
         br.remove();
         const a = document.createElement('a');
@@ -348,10 +350,35 @@ document.addEventListener('keydown', (event) => {
         a.classList.add('normalLink');
         a.innerText = '\u200b';
         a.insertAdjacentHTML('beforebegin', '<br>');
+        a.insertAdjacentText('beforebegin', '\u200b');
         createSelection(a, true);
       });
     }
   }
+
+  if (event.key === 'ArrowLeft') {
+    if (position.startOffset === 1 && position.startContainer.textContent.startsWith('\u200b')) {
+      const previousSibling = position.startContainer.previousSibling
+      if (previousSibling) {
+        createSelection(previousSibling, true)
+      }
+    }
+  }
+
+  if (event.key === 'ArrowRight') {
+    if (position.startOffset === 0 && position.startContainer.textContent.startsWith('\u200b')) {
+      if (position.startContainer.nodeType === 3) {
+        return selection.collapse(position.startContainer, 1)
+      }
+      const nextSibling = position.startContainer.nextSibling
+      if (nextSibling.isContentEditable === false) {
+        return createSelection(nextSibling, true)
+      }
+    }
+  }
+
+  // TODO：避免重复删除零宽等号
+
 }, { passive: false });
 
 // 撤销重做

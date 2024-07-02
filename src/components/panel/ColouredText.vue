@@ -52,6 +52,9 @@ function insertLink() {
   } else {
     wrap(link);
   }
+  if (link.previousSibling.tagName === 'BR') {
+    link.insertAdjacentText('beforebegin', '\u200b')
+  }
 }
 </script>
 

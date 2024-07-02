@@ -1,6 +1,6 @@
 {
   "title": "DOL烤餅機",
-  "placeholder": "歡迎使用DOL烤餅機！<br><br>本烤餅機專為高度還原遊戲界面而設計，只需直接在此輸入文本，並使用右側👉或下方👇的按鈕添加更多內容。<br><br>如在傳播所生成圖片時遇到疑問，請及時説明此為假圖。如有問題或建議，可前往 <a contenteditable=\"false\" href=\"https://github.com/omvjro/DOL-pancake\" target=\"_blank\">GitHub 倉庫</a>提出。<br><br><a class=\"normalLink\">&ZeroWidthSpace;繼續</a>",
+  "placeholder": "歡迎使用DOL烤餅機！<br><br>本烤餅機專為高度還原遊戲界面而設計，只需直接在此輸入文本，並使用右側👉或下方👇的按鈕添加更多內容。<br><br>如在傳播所生成圖片時遇到疑問，請及時説明此為假圖。如有問題或建議，可前往 <a contenteditable=\"false\" href=\"https://github.com/omvjro/DOL-pancake\" target=\"_blank\">GitHub 倉庫</a>提出。<br><br>&ZeroWidthSpace;<a class=\"normalLink\">&ZeroWidthSpace;繼續</a>",
   "watermark": "MADE BY DOL烤餅機",
   "theme": "更換主題",
   "default": "默認",
