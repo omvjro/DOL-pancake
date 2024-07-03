@@ -82,6 +82,7 @@ watch(theme, (newValue) => {
 watch(locale, (newValue) => {
   localStorage.setItem('locale', newValue)
   document.title = t('title')
+  document.querySelector('html').lang = locale.value
 })
 
 function loadFile(stat) {
@@ -126,6 +127,7 @@ function clear() {
 
 onMounted(() => {
   document.title = t('title')
+  document.querySelector('html').lang = locale.value
 })
 </script>
 
