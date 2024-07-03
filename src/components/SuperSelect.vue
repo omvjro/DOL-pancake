@@ -21,7 +21,7 @@ function insertOption(e) {
 select {
     color: gray;
 }
-:slotted(option) {
+:slotted(option:not([class])) {
     color: #eee;
 }
 </style>
