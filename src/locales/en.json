@@ -265,5 +265,9 @@
   "copy": {
     "caption": "<a id=\"copyCode\">Click me</a> to copy. There may be neglected widgets because of ambiguity. Also, please check &lt;&lt;personselect&gt;&gt; widgets.",
     "fail": "Copy failed, please do it manually!"
+  },
+  "pic": {
+    "loading": "Loading...",
+    "error": "Something went wrong: "
   }
 }

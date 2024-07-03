@@ -13,6 +13,7 @@ import ToolTip from './components/ToolTip.vue';
 import FeatBox from './components/FeatBox.vue';
 import { colors } from './assets/data';
 import CodeButton from './components/panel/CodeButton.vue';
+import PicButton from './components/panel/PicButton.vue';
 
 const { t, locale } = useI18n();
 const placeholder = localStorage.getItem('temp') || t('placeholder')
@@ -287,8 +288,7 @@ onMounted(() => {
         <div class="item">
           <button id="undo"><span class="iconfont icon-undo-alt"></span></button>
           <button id="redo"><span class="iconfont icon-redo-alt"></span></button>
-          <button id="pic">{{ $t('preview') }}</button>
-          <button id="pic-down">{{ $t('download') }}</button>
+          <PicButton />
           <CodeButton v-show="scene === 'default'" />
           <button id="clear" @click="clear">{{ $t('clear') }}</button>
         </div>

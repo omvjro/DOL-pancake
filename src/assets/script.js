@@ -1,8 +1,7 @@
-import { domToPng, domToBlob } from 'modern-screenshot'
 import {
   hollows,
 } from './data.js';
-import { saveTwee, savePng, saveJSON } from './save.js';
+import { saveTwee, saveJSON } from './save.js';
 import {
   position, insertTarget,
   generateInsertTarget,
@@ -13,7 +12,6 @@ import {
 import { getCode } from '@/assets/utils';
 
 const dolEditor = document.querySelector('div.passage');
-const output = document.querySelector('#output');
 function findInlineLink(candidate, operator) {
   if (!candidate) return;
   const candidateContent = candidate.textContent;
@@ -112,49 +110,6 @@ document.querySelectorAll('#hollows select').forEach((select) => {
     const hollow = event.target.value;
     insertHard(hollow, `<<${hollow}>>`, (widget) => widget.classList.add('noDisplay'));
     event.target.value = '';
-  });
-});
-
-// 预览图片
-document.querySelector('#pic').addEventListener('click', () => {
-  document.querySelectorAll('.noDisplay').forEach((e) => { e.style.display = 'none'; });
-  output.innerText = '生成图片中……';
-  domToPng(document.querySelector('#dol'), {
-    scale: 2,
-    features: {
-      removeControlCharacter: false,
-      fixSvgXmlDecode: false,
-    }
-  }).then((dataUrl) => {
-    const img = new Image();
-    img.src = dataUrl;
-    img.alt = 'dol-pancake';
-    output.innerText = '';
-    output.appendChild(img);
-  }).catch((error) => {
-    output.innerText = `出错了（${error}）`;
-  }).finally(() => {
-    document.querySelectorAll('.noDisplay').forEach((e) => { e.style.display = 'inline-block'; });
-  });
-});
-
-// 下载图片
-document.querySelector('#pic-down').addEventListener('click', () => {
-  document.querySelectorAll('.noDisplay').forEach((e) => { e.style.display = 'none'; });
-  output.innerText = '生成图片中……';
-  domToBlob(document.querySelector('#dol'), {
-    scale: 2,
-    features: {
-      removeControlCharacter: false,
-      fixSvgXmlDecode: false,
-    }
-  }).then((blob) => {
-    savePng(blob, 'dol-pancake');
-    output.innerText = '';
-  }).catch((error) => {
-    output.innerText = `出错了（${error}）`;
-  }).finally(() => {
-    document.querySelectorAll('.noDisplay').forEach((e) => { e.style.display = 'inline-block'; });
   });
 });
 
