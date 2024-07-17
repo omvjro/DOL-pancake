@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 
-defineProps({
+const props = defineProps({
   sup: {
     type: Boolean,
     default: true
@@ -15,9 +15,11 @@ defineProps({
 const tip = ref(null)
 
 onMounted(() => {
-  setTimeout(() => {
+  if (props.fixed) {
+	setTimeout(() => {
 	tip.value.remove()
-  }, 3000);
+  }, 3000)
+  }
 })
 </script>
 
