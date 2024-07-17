@@ -17,6 +17,7 @@
 	}
 }
 html {
+	scrollbar-width: none;
 	font-size: 1em;
 }
 html, pre {
