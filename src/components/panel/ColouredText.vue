@@ -8,6 +8,9 @@ import {
 } from '@/assets/insert';
 import SuperSelect from '../SuperSelect.vue';
 import { useI18n } from 'vue-i18n';
+import { store } from '@/assets/store'
+
+const { savedCode } = store
 
 const { t } = useI18n()
 
@@ -83,10 +86,12 @@ function insertLink() {
     <option value="normalLink">{{ $t('link') }}</option>
     <option value="nextWraith">{{ $t('wraithLink') }}</option>
   </select><temp hidden="1" class="advanced"><label for="linkTime">{{ $t('insertLink.1') }}</label>
-  <input id="linkTime" v-model="linkTime" min="1" max="599" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value > 599) this.value = '599';">
+  <input id="linkTime" :value="linkTime" type="number" min="1" max="599" step="1" @input="e => { e.target.value = e.target.value.replace(/[^0-9]/g, ''); if(e.target.value > 599) e.target.value = '599'; linkTime = e.target.value; }">
   {{ $t('insertLink.2') }}<label for="linkTo">{{ $t('insertLink.3') }}</label>
-  <input id="linkTo" v-model="linkTo" />
-  <datalist id="linkToList"></datalist>
+  <input list="linkToList" id="linkTo" v-model="linkTo" />
+  <datalist id="linkToList">
+    <option v-for="name in Object.keys(savedCode.passage)" :key="name">{{ name }}</option>
+  </datalist>
   {{ $t('insertLink.4') }}
   <select v-model="linkEnd">
     <option value="">{{ $t('insertLink.5') }}</option>
