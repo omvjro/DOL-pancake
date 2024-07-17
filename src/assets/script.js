@@ -93,7 +93,6 @@ if (document.querySelector('#direct-paste')) {
 
 generateInsertTarget(dolEditor);
 
-// NPC 部件 TODO
 document.querySelector('#hollows').innerHTML = Object.keys(hollows).reduce((selects, key) => `
 ${selects}
 <select id=${key}>
@@ -116,6 +115,7 @@ insertTarget.addEventListener('keydown', (event) => {
     event.preventDefault();
     const startContainer = position?.startContainer;
     // 允许回车退出颜色标签，阻止链接或颜色文字内换行
+    // TODO 自动添加下一个链接时会链接内换行
     if (['SPAN', 'A'].includes(startContainer.parentElement.tagName)) {
       if (startContainer.textContent.length !== position?.startOffset) return;
       const empty = document.createTextNode(' ');
