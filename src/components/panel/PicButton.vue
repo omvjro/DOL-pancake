@@ -2,15 +2,16 @@
 import { domToPng, domToBlob } from 'modern-screenshot'
 import { savePng } from '@/assets/save.js'
 import { useI18n } from 'vue-i18n'
+import { store } from '@/assets/store'
 
 const { t } = useI18n()
 
-// TODO NPC场景图片长度，改变选择元素
 function preview() {
+  const inputID = store.scene === 'default' ? 'html' : 'npc-relations'
   const output = document.querySelector('#output');
   document.querySelectorAll('.noDisplay').forEach((e) => { e.style.display = 'none'; });
   output.innerText = t('pic.loading');
-  domToPng(document.querySelector('#dol'), {
+  domToPng(document.getElementById(inputID), {
     scale: 2,
     features: {
       removeControlCharacter: false,
@@ -30,10 +31,11 @@ function preview() {
 }
 
 function download() {
+  const inputID = store.scene === 'default' ? 'html' : 'npc-relations'
   const output = document.querySelector('#output');
   document.querySelectorAll('.noDisplay').forEach((e) => { e.style.display = 'none'; });
   output.innerText = t('pic.loading');
-  domToBlob(document.querySelector('#dol'), {
+  domToBlob(document.getElementById(inputID), {
     scale: 2,
     features: {
       removeControlCharacter: false,

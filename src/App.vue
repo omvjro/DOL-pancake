@@ -39,9 +39,7 @@ const contenteditable = computed(() => {
   return isFirefox.value ? 'true' : 'plaintext-only'
 })
 
-const scene = ref('default'),
-
-      feat = ref('none'),
+const feat = ref('none'),
       featTitle = ref(''),
       featText = ref(''),
 
@@ -116,10 +114,10 @@ function insertPic() {
 }
 
 function clear() {
-  if (scene.value === 'default') {
+  if (store.scene === 'default') {
     const dolEditor = document.querySelector('div.passage');
     dolEditor.innerText = '';
-  } else if (scene.value === 'npc') {
+  } else if (store.scene === 'npc') {
     stats.value = [{name: '',},{name: '',},{name: '',},{name: '',}]
     name.value = ''
     title.value = ''
@@ -136,7 +134,7 @@ onMounted(() => {
 <template>
 <div id="container">
       <div id="dol">
-        <div id="html" v-show="scene === 'default'">
+        <div id="html" v-show="store.scene === 'default'">
           <div id="body" :data-theme="store.theme">
             <div id="ui-overlay" class="ui-close"></div>
             <div id="ui-bar" aria-live="polite" class="stowed">
@@ -158,7 +156,7 @@ onMounted(() => {
             <div id="gameVersionDisplay2" :contenteditable="contenteditable">{{ $t('watermark') }}</div>
           </div>
         </div>
-        <RelationBox v-show="scene === 'npc'"
+        <RelationBox :data-theme="store.theme" v-show="store.scene === 'npc'"
                      :name
                      :title
                      :color
@@ -180,7 +178,7 @@ onMounted(() => {
             <option value="mocha">Catppuccin Mocha</option>
           </select>
           <label for="scene">{{ $t('scene') }}：</label>
-          <select name="scene" v-model="scene">
+          <select name="scene" v-model="store.scene">
             <option value="default">{{ $t('default') }}</option>
             <option value="npc">NPC</option>
           </select>
@@ -192,7 +190,7 @@ onMounted(() => {
             <option>zh-HK</option>
           </select>
         </div>
-        <div v-show="scene === 'default'">
+        <div v-show="store.scene === 'default'">
         <div class="item">
           <label for="advanced">{{ $t('experimental') }}</label><input type="checkbox" id="advanced" name="advanced" />
           <label for="link-num">{{ $t('indexed') }}</label><input type="checkbox" id="link-num" name="link-num" checked />
@@ -233,7 +231,7 @@ onMounted(() => {
         <CustomWidget />
         <SaveManage />
         </div>
-        <div v-show="scene === 'npc'">
+        <div v-show="store.scene === 'npc'">
         <div class="item">
             <input type="text" v-model="name" />
             <input type="text" v-model="title" />
@@ -257,7 +255,7 @@ onMounted(() => {
           <button id="undo"><span class="iconfont icon-undo-alt"></span></button>
           <button id="redo"><span class="iconfont icon-redo-alt"></span></button>
           <PicButton />
-          <CodeButton v-show="scene === 'default'" />
+          <CodeButton v-show="store.scene === 'default'" />
           <button id="clear" @click="clear">{{ $t('clear') }}</button>
         </div>
         <div class="item" id="output"></div>
