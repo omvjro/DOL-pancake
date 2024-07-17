@@ -14,6 +14,8 @@ import FeatBox from './components/FeatBox.vue';
 import { colors } from './assets/data';
 import CodeButton from './components/panel/CodeButton.vue';
 import PicButton from './components/panel/PicButton.vue';
+import SaveManage from './components/panel/SaveManage.vue';
+import { store } from './assets/store'
 
 const { t, locale } = useI18n();
 const placeholder = localStorage.getItem('temp') || t('placeholder')
@@ -38,7 +40,6 @@ const contenteditable = computed(() => {
 })
 
 const scene = ref('default'),
-      theme = ref(localStorage.getItem('theme') || ''),
 
       feat = ref('none'),
       featTitle = ref(''),
@@ -77,9 +78,9 @@ const scene = ref('default'),
           },
       ])
 
-watch(theme, (newValue) => {
-  localStorage.setItem('theme', newValue)
-})
+function changeTheme() {
+  localStorage.setItem('theme', store.theme)
+}
 watch(locale, (newValue) => {
   localStorage.setItem('locale', newValue)
   document.title = t('title')
@@ -136,7 +137,7 @@ onMounted(() => {
 <div id="container">
       <div id="dol">
         <div id="html" v-show="scene === 'default'">
-          <div id="body" :data-theme="theme">
+          <div id="body" :data-theme="store.theme">
             <div id="ui-overlay" class="ui-close"></div>
             <div id="ui-bar" aria-live="polite" class="stowed">
               <div id="ui-bar-tray">
@@ -167,7 +168,7 @@ onMounted(() => {
       <div class="toolbox">
         <div class="item">
           <label for="theme">{{ $t('theme') }}：</label>
-          <select name="theme" v-model="theme">
+          <select name="theme" v-model="store.theme" @change="changeTheme">
             <option value="">{{ $t('default') }}</option>
             <option value="zen">Zen</option>
             <option value="arctic">Arctic</option>
@@ -227,43 +228,10 @@ onMounted(() => {
           </select>
           <input type="text" v-model="featTitle" :placeholder="$t('achvName')">
           <input type="text" v-model="featText" :placeholder="$t('achvDesc')">
+          <!-- TODO 单独截取成就 -->
         </div>
         <CustomWidget />
-        <div class="item advanced" hidden="1" id="codeSaver">
-          <label for="saveName">{{ $t('savePassage.1') }}</label>
-          <input type="text" name="saveName" id="saveName">
-          {{ $t('savePassage.2') }}
-          <select id="saveType"><option>passage</option><option>widget</option></select>
-          <button id="save" class="small">{{ $t('confirm') }}</button>
-          <span class="tipBox"></span>
-        </div>
-        <div class="item advanced" id="saveManager" hidden="1">
-          <select id="saveManage">
-            <option value="load">{{ $t('load') }}</option>
-            <option value="delete">{{ $t('delete') }}</option>
-            <option value="export">{{ $t('exportAll') }}</option>
-            <option value="clear">{{ $t('deleteAll') }}</option>
-          </select>
-          <label for="saveManage">{{ $t('saved') }}</label>
-          <select id="saveManageType">
-            <option>passage</option>
-            <option>widget</option>
-          </select>
-          <select id="saveManageSaved" name="saveManageSaved"></select>
-          <button id="saveManageConfirm" class="small">{{ $t('confirm') }}</button>
-          <span class="tipBox"></span>
-        </div>
-        <div class="item advanced" id="pancakeManager" hidden="1">
-          <select id="pancakeManage">
-            <option value="export">{{ $t('export') }}</option>
-            <option value="import">{{ $t('import') }}</option>
-            <option value="reset">{{ $t('reset') }}</option>
-          </select>
-          <label for="pancakeManage">{{ $t('settings') }}</label>
-          <button id="pancakeManageConfirm" class="small">{{ $t('confirm') }}</button>
-          <ToolTip>{{ $t('settingsTip') }}</ToolTip>
-          <span class="tipBox"></span>
-        </div>
+        <SaveManage />
         </div>
         <div v-show="scene === 'npc'">
         <div class="item">

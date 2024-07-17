@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
+// TODO NPC场景图片长度，改变选择元素
 function preview() {
   const output = document.querySelector('#output');
   document.querySelectorAll('.noDisplay').forEach((e) => { e.style.display = 'none'; });

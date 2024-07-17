@@ -36,7 +36,6 @@
   "insertCustomWidgets": "Custom widgets",
   "load": "Load",
   "delete": "Delete",
-  "deleteAll": "Delete all",
   "exportAll": "Export all",
   "saved": "saved",
   "export": "Export",
@@ -260,6 +259,7 @@
     "duplicated": "Duplicate name"
   },
   "save": "Save",
+  "duplicated": "Duplicated",
   "cancel": "Cancel",
   "useHTML": "Use HTML",
   "copy": {

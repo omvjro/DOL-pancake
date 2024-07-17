@@ -36,8 +36,7 @@
   "insertCustomWidgets": "插入自定義部件",
   "load": "載入",
   "delete": "刪除",
-  "deleteAll": "刪除所有",
-  "exportAll": "匯出所有",
+  "exportAll": "導出所有",
   "saved": "已保存的",
   "export": "導出",
   "import": "導入",
@@ -262,6 +261,7 @@
     "duplicated": "存在同名部件"
   },
   "save": "保存",
+  "duplicated": "存在同名",
   "cancel": "取消",
   "useHTML": "使用HTML",
   "copy": {
