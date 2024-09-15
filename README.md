@@ -9,6 +9,13 @@
 - 自定义部件，减少重复工作
 - 插入图片转为 base64 编码
 
+## 部署地址
+若打不开 GitHub Pages，可尝试下方其他地址。
+- [GitHub Pages](omvjro.github.io/DOL-pancake/)
+- [Vervel](https://dol-pancake.vercel.app/)
+- [Cloudflare Pages](https://dol-pancake.pages.dev/)
+- [Netlify](https://dol-pancake.netlify.app/)
+
 ## 其他问题
 - 部分 Safari 版本 CSS 失效
 - Firefox 上输出图片时链接标号无法正常显示（https://github.com/qq15725/modern-screenshot/issues/97 ）
