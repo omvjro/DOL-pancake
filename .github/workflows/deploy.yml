@@ -24,6 +24,7 @@ jobs:
       - name: Build project
         run: |
           echo "VITE_BASE_URL=/DOL-pancake/" >> $GITHUB_ENV
+          echo "VITE_BASE_URL is $VITE_BASE_URL"
           npm run build
 
       - name: Deploy to GitHub Pages
