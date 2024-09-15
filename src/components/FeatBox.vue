@@ -15,7 +15,7 @@ defineProps({
 <template>
 <div id="feat" class="feat feat-overlay" v-show="feat !== 'none'">
   <div class="featImage">
-      <img :src="`/img/ui/${feat}Coin.gif`" class="featCoin">
+      <img :src="`img/ui/${feat}Coin.gif`" class="featCoin">
   </div>
   <div class="featText"><span class="title">{{ featTitle }}</span><br><span class="text">{{ featText }}</span></div>
   <div class="closeFeat"></div>

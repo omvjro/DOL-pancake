@@ -52,21 +52,21 @@ const feat = ref('none'),
             name: t('relationBox.love'),
             progress: 80,
             direction: 'horizontal',
-            activeicon: '/img/ui/heart.png',
-            inactiveicon: '/img/ui/emptyheart.png'
+            activeicon: 'img/ui/heart.png',
+            inactiveicon: 'img/ui/emptyheart.png'
           },
           {
             name: t('relationBox.lust'),
             progress: 50,
             direction: 'vertical',
-            activeicon: '/img/ui/vial.png',
-            inactiveicon: '/img/ui/emptyvial.png'
+            activeicon: 'img/ui/vial.png',
+            inactiveicon: 'img/ui/emptyvial.png'
           },
           {
             name: t('relationBox.jealousy'),
             progress: 100,
             direction: 'horizontal',
-            activeicon: '/img/ui/wideeye.png'
+            activeicon: 'img/ui/wideeye.png'
           },
           {
             name: '',
