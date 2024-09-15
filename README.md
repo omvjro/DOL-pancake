@@ -9,46 +9,11 @@
 - 自定义部件，减少重复工作
 - 插入图片转为 base64 编码
 
-## 计划
-由于勉强能用.jpg且作者实力有限，无限鸽，如有实际需求，将更快完成。
-- [ ] 差分
-
 ## 其他问题
 - 部分 Safari 版本 CSS 失效
-- Firefox 上输出图片时链接标号无法正常显示（https://github.com/qq15725/modern-screenshot/issues/97）
-- Firefox 插入部件时换行和空格异常（https://bugzilla.mozilla.org/show_bug.cgi?id=1615852）
-
-## 开发
-### Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-### Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-### Project Setup
-
-```sh
-npm install
-```
-
-#### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-#### Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-#### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
+- Firefox 上输出图片时链接标号无法正常显示（https://github.com/qq15725/modern-screenshot/issues/97 ）
+- Firefox 插入部件时换行和空格异常（https://bugzilla.mozilla.org/show_bug.cgi?id=1615852 ）
+- Firefox 上有时会无法正确输出含幽灵等特效的图片（https://github.com/qq15725/modern-screenshot/issues/107 ）
 ```
 ## 感谢
 - [modern-screenshot](https://github.com/qq15725/modern-screenshot)
