@@ -1,12 +1,10 @@
 const getOptionText = (id) => document.getElementById(id)?.options[document.getElementById(id)?.selectedIndex]?.text;
 
+// 仅中文使用，英文直接正则替换
 const replacePronouns = (string, replacement) => string.replaceAll('\u200b', '')
-  .replaceAll('他们', '\u200b们')
-  .replaceAll('她们', '\u200c们')
+  .replace(/(他|她)(们|們)/g, '\u200b$2')
   .replaceAll('其他', '其\u200b')
-  .replaceAll('他妈', '\u200b妈')
-  .replaceAll('他人', '\u200b人')
-  .replaceAll('他娘', '\u200b娘')
+  .replace(/他(妈|媽|娘|人)/g, '\u200b$1')
   .replaceAll('他', replacement)
   .replaceAll('她', replacement)
   .replaceAll('\u200b', '他')
@@ -52,6 +50,14 @@ const getCode = (sourceHTML, isHTML = false) => {
   code = code.split('\n').map((line) => (line.endsWith(' ') ? line.slice(0, -1) : line)).join('\n');
   code = code.replaceAll('\n', '<br>').replaceAll('<br>', '<br>\n')
     .replaceAll('&lt;', '<').replaceAll('&gt;', '>');
+  code = code.replace(/\bs?he\b/g, '<<he>>')
+             .replace(/\b(She|He)\b/g, '<<He>>')
+             .replace(/\bh(is|er)\b/g, '<<his>>')
+             .replace(/\bH(is|er)\b/g, '<<His>>')
+             .replace(/\bhim\b/g, '<<him>>')
+             .replace(/\bHim\b/g, '<<Him>>')
+             .replace(/\bh(im|er)self\b/g, '<<himself>>')
+             .replace(/\bH(im|er)self\b/g, '<<Himself>>');
   code = replacePronouns(code, '<<he>>');
   if (isHTML) {
     code = code.replaceAll('<', '&lt;').replaceAll('>', '&gt;')
