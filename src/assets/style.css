@@ -172,6 +172,10 @@ div#dol, #customWidgetDisplay {
 		font-size: .8em;
 		display: inline-block;
 	}
+
+	.wraith, .lustful, .rainbow {
+		caret-color: var(--000);
+	}
 }
 
 /** Colour Classes **/
