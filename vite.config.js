@@ -5,7 +5,7 @@ import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/DOL-pancake/",
+  base: process.env.VITE_BASE_URL || '/',
   plugins: [
     vue({
       template: {
