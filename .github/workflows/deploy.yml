@@ -22,8 +22,9 @@ jobs:
         run: npm install
 
       - name: Build project
+        env:
+          VUE_APP_BASE_URL: /DOL-pancake/
         run: |
-          echo "VITE_BASE_URL=/DOL-pancake/" >> $GITHUB_ENV
           echo "VITE_BASE_URL is $VITE_BASE_URL"
           npm run build
 
