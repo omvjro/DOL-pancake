@@ -2,7 +2,7 @@ import {
   hollows,
 } from './data.js';
 import {
-  position, insertTarget,
+  position, /* insertTarget, */
   generateInsertTarget,
   insertHard, insert,
   getSelectionAndPosition, createSelection,
