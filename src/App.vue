@@ -165,8 +165,8 @@ onMounted(() => {
       </div>
       <div class="toolbox">
         <div class="item"><small v-html="t('intro')"></small></div>
-        <div class="item"><!-- TODO 冒号中英文区别 -->
-          <label for="theme">{{ $t('theme') }}：</label>
+        <div class="item">
+          <label for="theme">{{ $t('theme') }}</label>
           <select name="theme" v-model="store.theme" @change="changeTheme">
             <option value="">{{ $t('default') }}</option>
             <option value="zen">Zen</option>
@@ -178,12 +178,12 @@ onMounted(() => {
             <option value="macchiato">Catppuccin Macchiato</option>
             <option value="mocha">Catppuccin Mocha</option>
           </select>
-          <label for="scene">{{ $t('scene') }}：</label>
+          <label for="scene">{{ $t('scene') }}</label>
           <select name="scene" v-model="store.scene">
             <option value="default">{{ $t('default') }}</option>
             <option value="npc">NPC</option>
           </select>
-          <label for="language">{{ $t('language') }}：</label>
+          <label for="language">{{ $t('language') }}</label>
           <select name="language" v-model="locale">
             <option>zh</option>
             <option>en</option>
@@ -205,15 +205,15 @@ onMounted(() => {
         <InsertTags />
         <ColouredText />
         <div class="item">
-        <FileInput id="insertPic" :label="`${t('insertPics')}：`" :func="insertPic()" />
+        <FileInput id="insertPic" :label="`${t('insertPics')}`" :func="insertPic()" />
         </div>
         <div class="item advanced" hidden="1">
-          {{ $t('insertNPCwidgets') }}：
+          {{ $t('insertNPCwidgets') }}
           <span id="hollows"></span>
           <ToolTip>{{ $t('invisibleTip') }}</ToolTip>
         </div>
         <div class="item" id="feat">
-          {{ $t('achievementPopup') }}：
+          {{ $t('achievementPopup') }}
           <select id="featClass" v-model="feat">
             <option value="none">{{ $t('noPopup') }}</option>
             <option>Copper</option>
@@ -242,7 +242,7 @@ onMounted(() => {
             <option v-for="color in colors.color" :class="color" :key="color">{{ color }}</option>
             <option>white</option>
           </select>
-          {{ $t('relationBox.desc') }}：<input v-model="description" /></div>
+          {{ $t('relationBox.desc') }}<input v-model="description" /></div>
           <div v-for="(stat, i) in stats" class="item" :key="stat.name">
             <input type="text" v-model="stat.name" />
             <input type="number" v-model="stat.progress" min="1" max="100" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value > 100) this.value = '100';">%
@@ -250,7 +250,7 @@ onMounted(() => {
               <option value="horizontal">{{ $t('relationBox.horizontal') }}</option>
               <option value="vertical">{{ $t('relationBox.vertical') }}</option>
             </select>
-            <FileInput :id="`activeicon${i}`" :label="`${t('relationBox.icon')}：`" :func="loadFile(stat)" />
+            <FileInput :id="`activeicon${i}`" :label="`${t('relationBox.icon')}`" :func="loadFile(stat)" />
           </div>
         </div>
         <div class="item">

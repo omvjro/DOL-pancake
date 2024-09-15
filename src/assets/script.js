@@ -137,7 +137,7 @@ dolEditor.addEventListener('keydown', (event) => {
     }
   }
 
-  // 跳过零宽空格
+  // TODO 跳过零宽空格
   // if (event.key === 'ArrowLeft') {
   //   if (position.startOffset === 1 && position.startContainer.textContent.startsWith('\u200b')) {
   //     const previousSibling = position.startContainer.previousSibling

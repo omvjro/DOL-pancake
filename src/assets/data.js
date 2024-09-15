@@ -20,10 +20,10 @@ const colors = {
     'def',
     'sub',
   ],
-  specialColor: [ // TODO 多语言
-    ['wraith', '象牙幽灵'],
-    ['lustful', '炫彩悉尼'],
-    ['rainbow', '炫彩'],
+  specialColor: [
+    'wraith',
+    'lustful',
+    'rainbow',
   ],
 };
 

@@ -110,7 +110,7 @@ onMounted(() => {
 
 <template>
 <div class="item" id="customWidget">
-  {{ $t('insertCustomWidgets') }}：
+  {{ $t('insertCustomWidgets') }}
   <select v-model="widgetName" @change="() => { if (widgetName === 'new') showEditor() }">
     <option v-for="name in savedNames" :key="name">{{ name }}</option>
     <option value="new">{{ $t('new') }}</option>
@@ -122,17 +122,17 @@ onMounted(() => {
 
 <div v-show="isShown" id="customEditor">
 <div class="item">
-    <label>{{ $t('widget.name') }}：</label>
+    <label>{{ $t('widget.name') }}</label>
     <input v-model="editingName" type="text" :placeholder="$t('widget.tip1')" />
 </div>
 <div class="item" style="display: flex; flex-wrap: wrap;">
-    <label>{{ $t('widget.display') }}：</label>
+    <label>{{ $t('widget.display') }}</label>
     <!-- Firefox bug https://bugzilla.mozilla.org/show_bug.cgi?id=1291467 -->
     <div ref="editingDisplay" id="editingDisplay" :class="locale.replace('-', '')"
          :contenteditable="isFirefox ? true : 'plaintext-only'"></div>
 </div>
 <div class="item" style="display: flex; flex-wrap: wrap;">
-    <label for="twee">twee：</label>
+    <label for="twee">twee</label>
     <textarea v-model="editingTwee" name="twee" :placeholder="$t('widget.tip2')"></textarea>
 </div>
 <div class="item">

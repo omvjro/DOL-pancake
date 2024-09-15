@@ -63,7 +63,7 @@ function insertLink() {
 
 <template>
 <div class="item">
-  {{ $t('insertColoredText') }}：
+  {{ $t('insertColoredText') }}
   <SuperSelect :tip=" $t('normal') " :operator="coloredOperator">
     <option v-for="color in colors.color" :class="color" :key="color">{{ color }}</option>
   </SuperSelect>
@@ -71,7 +71,7 @@ function insertLink() {
     <option v-for="color in colors.statusColor" :class="color" :key="color">{{ color }}</option>
   </SuperSelect>
   <SuperSelect :tip=" $t('effected') " :operator="coloredOperator">
-    <option v-for="color in colors.specialColor" :key="color[0]" :value="color[0]">{{ color[1] }}</option>
+    <option v-for="color in colors.specialColor" :key="color" :value="color">{{ $t(color) }}</option>
   </SuperSelect>
   <SuperSelect :tip=" $t('biu') " :operator="BIUOperator">
     <option value="b">{{ $t('bold') }}</option>

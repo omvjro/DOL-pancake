@@ -69,7 +69,7 @@ function symbolsOperator(symbol) {
 
 <template>
 <div class="item">
-  {{ $t('insertLewd') }}：
+  {{ $t('insertLewd') }}
   <select v-model="lewdType">
     <option value="exhibitionist">{{ $t('lewd.exhibitionist') }}</option>
     <option value="promiscuous">{{ $t('lewd.promiscuous') }}</option>
@@ -83,7 +83,7 @@ function symbolsOperator(symbol) {
   <button class="small" @click="insertLewd">{{ $t('confirm') }}</button>
 </div>
 
-<div class="item">{{ $t('insertOther') }}：
+<div class="item">{{ $t('insertOther') }}
   <SuperSelect :tip=" $t('tags.trans') " :operator="transOperator">
     <template v-for="t in Object.keys(colors.trans)" :key="t">
       <option :value="t">

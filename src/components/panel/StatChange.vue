@@ -65,7 +65,7 @@ function insertStatChange() {
     <option v-for="key in Object.keys(statics)" :key :value="key">{{ $t(`stats.${key}`) }}</option>
   </select>
 
-  {{ $t('statChange') }}：</label>
+  {{ $t('statChange') }}</label>
 
   <select v-model="plus" id="statPlus">
     <option v-for="i in limit[0]" :key="i" :value="'g'.repeat(i)">

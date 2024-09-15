@@ -9,7 +9,6 @@ function func() {
   const output = document.querySelector('#output');
   const code = getCode(dolEditor.innerHTML, document.querySelector('#html-mode').checked);
 
-  // TODO 实时变化语言
   output.innerHTML = `${ t('copy.caption') }<div class="tempTip"></div>
   <pre contenteditable="${ navigator.userAgent.includes('Firefox') ? 'true' : 'plaintext-only' }" spellcheck="false"></pre>`;
   document.querySelector('#output pre').innerText = code;

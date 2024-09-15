@@ -45,7 +45,7 @@ function insertSkillCheck() {
 
 <template>
 <div class="item">
-  {{ $t('insertSkillChecks') }}：
+  {{ $t('insertSkillChecks') }}
   <select v-model="name" id="skillCheckName">
     <option v-for="skill in [
         'skulduggery',
