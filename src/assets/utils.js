@@ -17,7 +17,8 @@ const getCode = (sourceHTML, isHTML = false) => {
 
   Object.values(mockOutput.children).forEach((child) => {
     if (child.tagName === 'A') {
-      child.textContent = replacePronouns(child.textContent, '${$NPCList[0].pronouns.him}');
+      // 新版dol已支持在链接中使用<<he>>
+      // child.textContent = replacePronouns(child.textContent, '${$NPCList[0].pronouns.him}');
 
       const endevent = child.getAttribute('endevent') ? `<<${child.getAttribute('endevent')}>>` : '';
       const linktime = child.getAttribute('linktime') ? `<<pass ${child.getAttribute('linktime')}>>` : '';

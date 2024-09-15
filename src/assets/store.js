@@ -1,4 +1,4 @@
-import { reactive, watch } from 'vue'
+import { reactive } from 'vue'
 
 export const store = reactive({
   theme: localStorage.getItem('theme') || '',
@@ -8,12 +8,13 @@ export const store = reactive({
   },
   temp: localStorage.getItem('temp') || '',
   customWidgets: JSON.parse(localStorage.getItem('customWidgets')) || {},
-  scene: localStorage.getItem('scene') || 'default'
+  scene: localStorage.getItem('scene') || 'default',
+  captureFeat: false,
 })
 
-watch(
-  () => store.scene,
-  (scene) => {
-    localStorage.setItem('scene', scene)
-  }
-)
+// watch(
+//   () => store.scene,
+//   (scene) => {
+//     localStorage.setItem('scene', scene)
+//   }
+// )

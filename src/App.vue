@@ -19,14 +19,14 @@ import { store } from './assets/store'
 
 const { t, locale } = useI18n();
 const placeholder = localStorage.getItem('temp') || t('placeholder')
-const isRestored = computed(() => {
-  return localStorage.getItem('temp');
-})
-function restoreInit(e) {
-  localStorage.removeItem('temp');
-  e.target.hidden = true;
-  document.querySelector('div.passage').innerHTML = t('placeholder');
-}
+// const isRestored = computed(() => {
+//   return localStorage.getItem('temp');
+// })
+// function restoreInit(e) {
+//   localStorage.removeItem('temp');
+//   e.target.hidden = true;
+//   document.querySelector('div.passage').innerHTML = t('placeholder');
+// }
 window.addEventListener('beforeunload', () => {
   localStorage.setItem('temp', document.querySelector('div.passage').innerHTML);
 });
@@ -144,7 +144,7 @@ onMounted(() => {
               <div id="ui-bar-body"></div>
             </div>
             <div id="story" role="main" class="">
-              <ToolTip :fixed="true" v-if="isRestored" @click="restoreInit($event)">{{ $t('restoreTip') }}</ToolTip>
+              <!-- <ToolTip :fixed="true" v-if="isRestored" @click="restoreInit($event)">{{ $t('restoreTip') }}</ToolTip> -->
               <FeatBox :feat
                        :featTitle
                        :featText />
@@ -164,7 +164,8 @@ onMounted(() => {
                      :stats />
       </div>
       <div class="toolbox">
-        <div class="item">
+        <div class="item"><small v-html="t('intro')"></small></div>
+        <div class="item"><!-- TODO 冒号中英文区别 -->
           <label for="theme">{{ $t('theme') }}：</label>
           <select name="theme" v-model="store.theme" @change="changeTheme">
             <option value="">{{ $t('default') }}</option>
@@ -226,7 +227,8 @@ onMounted(() => {
           </select>
           <input type="text" v-model="featTitle" :placeholder="$t('achvName')">
           <input type="text" v-model="featText" :placeholder="$t('achvDesc')">
-          <!-- TODO 单独截取成就 -->
+          <!-- <label for="captureFeat">{{ $t('captureFeat') }}</label>
+          <input type="checkbox" id="captureFeat" name="captureFeat" v-model="store.captureFeat" /> -->
         </div>
         <CustomWidget />
         <SaveManage />

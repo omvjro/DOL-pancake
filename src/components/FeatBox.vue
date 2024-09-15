@@ -13,7 +13,7 @@ defineProps({
 </script>
 
 <template>
-<div class="feat feat-overlay" v-show="feat !== 'none'">
+<div id="feat" class="feat feat-overlay" v-show="feat !== 'none'">
   <div class="featImage">
       <img :src="`/img/ui/${feat}Coin.gif`" class="featCoin">
   </div>

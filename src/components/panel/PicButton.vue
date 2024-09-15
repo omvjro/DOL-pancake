@@ -7,7 +7,9 @@ import { store } from '@/assets/store'
 const { t } = useI18n()
 
 function preview() {
-  const inputID = store.scene === 'default' ? 'html' : 'npc-relations'
+  let inputID = store.scene === 'default' ? 'html' : 'npc-relations'
+  // TODO 不知道为什么截出来只有一半
+  // if (store.captureFeat) inputID = 'feat'
   const output = document.querySelector('#output');
   document.querySelectorAll('.noDisplay').forEach((e) => { e.style.display = 'none'; });
   output.innerText = t('pic.loading');
@@ -31,7 +33,8 @@ function preview() {
 }
 
 function download() {
-  const inputID = store.scene === 'default' ? 'html' : 'npc-relations'
+  let inputID = store.scene === 'default' ? 'html' : 'npc-relations'
+  // if (store.captureFeat) inputID = 'feat'
   const output = document.querySelector('#output');
   document.querySelectorAll('.noDisplay').forEach((e) => { e.style.display = 'none'; });
   output.innerText = t('pic.loading');
