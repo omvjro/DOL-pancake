@@ -211,6 +211,10 @@ const statics = {
     tending: {},
     housekeeping: {},
     danceskill: {},
+    physique: {
+      value: [8, 16, 24],
+      valueMacro: ['physique_loss', 'physique'],
+    },
     net: {
       value: false,
       limit: [1, 0],

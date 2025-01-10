@@ -28,6 +28,8 @@ watch(type, (t) => {
 function insertStatChange() {
   const isPlus = plus.value.includes('g');
   const value = stat.value.value === false ? undefined : (stat.value.value || statics[type.value]._?.value);
+  const valueMacro = stat.value.valueMacro;
+  const valueMacroIsArray = Array.isArray(valueMacro);
   let realStatName = statName.value;
   let realPlus = plus.value;
 
@@ -36,13 +38,13 @@ function insertStatChange() {
     realStatName = stat.value.variant;
   }
 
-  let valueType = stat.value.valueMacro || realStatName;
+  let valueType = valueMacroIsArray ? valueMacro[+isPlus] : valueMacro || realStatName;
   if (type.value === 'npc') {
     valueType = `npcincr "${ stat.value.npc || npc.value || '' }" ${ stat.value.valueType || realStatName }`;
   }
 
   let code = `<<${realPlus}${realStatName}${stat.value.npcs && npc.value ? ` "${npc.value}"` : ''}>>`;
-  const valueCode = value ? `<<${valueType} ${isPlus ? '' : '-'}${value[realPlus.length - 1]}>>` : '';
+  const valueCode = value ? `<<${valueType} ${valueMacroIsArray || isPlus ? '' : '-'}${value[realPlus.length - 1]}>>` : '';
   let text = `${ getOptionText('statPlus') } ${
     getOptionText('statNPC') || ''
    }${ getOptionText('statName') }`;
