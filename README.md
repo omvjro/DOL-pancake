@@ -11,7 +11,7 @@
 
 ## 部署地址
 若打不开 GitHub Pages，可尝试下方其他地址。
-- [GitHub Pages](omvjro.github.io/DOL-pancake/)
+- [GitHub Pages](https://omvjro.github.io/DOL-pancake/)
 - [Vercel](https://dol-pancake.vercel.app/)
 - [Cloudflare Pages](https://dol-pancake.pages.dev/)
 - [Netlify](https://dol-pancake.netlify.app/)
