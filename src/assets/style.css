@@ -57,6 +57,10 @@ body, html {
 	#output {
 		max-width: 100%;
 	}
+	&.flex {
+		display: flex;
+		gap: 1rem;
+	}
 	img {
 		width: 375px;
 		max-width: 100%;
@@ -99,9 +103,10 @@ body, html {
 		border: 1px solid #444;
 		padding: .34em .4em;
 		cursor: pointer;
+		field-sizing: content;
+		min-width: 1rem;
 	}
 	input[type="text"], input[type="number"], input[list] {
-		width: 5em;
 		cursor:text;
 	}
 	input:focus,input:hover,select:focus,select:hover,textarea:focus,textarea:hover {
@@ -116,6 +121,12 @@ body, html {
 		}
 	}
 
+}
+
+@supports not (field-sizing: content) {
+	.item :is(input[type="text"], input[type="number"], input[list]) {
+		width: 5em;
+	}
 }
 .toolbox {
 	background: #000;
@@ -173,7 +184,7 @@ div#dol, #customWidgetDisplay {
 		display: inline-block;
 	}
 
-	.wraith, .lustful, .rainbow {
+	.wraith, .lustful, .rainbow, .tentacle {
 		caret-color: var(--000);
 	}
 }

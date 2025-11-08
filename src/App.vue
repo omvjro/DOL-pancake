@@ -157,38 +157,44 @@ onMounted(() => {
       </div>
       <div class="toolbox">
         <div class="item"><small v-html="t('intro')"></small></div>
-        <div class="item">
-          <label for="theme">{{ $t('theme') }}</label>
-          <select name="theme" v-model="store.theme" @change="changeTheme">
-            <option value="">{{ $t('default') }}</option>
-            <option value="zen">Zen</option>
-            <option value="arctic">Arctic</option>
-            <option value="monokai">Monokai</option>
-            <option value="storm">Storm</option>
-            <option value="latte">Catppuccin Latte</option>
-            <option value="frappe">Catppuccin Frappé</option>
-            <option value="macchiato">Catppuccin Macchiato</option>
-            <option value="mocha">Catppuccin Mocha</option>
-          </select>
-          <label for="scene">{{ $t('scene') }}</label>
-          <select name="scene" v-model="store.scene">
-            <option value="default">{{ $t('default') }}</option>
-            <option value="npc">NPC</option>
-          </select>
-          <label for="language">{{ $t('language') }}</label>
-          <select name="language" v-model="locale">
-            <option>zh</option>
-            <option>en</option>
-            <option>zh-TW</option>
-            <option>zh-HK</option>
-          </select>
+        <div class="item flex">
+          <div>
+            <label for="theme">{{ $t('theme') }}</label>
+            <select name="theme" v-model="store.theme" @change="changeTheme">
+              <option value="">{{ $t('default') }}</option>
+              <option value="zen">Zen</option>
+              <option value="arctic">Arctic</option>
+              <option value="monokai">Monokai</option>
+              <option value="storm">Storm</option>
+              <option value="latte">Catppuccin Latte</option>
+              <option value="frappe">Catppuccin Frappé</option>
+              <option value="macchiato">Catppuccin Macchiato</option>
+              <option value="mocha">Catppuccin Mocha</option>
+            </select>
+          </div>
+          <div>
+            <label for="scene">{{ $t('scene') }}</label>
+            <select name="scene" v-model="store.scene">
+              <option value="default">{{ $t('default') }}</option>
+              <option value="npc">NPC</option>
+            </select>
+          </div>
+          <div>
+            <label for="language">{{ $t('language') }}</label>
+            <select name="language" v-model="locale">
+              <option>zh</option>
+              <option>en</option>
+              <option>zh-TW</option>
+              <option>zh-HK</option>
+            </select>
+          </div>
         </div>
         <div v-show="store.scene === 'default'">
-        <div class="item">
-          <label for="advanced">{{ $t('experimental') }}</label><input type="checkbox" id="advanced" name="advanced" />
-          <label for="link-num">{{ $t('indexed') }}</label><input type="checkbox" id="link-num" name="link-num" checked />
-          <label for="html-mode">{{ $t('exportHTML') }}</label><input type="checkbox" id="html-mode" name="html-mode" />
-          <label for="direct-paste">{{ $t('pasteDirectly') }}</label><input type="checkbox" id="direct-paste" name="direct-paste" />
+        <div class="item flex">
+          <div><label for="advanced">{{ $t('experimental') }}</label><input type="checkbox" id="advanced" name="advanced" /></div>
+          <div><label for="link-num">{{ $t('indexed') }}</label><input type="checkbox" id="link-num" name="link-num" checked /></div>
+          <div><label for="html-mode">{{ $t('exportHTML') }}</label><input type="checkbox" id="html-mode" name="html-mode" /></div>
+          <div><label for="direct-paste">{{ $t('pasteDirectly') }}</label><input type="checkbox" id="direct-paste" name="direct-paste" /></div>
         </div>
         <StatChange />
         <SkillCheck />
