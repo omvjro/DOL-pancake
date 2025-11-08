@@ -6,9 +6,7 @@ import { getCode } from '@/assets/utils';
 import { saveTwee } from '@/assets/save.js';
 import { store } from '@/assets/store'
 
-const { t, locale } = useI18n();
-
-const isFirefox = computed(() => navigator.userAgent.includes('Firefox'))
+const { t, locale } = useI18n()
 
 const savedNames = computed(() => Object.keys(store.customWidgets))
 const widgetName = ref(savedNames.value[0] || 'new')
