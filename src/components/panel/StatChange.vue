@@ -5,12 +5,9 @@ import { getOptionText } from '@/assets/utils'
 import { statics } from '@/assets/data'
 
 const type = ref(Object.keys(statics)[0]),
-      allStats = Object.values(statics).map((v) => Object.keys(v)).flat().filter((v) => v !== '_'),
       plus = ref('g'),
       visibleStats = computed(() => {
-        return allStats.filter((s) => {
-          return Object.keys(statics[type.value]).includes(s)
-        })
+        return Object.keys(statics[type.value]).filter((v) => v !== '_')
       }),
       statName = ref(Object.keys(statics[type.value])[0]),
       npc = ref(),
@@ -38,6 +35,10 @@ function insertStatChange() {
     realStatName = stat.value.variant;
   }
 
+  if (stat.value.alias) {
+    realStatName = stat.value.alias;
+  }
+
   let valueType = valueMacroIsArray ? valueMacro[+isPlus] : valueMacro || realStatName;
   if (type.value === 'npc') {
     valueType = `npcincr "${ stat.value.npc || npc.value || '' }" ${ stat.value.valueType || realStatName }`;
@@ -55,7 +56,7 @@ function insertStatChange() {
   let color = (stat.value.colors || statics[type.value]._?.colors)?.[+!isPlus];
   color ??= isPlus ? 'red' : 'green';
 
-  insertHard(` | <span class="${color}">${text}</span>`, code, (widget) => widget.setAttribute('valueCode', valueCode))
+  insertHard(` | <span class="${color}">${text}</span>`, code, (widget) => widget.dataset.valueCode = valueCode)
 }
 </script>
 

@@ -113,7 +113,6 @@ dolEditor.addEventListener('keydown', (event) => {
   if (event.key === 'Enter') {
     event.preventDefault()
     const startContainer = position?.startContainer
-    console.log(startContainer.parentElement.tagName)
     // 允许回车退出颜色标签，阻止链接或颜色文字内换行
     if (['SPAN', 'A'].includes(startContainer.parentElement.tagName)) {
       if (startContainer.textContent.length !== position?.startOffset) return

@@ -31,7 +31,7 @@ const insert = (element, isCollapsed, forceLocal = false) => {
 const insertHard = (html, code, decorate) => {
   const widget = document.createElement('widget');
   widget.innerHTML = html;
-  widget.setAttribute('code', code);
+  widget.dataset.code = code;
   widget.contentEditable = false;
   decorate?.(widget);
   insert(widget, true);

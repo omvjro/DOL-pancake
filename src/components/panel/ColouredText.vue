@@ -42,9 +42,9 @@ const linkClass = ref('normalLink'),
 function insertLink() {
   const link = document.createElement('a');
   link.classList.add(linkClass.value);
-  link.setAttribute('endevent', linkEnd.value);
-  link.setAttribute('linkto', linkTo.value);
-  link.setAttribute('linktime', linkTime.value);
+  link.dataset.endevent = linkEnd.value;
+  link.dataset.linkto = linkTo.value;
+  link.dataset.linktime = linkTime.value;
   if (position?.startContainer.parentElement !== insertTarget) {
     selection.collapse(insertTarget);
   }

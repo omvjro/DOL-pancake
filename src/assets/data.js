@@ -82,29 +82,22 @@ const statics = {
         'Sydney',
         'Black Wolf',
         'Great Hawk',
-        'Bailey',
-        'Briar',
-        'Charlie',
+        'Gwylan',
+        'Ivory Wraith',
+      ],
+    },
+    affection: {
+      colors: POSITIVE,
+      npcs: [
         'Darryl',
         'Doren',
-        'Gwylan',
-        'Harper',
-        'Jordan',
-        'Landry',
-        'Leighton',
         'Mason',
         'Morgan',
-        'River',
-        'Sam',
         'Sirris',
         'Winter',
-        'Niki',
-        'Quinn',
-        'Remy',
         'Wren',
-        'Ivory Wraith',
-        'Zephyr',
       ],
+      alias: 'love',
     },
     lust: {
       colors: ['lewd', 'teal'],
@@ -178,12 +171,38 @@ const statics = {
     obsession: {
       colors: ['red', 'blue'],
       decorate(input) {
-        input.code = input.code.replace('gg', 'g').replace('gg', 'g').replace('ll', 'l').replace('ll', 'l');
+        input.dataset.code = input.dataset.code.replace('gg', 'g').replace('gg', 'g').replace('ll', 'l').replace('ll', 'l');
         return Object.values(input);
       },
     },
     stockholm: {
       colors: ['blue', 'lblue'],
+    },
+    respect: {
+      colors: POSITIVE,
+      npcs: [
+        'Bailey',
+        'Briar',
+        'Charlie',
+        'Jordan',
+        'River',
+        'Sam',
+        'Niki',
+      ],
+      alias: 'love',
+    },
+    interest: {
+      colors: POSITIVE,
+      npcs: [
+        'Gwylan',
+        'Harper',
+        'Landry',
+        'Leighton',
+        'Quinn',
+        'Remy',
+        'Zephyr',
+      ],
+      alias: 'love',
     },
   },
   skill: {

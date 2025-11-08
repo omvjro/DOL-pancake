@@ -15,27 +15,28 @@ const getCode = (sourceHTML, isHTML = false) => {
 
   Object.values(mockOutput.children).forEach((child) => {
     if (child.tagName === 'A') {
-      const endevent = child.getAttribute('endevent') ? `<<${child.getAttribute('endevent')}>>` : '';
-      const linktime = child.getAttribute('linktime') ? `<<pass ${child.getAttribute('linktime')}>>` : '';
-      const linkto = child.getAttribute('linkto') || '';
+      const endevent = child.dataset.endevent ? `<<${child.dataset.endevent}>>` : '';
+      const linktime = child.dataset.linktime ? `<<pass ${child.dataset.linktime}>>` : '';
+      const linkto = child.dataset.linkto || '';
 
       const code = child.outerHTML.replace('</a>', `\`|${linkto}]]>>${linktime}${endevent}<</link>>`);
 
       if (child.classList.contains('nextWraith')) {
-        child.setAttribute('code', code.replace(/<a.*?>/gi, '<span id="next" class="nextWraith"><<link [[`'));
+        child.dataset.code = code.replace(/<a.*?>/gi, '<span id="next" class="nextWraith"><<link [[`');
       } else if (child.classList.contains('normalLink')) {
-        child.setAttribute('code', code.replace(/<a.*?>/gi, '<<link [[`'));
+        child.dataset.code = code.replace(/<a.*?>/gi, '<<link [[`');
       }
     }
-    if (child.getAttribute('code')) {
-      let valueCode = child.getAttribute('valueCode') || '';
+    if (child.dataset.code) {
+      let valueCode = child.dataset.valueCode || '';
       if (valueCode !== '') {
         findInlineLink(child.previousSibling, (link) => {
           link.textContent = link.textContent.replace('<</link>>', `${valueCode}<</link>>`);
           valueCode = '';
         });
       }
-      const code = document.createTextNode(`${child.getAttribute('code')}${valueCode}`);
+      const code = document.createTextNode(`${child.dataset.code}${valueCode}`);
+      console.log(valueCode);
       mockOutput.replaceChild(code, child);
     }
     if (Array.from(child.childNodes).every((grandChild) => grandChild.nodeType !== 3 || grandChild.textContent === '') && child.tagName === 'SPAN') {
