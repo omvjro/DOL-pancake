@@ -18,7 +18,9 @@ import SaveManage from './components/panel/SaveManage.vue';
 import { store } from './assets/store'
 
 const { t, locale } = useI18n();
-const placeholder = localStorage.getItem('temp') || t('placeholder')
+const placeholder = localStorage.getItem('temp') || `${t('placeholder.1')}${
+  window.innerWidth > 836 ? t('placeholder.buttonPosWide') : t('placeholder.buttonPosNarrow')
+}${t('placeholder.2')}`
 // const isRestored = computed(() => {
 //   return localStorage.getItem('temp');
 // })

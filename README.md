@@ -9,8 +9,8 @@
 - 自定义部件，减少重复工作
 - 插入图片转为 base64 编码
 
-## 部署地址
-若打不开 GitHub Pages，可尝试下方其他地址。
+## 使用方法
+打开 GitHub Pages 即可使用，若打不开网页，可尝试其余的备用部署网址。
 - [GitHub Pages](https://omvjro.github.io/DOL-pancake/)
 - [Vercel](https://dol-pancake.vercel.app/)
 - [Cloudflare Pages](https://dol-pancake.pages.dev/)
