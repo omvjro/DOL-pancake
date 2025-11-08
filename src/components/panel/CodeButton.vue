@@ -10,7 +10,7 @@ function func() {
   const code = getCode(dolEditor.innerHTML, document.querySelector('#html-mode').checked);
 
   output.innerHTML = `${ t('copy.caption') }<div class="tempTip"></div>
-  <pre contenteditable="${ navigator.userAgent.includes('Firefox') ? 'true' : 'plaintext-only' }" spellcheck="false"></pre>`;
+  <pre contenteditable="plaintext-only" spellcheck="false"></pre>`;
   document.querySelector('#output pre').innerText = code;
 
   document.querySelector('#copyCode').addEventListener('click', async () => {

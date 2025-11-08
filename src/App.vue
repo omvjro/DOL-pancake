@@ -31,14 +31,6 @@ window.addEventListener('beforeunload', () => {
   localStorage.setItem('temp', document.querySelector('div.passage').innerHTML);
 });
 
-// Firefox bug https://bugzilla.mozilla.org/show_bug.cgi?id=1291467
-const isFirefox = computed(() => {
-  return navigator.userAgent.includes('Firefox')
-})
-const contenteditable = computed(() => {
-  return isFirefox.value ? 'true' : 'plaintext-only'
-})
-
 const feat = ref('none'),
       featTitle = ref(''),
       featText = ref(''),
@@ -149,11 +141,11 @@ onMounted(() => {
                        :featTitle
                        :featText />
               <div id="passages" aria-live="polite">
-                <div class="passage" :contenteditable="contenteditable" v-html="placeholder"></div>
+                <div class="passage" contenteditable="plaintext-only" v-html="placeholder"></div>
               </div>
             </div>
-            <div id="gameVersionDisplay" :contenteditable="contenteditable"> {{ $t('watermark') }} </div>
-            <div id="gameVersionDisplay2" :contenteditable="contenteditable">{{ $t('watermark') }}</div>
+            <div id="gameVersionDisplay" contenteditable="plaintext-only"> {{ $t('watermark') }} </div>
+            <div id="gameVersionDisplay2" contenteditable="plaintext-only">{{ $t('watermark') }}</div>
           </div>
         </div>
         <RelationBox :data-theme="store.theme" v-show="store.scene === 'npc'"
@@ -196,9 +188,7 @@ onMounted(() => {
           <label for="advanced">{{ $t('experimental') }}</label><input type="checkbox" id="advanced" name="advanced" />
           <label for="link-num">{{ $t('indexed') }}</label><input type="checkbox" id="link-num" name="link-num" checked />
           <label for="html-mode">{{ $t('exportHTML') }}</label><input type="checkbox" id="html-mode" name="html-mode" />
-          <template v-if="!isFirefox">
-            <label for="direct-paste">{{ $t('pasteDirectly') }}</label><input type="checkbox" id="direct-paste" name="direct-paste" :checked="isFirefox" />
-          </template>
+          <label for="direct-paste">{{ $t('pasteDirectly') }}</label><input type="checkbox" id="direct-paste" name="direct-paste" />
         </div>
         <StatChange />
         <SkillCheck />

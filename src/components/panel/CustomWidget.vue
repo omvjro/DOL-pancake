@@ -127,9 +127,8 @@ onMounted(() => {
 </div>
 <div class="item" style="display: flex; flex-wrap: wrap;">
     <label>{{ $t('widget.display') }}</label>
-    <!-- Firefox bug https://bugzilla.mozilla.org/show_bug.cgi?id=1291467 -->
     <div ref="editingDisplay" id="editingDisplay" :class="locale.replace('-', '')"
-         :contenteditable="isFirefox ? true : 'plaintext-only'"></div>
+         contenteditable="plaintext-only"></div>
 </div>
 <div class="item" style="display: flex; flex-wrap: wrap;">
     <label for="twee">twee</label>
