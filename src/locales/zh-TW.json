@@ -174,7 +174,9 @@
     "slust": "悉尼的性慾",
     "arage": "憤怒",
     "endear": "親密",
+    "frustration": "煩躁",
     "obsession": "痴迷",
+    "yearning": "渴望",
     "stockholm": "斯德哥爾摩綜合徵",
     "science": "科學",
     "maths": "數學",
@@ -220,12 +222,14 @@
     "lewdity": "淫穢",
     "saltiness": "含鹽量",
     "shame": "羞恥",
+    "security": "安保",
     "impatience": "不耐煩",
     "interest": "興趣",
     "knowledge": "知識",
     "hunger": "飢餓",
     "acceptance": "接受",
-    "tanned": "日曬"
+    "tanned": "日曬",
+    "warmth": "溫暖"
   },
   "skillCheck": {
     "name": "技能名稱",
@@ -278,5 +282,8 @@
   "captureFeat": "僅截圖成就",
   "wraith": "象牙怨靈",
   "lustful": "炫彩悉尼",
-  "rainbow": "炫彩"
+  "rainbow": "炫彩",
+  "tentacle": "觸手",
+  "forest-green": "森林綠",
+  "witchbloom": "巫花"
 }

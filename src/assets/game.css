@@ -1600,6 +1600,14 @@
 		color: var(--manager);
 	}
 
+	.forest-green {
+		color: #058d05;
+	}
+
+	.witchbloom {
+		color: #8a3eb6;
+	}
+
 	/* #endregion End of Status Colour Classes */
 
 

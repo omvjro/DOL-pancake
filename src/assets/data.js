@@ -24,6 +24,9 @@ const colors = {
     'wraith',
     'lustful',
     'rainbow',
+    'tentacle',
+    'forest-green',
+    'witchbloom',
   ],
 };
 
@@ -168,12 +171,18 @@ const statics = {
     endear: {
       colors: ['teal', 'pink'],
     },
+    frustration: {
+      colors: POSITIVE,
+    },
     obsession: {
       colors: ['red', 'blue'],
       decorate(input) {
         input.dataset.code = input.dataset.code.replace('gg', 'g').replace('gg', 'g').replace('ll', 'l').replace('ll', 'l');
         return Object.values(input);
       },
+    },
+    yearning: {
+      colors: ['forest-green', 'witchbloom'],
     },
     stockholm: {
       colors: ['blue', 'lblue'],
@@ -339,6 +348,7 @@ const statics = {
       colors: POSITIVE,
     },
     shame: {},
+    security: {},
     impatience: {},
     interest: {
       colors: POSITIVE,
@@ -356,6 +366,9 @@ const statics = {
       colors: POSITIVE,
       limit: [3, 0],
     },
+    warmth: {
+      colors: ['orange', 'teal']
+    }
   },
 };
 
