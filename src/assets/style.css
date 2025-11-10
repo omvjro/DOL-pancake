@@ -70,7 +70,7 @@ body, html {
 		background: #222;
 		padding: 1em 2em;
 		border-radius: 5px;
-		text-wrap: wrap;
+		white-space: pre-wrap;
 	}
 	button {
 		border: 1px solid #666;
@@ -83,6 +83,7 @@ body, html {
 		user-select: none;
 		-webkit-appearance: button;
 		text-transform: none;
+		font-size: .9em;
 
 		&.small {
 			line-height: 1;
@@ -106,6 +107,7 @@ body, html {
 		cursor: pointer;
 		field-sizing: content;
 		min-width: 1rem;
+		font-size: .9em;
 	}
 	input[type="text"], input[type="number"], input[list] {
 		cursor:text;
