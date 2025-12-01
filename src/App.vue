@@ -163,15 +163,15 @@ onMounted(() => {
           <div>
             <label for="theme">{{ $t('theme') }}</label>
             <select name="theme" v-model="store.theme" @change="changeTheme">
-              <option value="">{{ $t('default') }}</option>
-              <option value="zen">Zen</option>
-              <option value="arctic">Arctic</option>
-              <option value="monokai">Monokai</option>
-              <option value="storm">Storm</option>
-              <option value="latte">Catppuccin Latte</option>
-              <option value="frappe">Catppuccin Frappé</option>
-              <option value="macchiato">Catppuccin Macchiato</option>
-              <option value="mocha">Catppuccin Mocha</option>
+              <option value="" style="background-color: #111; color: #eee;">{{ $t('default') }}</option>
+              <option value="zen" style="background-color: hsl(0deg 0% 22%); color: hsl(60deg 20% 86%);">Zen</option>
+              <option value="arctic" style="background-color: hsl(220deg 16% 22%); color: hsl(218deg 27% 94%);">Arctic</option>
+              <option value="monokai" style="background-color: hsl(24deg 8% 12%); color: hsl(60deg 30% 96%);">Monokai</option>
+              <option value="storm" style="background-color: hsl(235deg 19% 13%); color: hsl(227deg 35% 71%);">Storm</option>
+              <option value="latte" style="background-color: hsl(220deg 23% 95%); color: hsl(234deg 16% 35%);">Catppuccin Latte</option>
+              <option value="frappe" style="background-color: hsl(229deg 19% 23%); color: hsl(227deg 70% 87%);">Catppuccin Frappé</option>
+              <option value="macchiato" style="background-color: hsl(232deg 23% 18%); color: hsl(227deg 68% 88%);">Catppuccin Macchiato</option>
+              <option value="mocha" style="background-color: hsl(240deg 21% 15%); color: hsl(226deg 64% 88%);">Catppuccin Mocha</option>
             </select>
           </div>
           <div>

@@ -74,9 +74,9 @@ function insertLink() {
     <option v-for="color in colors.specialColor" :key="color" :value="color">{{ $t(color) }}</option>
   </SuperSelect>
   <SuperSelect :tip=" $t('biu') " :operator="BIUOperator">
-    <option value="b">{{ $t('bold') }}</option>
-    <option value="i">{{ $t('italic') }}</option>
-    <option value="u">{{ $t('underlined') }}</option>
+    <option value="b" style="font-weight: bold;">{{ $t('bold') }}</option>
+    <option value="i" style="font-style: italic;">{{ $t('italic') }}</option>
+    <option value="u" style="text-decoration: underline;">{{ $t('underlined') }}</option>
   </SuperSelect>
 </div>
 
